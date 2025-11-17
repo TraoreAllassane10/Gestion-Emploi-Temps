@@ -10,10 +10,20 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { annee, cours, dashboard, filiere, niveau, professeur, salle } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Book, BookA, BookOpen, Folder, House, LayoutGrid, LucideMoveUpLeft, User } from 'lucide-react';
+import {
+    Book,
+    BookA,
+    BookOpen,
+    Calendar1,
+    Folder,
+    House,
+    LayoutGrid,
+    LucideMoveUpLeft,
+    User,
+} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -24,33 +34,38 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Annee Scolaire',
-        href: dashboard(),
+        href: annee(),
         icon: Book,
     },
     {
         title: 'Niveau',
-        href: dashboard(),
+        href: niveau(),
         icon: LucideMoveUpLeft,
     },
     {
         title: 'Filière',
-        href: dashboard(),
+        href: filiere(),
         icon: BookOpen,
     },
     {
         title: 'Professeur',
-        href: dashboard(),
+        href: professeur(),
         icon: User,
     },
-      {
+    {
         title: 'Salle',
-        href: dashboard(),
+        href: salle(),
         icon: House,
     },
-      {
+    {
         title: 'Cours',
+        href: cours(),
+        icon: BookA,
+    },
+    {
+        title: 'Emploi du temps',
         href: dashboard(),
-        icon: BookA
+        icon: Calendar1,
     },
 ];
 

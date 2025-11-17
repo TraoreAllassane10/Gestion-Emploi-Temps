@@ -10,6 +10,26 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+//Routes proivisoire
+Route::get("/annee", function () {
+    return Inertia::render("annee/Index");
+})->name("annee");
+Route::get("/niveau", function () {
+    return Inertia::render("niveau/Index");
+})->name("niveau");
+Route::get("/filiere", function () {
+    return Inertia::render("filiere/Index");
+})->name("filiere");
+Route::get("/professeur", function () {
+    return Inertia::render("professeur/Index");
+})->name("professeur");
+Route::get("/cours", function () {
+    return Inertia::render("cours/Index");
+})->name("cours");
+Route::get("/salle", function () {
+    return Inertia::render("salle/Index");
+})->name("salle");
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');

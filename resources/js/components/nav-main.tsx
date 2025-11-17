@@ -13,15 +13,15 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
     const page = usePage();
     return (
         <SidebarGroup className="px-2 py-0">
-            <SidebarGroupLabel>Platform</SidebarGroupLabel>
+            <SidebarGroupLabel>Administration</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => (
-                    <SidebarMenuItem key={item.title}>
+                    <SidebarMenuItem key={item.title} className='text-white font-medium'>
                         <SidebarMenuButton
                             asChild
-                            isActive={page.url.startsWith(
-                                resolveUrl(item.href),
-                            )}
+                            // isActive={page.url.startsWith(
+                            //     resolveUrl(item.href),
+                            // )}
                             tooltip={{ children: item.title }}
                         >
                             <Link href={item.href} prefetch>
