@@ -29,6 +29,9 @@ Route::get("/cours", function () {
 Route::get("/salle", function () {
     return Inertia::render("salle/Index");
 })->name("salle");
+Route::get("/seance", function () {
+    return Inertia::render("seance/Index");
+})->name("seance");
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

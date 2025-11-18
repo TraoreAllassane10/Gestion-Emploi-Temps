@@ -1,8 +1,25 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
+import { dashboard, seance } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
+import {
+    ArrowRight,
+    BookOpen,
+    Building2,
+    Clock,
+    Edit,
+    GraduationCap,
+    Trash,
+} from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -15,21 +32,165 @@ export default function Dashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
+
+            <div className="p-4">
+                {/* Statistiques */}
+                <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <Card className="shadow-sm transition hover:shadow-md">
+                        <CardContent className="flex flex-col items-center py-6">
+                            <GraduationCap
+                                className="mb-2 text-primary"
+                                size={32}
+                            />
+                            <h3 className="text-lg font-semibold">
+                                Nombre de filières
+                            </h3>
+                            <span className="text-2xl font-bold text-primary">
+                                10
+                            </span>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="shadow-sm transition hover:shadow-md">
+                        <CardContent className="flex flex-col items-center py-6">
+                            <Building2
+                                className="mb-2 text-blue-500"
+                                size={32}
+                            />
+                            <h3 className="text-lg font-semibold">
+                                Nombre de salles
+                            </h3>
+                            <span className="text-2xl font-bold text-blue-500">
+                                10
+                            </span>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="shadow-sm transition hover:shadow-md">
+                        <CardContent className="flex flex-col items-center py-6">
+                            <BookOpen
+                                className="mb-2 text-green-600"
+                                size={32}
+                            />
+                            <h3 className="text-lg font-semibold">
+                                Nombre de cours
+                            </h3>
+                            <span className="text-2xl font-bold text-green-600">
+                                10
+                            </span>
+                        </CardContent>
+                    </Card>
                 </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
+
+                {/* ________ Last Seances Section _________ */}
+                <Card className="shadow-sm">
+                    <CardHeader>
+                        <div className="flex items-center justify-between">
+                            <h2 className="flex items-center gap-2 text-xl font-semibold">
+                                <Clock size={20} /> 5 dernières séances
+                                enregistrées
+                            </h2>
+
+                            <Link
+                                href={seance()}
+                                className="flex items-center gap-1 rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground hover:bg-primary/90"
+                            >
+                                Voir plus <ArrowRight size={18} />
+                            </Link>
+                        </div>
+                    </CardHeader>
+
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-muted/60">
+                                    <TableHead className="font-semibold">
+                                        Jour
+                                    </TableHead>
+                                    <TableHead className="font-semibold">
+                                        Début
+                                    </TableHead>
+                                    <TableHead className="font-semibold">
+                                        Fin
+                                    </TableHead>
+                                    <TableHead className="font-semibold">
+                                        Cours
+                                    </TableHead>
+                                    <TableHead className="font-semibold">
+                                        Professeur
+                                    </TableHead>
+                                    <TableHead className="font-semibold">
+                                        Salle
+                                    </TableHead>
+                                    <TableHead className="font-semibold">
+                                        Niveau
+                                    </TableHead>
+                                    <TableHead className="text-center font-semibold">
+                                        Actions
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
+
+                            <TableBody>
+                                <TableRow className="border-b">
+                                    <TableCell className="font-medium">
+                                        Samedi
+                                    </TableCell>
+                                    <TableCell>07h30</TableCell>
+                                    <TableCell>17h15</TableCell>
+                                    <TableCell>Merise</TableCell>
+                                    <TableCell> M. Traore Allassane</TableCell>
+                                    <TableCell> Salle Info</TableCell>
+                                    <TableCell> IDA 2</TableCell>
+
+                                    <TableCell className="flex justify-center gap-3">
+                                        <Link>
+                                            <Edit
+                                                size={20}
+                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                            />
+                                        </Link>
+
+                                        <Link>
+                                            <Trash
+                                                size={20}
+                                                className="cursor-pointer text-red-600 hover:text-red-800"
+                                            />
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
+
+                                    <TableRow className="border-b">
+                                    <TableCell className="font-medium">
+                                        Dimanche
+                                    </TableCell>
+                                    <TableCell>07h30</TableCell>
+                                    <TableCell>17h15</TableCell>
+                                    <TableCell>Merise</TableCell>
+                                    <TableCell> M. Traore Allassane</TableCell>
+                                    <TableCell> Salle Info</TableCell>
+                                    <TableCell> IDA 2</TableCell>
+
+                                    <TableCell className="flex justify-center gap-3">
+                                        <Link>
+                                            <Edit
+                                                size={20}
+                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                            />
+                                        </Link>
+
+                                        <Link>
+                                            <Trash
+                                                size={20}
+                                                className="cursor-pointer text-red-600 hover:text-red-800"
+                                            />
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
             </div>
         </AppLayout>
     );

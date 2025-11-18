@@ -10,16 +10,25 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { annee, cours, dashboard, filiere, niveau, professeur, salle } from '@/routes';
+import {
+    annee,
+    cours,
+    dashboard,
+    filiere,
+    niveau,
+    professeur,
+    salle,
+    seance,
+} from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
     Book,
-    BookA,
     BookOpen,
+    Building2,
     Calendar1,
     Folder,
-    House,
+    GraduationCap,
     LayoutGrid,
     LucideMoveUpLeft,
     User,
@@ -38,14 +47,14 @@ const mainNavItems: NavItem[] = [
         icon: Book,
     },
     {
+        title: 'Filière',
+        href: filiere(),
+        icon: GraduationCap,
+    },
+    {
         title: 'Niveau',
         href: niveau(),
         icon: LucideMoveUpLeft,
-    },
-    {
-        title: 'Filière',
-        href: filiere(),
-        icon: BookOpen,
     },
     {
         title: 'Professeur',
@@ -55,16 +64,16 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Salle',
         href: salle(),
-        icon: House,
+        icon: Building2,
     },
     {
         title: 'Cours',
         href: cours(),
-        icon: BookA,
+        icon: BookOpen,
     },
     {
         title: 'Emploi du temps',
-        href: dashboard(),
+        href: seance(),
         icon: Calendar1,
     },
 ];

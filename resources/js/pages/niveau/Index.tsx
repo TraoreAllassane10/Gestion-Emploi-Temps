@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import {
     Sheet,
     SheetClose,
@@ -53,7 +54,7 @@ const Index = () => {
                             <SheetContent>
                                 <SheetHeader>
                                     <SheetTitle>
-                                        Nouveau Annnée Scolaire
+                                        Nouveau niveau
                                     </SheetTitle>
                                     <SheetDescription>
                                         Ajouter un niveau
@@ -65,6 +66,27 @@ const Index = () => {
                                             Nom du niveau
                                         </Label>
                                         <Input id="sheet-demo-name" />
+                                    </div>
+
+                                    <div className="grid gap-3">
+                                        <Label htmlFor="sheet-demo-name">
+                                            Filière
+                                        </Label>
+                                        <NativeSelect className='w-full'>
+                                            <NativeSelectOption value="">
+                                                
+                                            </NativeSelectOption>
+                                            <NativeSelectOption value="">
+                                                Développement web et mobile
+                                            </NativeSelectOption>
+                                            <NativeSelectOption value="todo">
+                                                Gestion Commerciale
+                                            </NativeSelectOption>
+                                            <NativeSelectOption value="in-progress">
+                                                Marketing digital
+                                            </NativeSelectOption>
+                                           
+                                        </NativeSelect>
                                     </div>
                                    
                                 </div>
@@ -96,7 +118,7 @@ const Index = () => {
                                 <TableBody>
                                     <TableRow>
                                         <TableCell className="font-medium">
-                                            BTS 1
+                                            IDA 1
                                         </TableCell>
 
                                         <TableCell className="flex gap-2">
@@ -106,7 +128,7 @@ const Index = () => {
                                     </TableRow>
                                      <TableRow>
                                          <TableCell className="font-medium">
-                                            BTS 2
+                                            IDA 2
                                         </TableCell>
                                         <TableCell className="flex gap-2">
                                             <Link><Edit size={24} className='text-gray-500'/></Link>
@@ -115,7 +137,7 @@ const Index = () => {
                                     </TableRow>
                                      <TableRow>
                                        <TableCell className="font-medium">
-                                            Licence 1
+                                            Licence 1 FCGE
                                         </TableCell>
                                         <TableCell className="flex gap-2">
                                             <Link><Edit size={24} className='text-gray-500'/></Link>
@@ -124,7 +146,7 @@ const Index = () => {
                                     </TableRow>
                                     <TableRow>
                                        <TableCell className="font-medium">
-                                            Licence 2
+                                            Licence FCGE
                                         </TableCell>
                                         <TableCell className="flex gap-2">
                                             <Link><Edit size={24} className='text-gray-500'/></Link>
@@ -133,11 +155,22 @@ const Index = () => {
                                     </TableRow>
                                     <TableRow>
                                        <TableCell className="font-medium">
-                                            Licence 3
+                                            Licence 3 FCGE
                                         </TableCell>
                                         <TableCell className="flex gap-2">
-                                            <Link><Edit size={24} className='text-gray-500'/></Link>
-                                            <Link><Trash size={24} className='text-gray-500'/></Link>
+                                            <Link>
+                                            <Edit
+                                                size={20}
+                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                            />
+                                        </Link>
+
+                                        <Link>
+                                            <Trash
+                                                size={20}
+                                                className="cursor-pointer text-red-600 hover:text-red-800"
+                                            />
+                                        </Link>
                                         </TableCell>
                                     </TableRow>
                                 </TableBody>

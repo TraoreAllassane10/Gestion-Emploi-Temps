@@ -133,18 +133,19 @@ const Index = () => {
                                            Salle Marketing
                                         </TableCell>
                                         <TableCell className="flex gap-2">
-                                            <Link>
-                                                <Edit
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
-                                            <Link>
-                                                <Trash
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
+                                             <Link>
+                                            <Edit
+                                                size={20}
+                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                            />
+                                        </Link>
+
+                                        <Link>
+                                            <Trash
+                                                size={20}
+                                                className="cursor-pointer text-red-600 hover:text-red-800"
+                                            />
+                                        </Link>
                                         </TableCell>
                                     </TableRow>
                                    

@@ -101,13 +101,11 @@ const Index = () => {
                         <CardContent>
                             <Table>
                                 <TableHeader>
-                                    <TableRow className='bg-muted'>
+                                    <TableRow className="bg-muted">
                                         <TableHead>Libellé</TableHead>
                                         <TableHead>Date de Début</TableHead>
                                         <TableHead>Date de Fin</TableHead>
-                                        <TableHead >
-                                            Actions
-                                        </TableHead>
+                                        <TableHead>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -118,30 +116,61 @@ const Index = () => {
                                         <TableCell>08/10/25</TableCell>
                                         <TableCell>20/08/25</TableCell>
                                         <TableCell className="flex gap-2">
-                                            <Link><Edit size={24} className='text-gray-500'/></Link>
-                                            <Link><Trash size={24} className='text-gray-500'/></Link>
+                                            <Link>
+                                                <Edit
+                                                    size={24}
+                                                    className="text-gray-500"
+                                                />
+                                            </Link>
+                                            <Link>
+                                                <Trash
+                                                    size={24}
+                                                    className="text-gray-500"
+                                                />
+                                            </Link>
                                         </TableCell>
                                     </TableRow>
-                                     <TableRow>
+                                    <TableRow>
                                         <TableCell className="font-medium">
                                             2024-2025
                                         </TableCell>
                                         <TableCell>08/10/24</TableCell>
                                         <TableCell>20/08/25</TableCell>
                                         <TableCell className="flex gap-2">
-                                            <Link><Edit size={24} className='text-gray-500'/></Link>
-                                            <Link><Trash size={24} className='text-gray-500'/></Link>
+                                            <Link>
+                                                <Edit
+                                                    size={24}
+                                                    className="text-gray-500"
+                                                />
+                                            </Link>
+                                            <Link>
+                                                <Trash
+                                                    size={24}
+                                                    className="text-gray-500"
+                                                />
+                                            </Link>
                                         </TableCell>
                                     </TableRow>
-                                     <TableRow>
+                                    <TableRow>
                                         <TableCell className="font-medium">
                                             2023-2024
                                         </TableCell>
                                         <TableCell>08/10/23</TableCell>
                                         <TableCell>20/08/24</TableCell>
                                         <TableCell className="flex gap-2">
-                                            <Link><Edit size={24} className='text-gray-500'/></Link>
-                                            <Link><Trash size={24} className='text-gray-500'/></Link>
+                                            <Link>
+                                                <Edit
+                                                    size={20}
+                                                    className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                                />
+                                            </Link>
+
+                                            <Link>
+                                                <Trash
+                                                    size={20}
+                                                    className="cursor-pointer text-red-600 hover:text-red-800"
+                                                />
+                                            </Link>
                                         </TableCell>
                                     </TableRow>
                                 </TableBody>
