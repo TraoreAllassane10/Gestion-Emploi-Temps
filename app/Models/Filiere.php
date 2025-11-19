@@ -11,4 +11,8 @@ class Filiere extends Model
     use HasFactory;
 
     protected $fillable = ["nom"];
+
+    public function niveaux() {
+        return $this->hasMany(Niveau::class);
+    }
 }

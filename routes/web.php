@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnneeScolaireController;
 use App\Http\Controllers\FiliereController;
+use App\Http\Controllers\NiveauController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -56,6 +57,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("filiere/{filiere}/edit", "edit")->name("filiere.edit");
         Route::put("filiere/{filiere}/update", "update")->name("filiere.update");
         Route::delete("filiere/{filiere}/delete", "delete")->name("filiere.delete");
+    });
+
+    // Routes Niveau
+    Route::controller(NiveauController::class)->group(function() {
+        Route::get("niveau", "index")->name("niveau");
+        Route::post("niveau", "store")->name("niveau.store");
+        Route::get("niveau/{niveau}/edit", "edit")->name("niveau.edit");
+        Route::put("niveau/{niveau}/update", "update")->name("niveau.update");
+        Route::delete("niveau/{niveau}/delete", "delete")->name("niveau.delete");
     });
 });
 
