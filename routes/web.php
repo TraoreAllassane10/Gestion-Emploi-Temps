@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnneeScolaireController;
+use App\Http\Controllers\FiliereController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -18,9 +19,9 @@ Route::get('/', function () {
 Route::get("/niveau", function () {
     return Inertia::render("niveau/Index");
 })->name("niveau");
-Route::get("/filiere", function () {
-    return Inertia::render("filiere/Index");
-})->name("filiere");
+// Route::get("/filiere", function () {
+//     return Inertia::render("filiere/Index");
+// })->name("filiere");
 Route::get("/professeur", function () {
     return Inertia::render("professeur/Index");
 })->name("professeur");
@@ -46,6 +47,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("annee/{annee}/edit", "edit")->name("annee.edit");
         Route::put("annee/{annee}/update", "update")->name("annee.update");
         Route::delete("annee/{annee}/delete", "delete")->name("annee.delete");
+    });
+
+    //Routes filiere
+    Route::controller(FiliereController::class)->group(function() {
+        Route::get("filiere", "index")->name("filiere");
+        Route::post("filiere", "store")->name("filiere.store");
+        Route::get("filiere/{filiere}/edit", "edit")->name("filiere.edit");
+        Route::put("filiere/{filiere}/update", "update")->name("filiere.update");
+        Route::delete("filiere/{filiere}/delete", "delete")->name("filiere.delete");
     });
 });
 

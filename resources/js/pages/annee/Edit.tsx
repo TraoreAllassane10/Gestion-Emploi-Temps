@@ -90,7 +90,7 @@ const Edit = () => {
                                 type="date"
                                 value={date_debut}
                                 onChange={(e) =>
-                                    setDateDebut(e.currentTarget.value)
+                                    setDateDebut(e.target.value)
                                 }
                             />
                         </div>
@@ -103,7 +103,7 @@ const Edit = () => {
                                 type="date"
                                 value={date_fin}
                                 onChange={(e) =>
-                                    setDateFin(e.currentTarget.value)
+                                    setDateFin(e.target.value)
                                 }
                             />
                         </div>
