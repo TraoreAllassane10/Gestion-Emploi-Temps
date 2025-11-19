@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnneeScolaireController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -11,9 +12,9 @@ Route::get('/', function () {
 })->name('home');
 
 //Routes proivisoire
-Route::get("/annee", function () {
-    return Inertia::render("annee/Index");
-})->name("annee");
+// Route::get("/annee", function () {
+//     return Inertia::render("annee/Index");
+// })->name("annee");
 Route::get("/niveau", function () {
     return Inertia::render("niveau/Index");
 })->name("niveau");
@@ -37,6 +38,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+
+    //Routes annnée scolaire
+    Route::controller(AnneeScolaireController::class)->group(function() {
+        Route::get("annee", "index")->name("annee");
+        Route::post("annee", "store")->name("annee.store");
+        Route::get("annee/{annee}/edit", "edit")->name("annee.edit");
+        Route::put("annee/{annee}/update", "update")->name("annee.update");
+        Route::delete("annee/{annee}/delete", "delete")->name("annee.delete");
+    });
 });
 
 require __DIR__.'/settings.php';

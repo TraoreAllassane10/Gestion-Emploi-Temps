@@ -1,3 +1,4 @@
+import PaginationLinks from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,10 +21,14 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import useAnnee from '@/hooks/useAnnee';
 import AppLayout from '@/layouts/app-layout';
+import { annee } from '@/routes';
 import { BreadcrumbItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Edit, Trash } from 'lucide-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,7 +37,73 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+interface Annee {
+    id: number;
+    libelle: string;
+    date_debut: string;
+    date_fin: string;
+}
+
+interface Meta {
+    current_page: number;
+    from: number;
+    last_page: number;
+    links: {
+        active: boolean;
+        label: string;
+        page: number;
+        url: string;
+    }[];
+}
+
+interface Annees {
+    data: Annee[];
+    meta: Meta;
+}
+
+interface AnneeProps {
+    annees: Annees;
+    [key: string]: unknown;
+}
+
 const Index = () => {
+    const { annees } = usePage<AnneeProps>().props;
+
+    const [libelle, setLibelle] = useState('');
+    const [date_debut, setDateDebut] = useState('');
+    const [date_fin, setDateFin] = useState('');
+
+    const { createAnnee, deleteAnnee } = useAnnee();
+
+    // Enregistrement d'une annee
+    const handleSubmit = () => {
+        // Verification des données
+        if (libelle == '' || date_debut == undefined || date_fin == undefined) {
+            toast.error('Veuillez remplir tous les champs svp !');
+            return;
+        }
+
+        // Creation d'une nouvelle année
+        createAnnee({
+            libelle,
+            date_debut: new Date(date_debut),
+            date_fin: new Date(date_fin),
+        });
+
+        // Nettoye de l'etat du composant
+        setLibelle('');
+        setDateDebut('');
+        setDateFin('');
+
+        //Redirection sur la page d'affiche
+        router.visit(annee());
+    };
+
+    // Suppression d'une année
+    const handleDelete = (id: number) => {
+        if (id) deleteAnnee(id);
+    };
+
     return (
         <div>
             <AppLayout breadcrumbs={breadcrumbs}>
@@ -64,7 +135,12 @@ const Index = () => {
                                         <Label htmlFor="sheet-demo-name">
                                             Libellé
                                         </Label>
-                                        <Input id="sheet-demo-name" />
+                                        <Input
+                                            value={libelle}
+                                            onChange={(e) =>
+                                                setLibelle(e.target.value)
+                                            }
+                                        />
                                     </div>
                                     <div className="grid gap-3">
                                         <Label htmlFor="sheet-demo-username">
@@ -72,7 +148,10 @@ const Index = () => {
                                         </Label>
                                         <Input
                                             type="date"
-                                            id="sheet-demo-username"
+                                            value={date_debut}
+                                            onChange={(e) =>
+                                                setDateDebut(e.target.value)
+                                            }
                                         />
                                     </div>
                                     <div className="grid gap-3">
@@ -81,12 +160,17 @@ const Index = () => {
                                         </Label>
                                         <Input
                                             type="date"
-                                            id="sheet-demo-username"
+                                            value={date_fin}
+                                            onChange={(e) =>
+                                                setDateFin(e.target.value)
+                                            }
                                         />
                                     </div>
                                 </div>
                                 <SheetFooter>
-                                    <Button type="submit">Enregistrer</Button>
+                                    <Button onClick={handleSubmit}>
+                                        Enregistrer
+                                    </Button>
                                     <SheetClose asChild>
                                         <Button variant="outline">
                                             Fermer
@@ -109,72 +193,45 @@ const Index = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow>
-                                        <TableCell className="font-medium">
-                                            2025-2026
-                                        </TableCell>
-                                        <TableCell>08/10/25</TableCell>
-                                        <TableCell>20/08/25</TableCell>
-                                        <TableCell className="flex gap-2">
-                                            <Link>
-                                                <Edit
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
-                                            <Link>
-                                                <Trash
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell className="font-medium">
-                                            2024-2025
-                                        </TableCell>
-                                        <TableCell>08/10/24</TableCell>
-                                        <TableCell>20/08/25</TableCell>
-                                        <TableCell className="flex gap-2">
-                                            <Link>
-                                                <Edit
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
-                                            <Link>
-                                                <Trash
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell className="font-medium">
-                                            2023-2024
-                                        </TableCell>
-                                        <TableCell>08/10/23</TableCell>
-                                        <TableCell>20/08/24</TableCell>
-                                        <TableCell className="flex gap-2">
-                                            <Link>
-                                                <Edit
-                                                    size={20}
-                                                    className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                                />
-                                            </Link>
+                                    {annees?.data.map((annee) => (
+                                        <TableRow key={annee.id}>
+                                            <TableCell className="font-medium">
+                                                {annee.libelle}
+                                            </TableCell>
+                                            <TableCell>
+                                                {annee.date_debut}
+                                            </TableCell>
+                                            <TableCell>
+                                                {annee.date_debut}
+                                            </TableCell>
+                                            <TableCell className="flex gap-2">
+                                                <Link
+                                                    href={`annee/${annee.id}/edit`}
+                                                >
+                                                    <Edit
+                                                        size={20}
+                                                        className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                                    />
+                                                </Link>
 
-                                            <Link>
-                                                <Trash
-                                                    size={20}
-                                                    className="cursor-pointer text-red-600 hover:text-red-800"
-                                                />
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
+                                                <Link
+                                                    onClick={() =>
+                                                        handleDelete(annee.id)
+                                                    }
+                                                >
+                                                    <Trash
+                                                        size={20}
+                                                        className="cursor-pointer text-red-600 hover:text-red-800"
+                                                    />
+                                                </Link>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
                                 </TableBody>
                             </Table>
+
+                            {/* Systeme de pagination */}
+                            <PaginationLinks links={annees.meta.links} />
                         </CardContent>
                     </Card>
                 </div>
