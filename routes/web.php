@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnneeScolaireController;
+use App\Http\Controllers\CoursController;
 use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\NiveauController;
 use App\Http\Controllers\ProfesseurController;
@@ -31,7 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     //Routes annnée scolaire
-    Route::controller(AnneeScolaireController::class)->group(function() {
+    Route::controller(AnneeScolaireController::class)->group(function () {
         Route::get("annee", "index")->name("annee");
         Route::post("annee", "store")->name("annee.store");
         Route::get("annee/{annee}/edit", "edit")->name("annee.edit");
@@ -40,7 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     //Routes filiere
-    Route::controller(FiliereController::class)->group(function() {
+    Route::controller(FiliereController::class)->group(function () {
         Route::get("filiere", "index")->name("filiere");
         Route::post("filiere", "store")->name("filiere.store");
         Route::get("filiere/{filiere}/edit", "edit")->name("filiere.edit");
@@ -49,7 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Routes Niveau
-    Route::controller(NiveauController::class)->group(function() {
+    Route::controller(NiveauController::class)->group(function () {
         Route::get("niveau", "index")->name("niveau");
         Route::post("niveau", "store")->name("niveau.store");
         Route::get("niveau/{niveau}/edit", "edit")->name("niveau.edit");
@@ -57,8 +58,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete("niveau/{niveau}/delete", "delete")->name("niveau.delete");
     });
 
-     // Routes Professeur
-    Route::controller(ProfesseurController::class)->group(function() {
+    // Routes Professeur
+    Route::controller(ProfesseurController::class)->group(function () {
         Route::get("professeur", "index")->name("professeur");
         Route::post("professeur", "store")->name("professeur.store");
         Route::get("professeur/{professeur}/edit", "edit")->name("professeur.edit");
@@ -67,13 +68,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     //Routes salle
-    Route::controller(SalleController::class)->group(function() {
+    Route::controller(SalleController::class)->group(function () {
         Route::get("salle", "index")->name("salle");
         Route::post("salle", "store")->name("salle.store");
         Route::get("salle/{salle}/edit", "edit")->name("salle.edit");
         Route::put("salle/{salle}/update", "update")->name("salle.update");
         Route::delete("salle/{salle}/delete", "delete")->name("salle.delete");
     });
+
+    //Routes cours
+    Route::controller(CoursController::class)->group(function () {
+        Route::get("cours", "index")->name("cours");
+        Route::post("cours", "store")->name("cours.store");
+        Route::get("cours/{cours}/edit", "edit")->name("cours.edit");
+        Route::put("cours/{cours}/update", "update")->name("cours.update");
+        Route::delete("cours/{cours}/delete", "delete")->name("cours.delete");
+    });
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

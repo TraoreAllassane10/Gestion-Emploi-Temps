@@ -11,4 +11,8 @@ class Professeur extends Model
     use HasFactory;
 
     protected $fillable = ["nom", "prenom", "email", "telephone"];
+
+    public function cours () {
+        return $this->hasMany(Cours::class);
+    }
 }
