@@ -6,6 +6,7 @@ use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\NiveauController;
 use App\Http\Controllers\ProfesseurController;
 use App\Http\Controllers\SalleController;
+use App\Http\Controllers\SeanceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -16,15 +17,6 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-//Routes proivisoire
-
-Route::get("/cours", function () {
-    return Inertia::render("cours/Index");
-})->name("cours");
-
-Route::get("/seance", function () {
-    return Inertia::render("seance/Index");
-})->name("seance");
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
@@ -83,6 +75,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("cours/{cours}/edit", "edit")->name("cours.edit");
         Route::put("cours/{cours}/update", "update")->name("cours.update");
         Route::delete("cours/{cours}/delete", "delete")->name("cours.delete");
+    });
+
+     //Routes seance
+    Route::controller(SeanceController::class)->group(function () {
+        Route::get("seance", "index")->name("seance");
+        Route::post("seance", "store")->name("seance.store");
+        Route::get("seance/{seance}/edit", "edit")->name("seance.edit");
+        Route::put("seance/{seance}/update", "update")->name("seance.update");
+        Route::delete("seance/{seance}/delete", "delete")->name("seance.delete");
     });
 });
 

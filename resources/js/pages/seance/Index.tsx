@@ -1,3 +1,4 @@
+import PaginationLinks from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -23,10 +24,13 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import useSeance from '@/hooks/useSeance';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Edit, Trash } from 'lucide-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -35,7 +39,129 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+interface Data {
+    id: number;
+    jours: string;
+    heure_debut: string;
+    heure_fin: string;
+    professeur: Professeur;
+    cours: Cours;
+    salle: Salle;
+    niveau: Niveau;
+}
+
+interface Meta {
+    current_page: number;
+    from: number;
+    last_page: number;
+    links: {
+        active: boolean;
+        label: string;
+        page: number;
+        url: string;
+    }[];
+}
+
+interface Seance {
+    data: Data[];
+    meta: Meta;
+}
+
+// Type des données du professeur
+interface Professeur {
+    id: number;
+    nom: string;
+    prenom: string;
+}
+
+interface Cours {
+    id: number;
+    nom: string;
+}
+
+interface Salle {
+    id: number;
+    nom: string;
+}
+
+interface Niveau {
+    id: number;
+    nom: string;
+}
+
+interface SeanceProps {
+    seances: Seance;
+    professeurs: {
+        data: Professeur[];
+    };
+     cours: {
+        data: Cours[];
+    };
+     salles: {
+        data: Salle[];
+    };
+     niveaux: {
+        data: Niveau[];
+    };
+    [key: string]: unknown;
+}
+
+
 const Index = () => {
+    const { seances, professeurs, cours, salles, niveaux } = usePage<SeanceProps>().props;
+
+    const [jours, setJours] = useState('');
+    const [heure_debut, setHeureDebut] = useState('');
+    const [heure_fin, setHeureFin] = useState('');
+    const [cours_id, setCoursId] = useState('');
+    const [professeur_id, setProfesseurId] = useState('');
+    const [salle_id, setSalleId] = useState('');
+    const [niveau_id, setNiveauId] = useState('');
+
+    const { createSeance, deleteSeance } = useSeance();
+
+    // Enregistrement d'un cours
+    const handleSubmit = () => {
+        // Verification des données
+        if (
+            jours == '' ||
+            heure_debut == '' ||
+            heure_fin == '' ||
+            professeur_id == '' ||
+            cours_id == '' ||
+            salle_id == '' ||
+            niveau_id == ''
+        ) {
+            toast.error('Veuillez remplir tous les champs!');
+            return;
+        }
+
+        // Création d'une seance
+        createSeance({
+            jours,
+            heure_debut,
+            heure_fin,
+            professeur_id,
+            cours_id,
+            niveau_id,
+            salle_id,
+        });
+
+        // Nettoyage de l'etat
+        setJours('');
+        setHeureDebut('');
+        setHeureFin('');
+        setProfesseurId('');
+        setCoursId('');
+        setSalleId('');
+        setNiveauId('');
+    };
+
+    // Suppression d'une
+    const handleDelete = (id: number) => {
+        if (id) deleteSeance(id);
+    };
+
     return (
         <div>
             <AppLayout breadcrumbs={breadcrumbs}>
@@ -56,29 +182,30 @@ const Index = () => {
                             <SheetContent>
                                 <SheetHeader>
                                     <SheetTitle>Nouvelle séance</SheetTitle>
-                                    {/* <SheetDescription>
-                                        Ajouter une nouvelle séance
-                                    </SheetDescription> */}
                                 </SheetHeader>
                                 <div className="grid flex-1 auto-rows-min gap-6 px-4">
                                     <div className="grid gap-3">
                                         <Label htmlFor="sheet-demo-name">
                                             Niveau
                                         </Label>
-                                        <NativeSelect className="w-full">
-                                            <NativeSelectOption value=""></NativeSelectOption>
+                                        <NativeSelect
+                                            className="w-full"
+                                            value={niveau_id}
+                                            onChange={(e) =>
+                                                setNiveauId(e.target.value)
+                                            }
+                                        >
                                             <NativeSelectOption value="">
-                                                IDA 1
+                                                {' '}
                                             </NativeSelectOption>
-                                            <NativeSelectOption value="">
-                                                IDA 2
-                                            </NativeSelectOption>
-                                            <NativeSelectOption value="todo">
-                                                Licence 1 FCGE
-                                            </NativeSelectOption>
-                                            <NativeSelectOption value="in-progress">
-                                                Licence 2 FCGE
-                                            </NativeSelectOption>
+
+                                            {niveaux.data.map((niveau) => (
+                                                <NativeSelectOption
+                                                    value={niveau.id}
+                                                >
+                                                    {niveau.nom}
+                                                </NativeSelectOption>
+                                            ))}
                                         </NativeSelect>
                                     </div>
 
@@ -86,14 +213,24 @@ const Index = () => {
                                         <Label htmlFor="sheet-demo-name">
                                             Cours
                                         </Label>
-                                        <NativeSelect className="w-full">
-                                            <NativeSelectOption value=""></NativeSelectOption>
+                                        <NativeSelect
+                                            className="w-full"
+                                            value={cours_id}
+                                            onChange={(e) =>
+                                                setCoursId(e.target.value)
+                                            }
+                                        >
                                             <NativeSelectOption value="">
-                                                Merise
+                                                {' '}
                                             </NativeSelectOption>
-                                            <NativeSelectOption value="">
-                                                Algorithme
-                                            </NativeSelectOption>
+
+                                            {cours.data.map((cours) => (
+                                                <NativeSelectOption
+                                                    value={cours.id}
+                                                >
+                                                    {cours.nom}
+                                                </NativeSelectOption>
+                                            ))}
                                         </NativeSelect>
                                     </div>
 
@@ -101,17 +238,27 @@ const Index = () => {
                                         <Label htmlFor="sheet-demo-name">
                                             Professeur
                                         </Label>
-                                        <NativeSelect className="w-full">
-                                            <NativeSelectOption value=""></NativeSelectOption>
+                                        <NativeSelect
+                                            className="w-full"
+                                            value={professeur_id}
+                                            onChange={(e) =>
+                                                setProfesseurId(e.target.value)
+                                            }
+                                        >
                                             <NativeSelectOption value="">
-                                                Traore Allassane
+                                                {' '}
                                             </NativeSelectOption>
-                                            <NativeSelectOption value="todo">
-                                                Kone Ibrahim
-                                            </NativeSelectOption>
-                                            <NativeSelectOption value="in-progress">
-                                                Kouassi Jean
-                                            </NativeSelectOption>
+
+                                            {professeurs.data.map(
+                                                (professeur) => (
+                                                    <NativeSelectOption
+                                                        value={professeur.id}
+                                                    >
+                                                        {professeur.nom}{' '}
+                                                        {professeur.prenom}
+                                                    </NativeSelectOption>
+                                                ),
+                                            )}
                                         </NativeSelect>
                                     </div>
 
@@ -119,17 +266,24 @@ const Index = () => {
                                         <Label htmlFor="sheet-demo-name">
                                             Salle
                                         </Label>
-                                        <NativeSelect className="w-full">
-                                            <NativeSelectOption value=""></NativeSelectOption>
+                                        <NativeSelect
+                                            className="w-full"
+                                            value={salle_id}
+                                            onChange={(e) =>
+                                                setSalleId(e.target.value)
+                                            }
+                                        >
                                             <NativeSelectOption value="">
-                                                Salle Marketing
+                                                {' '}
                                             </NativeSelectOption>
-                                            <NativeSelectOption value="todo">
-                                                Salle Compta
-                                            </NativeSelectOption>
-                                            <NativeSelectOption value="in-progress">
-                                                Salle Info
-                                            </NativeSelectOption>
+
+                                            {salles.data.map((salle) => (
+                                                <NativeSelectOption
+                                                    value={salle.id}
+                                                >
+                                                    {salle.nom}
+                                                </NativeSelectOption>
+                                            ))}
                                         </NativeSelect>
                                     </div>
 
@@ -137,16 +291,34 @@ const Index = () => {
                                         <Label htmlFor="sheet-demo-name">
                                             Jour
                                         </Label>
-                                        <NativeSelect className="w-full">
+                                        <NativeSelect
+                                            className="w-full"
+                                            value={jours}
+                                            onChange={(e) =>
+                                                setJours(e.target.value)
+                                            }
+                                        >
                                             <NativeSelectOption value=""></NativeSelectOption>
-                                            <NativeSelectOption value="">
+                                            <NativeSelectOption value="Lundi">
                                                 Lundi
                                             </NativeSelectOption>
-                                            <NativeSelectOption value="todo">
+                                            <NativeSelectOption value="Mardi">
                                                 Mardi
                                             </NativeSelectOption>
-                                            <NativeSelectOption value="in-progress">
+                                            <NativeSelectOption value="Mercredi">
                                                 Mercredi
+                                            </NativeSelectOption>
+                                            <NativeSelectOption value="Jeudi">
+                                                Jeudi
+                                            </NativeSelectOption>
+                                            <NativeSelectOption value="Vendredi">
+                                                Vendredi
+                                            </NativeSelectOption>
+                                            <NativeSelectOption value="Samedi">
+                                                Samedi
+                                            </NativeSelectOption>
+                                            <NativeSelectOption value="Dimanche">
+                                                Dimanche
                                             </NativeSelectOption>
                                         </NativeSelect>
                                     </div>
@@ -158,7 +330,12 @@ const Index = () => {
                                             </Label>
                                             <Input
                                                 type="time"
-                                                id="sheet-demo-name"
+                                                value={heure_debut}
+                                                onChange={(e) =>
+                                                    setHeureDebut(
+                                                        e.target.value,
+                                                    )
+                                                }
                                             />
                                         </div>
 
@@ -168,13 +345,21 @@ const Index = () => {
                                             </Label>
                                             <Input
                                                 type="time"
-                                                id="sheet-demo-name"
+                                                value={heure_fin}
+                                                onChange={(e) =>
+                                                    setHeureFin(e.target.value)
+                                                }
                                             />
                                         </div>
                                     </div>
                                 </div>
                                 <SheetFooter>
-                                    <Button type="submit">Enregistrer</Button>
+                                    <Button
+                                        onClick={handleSubmit}
+                                        className="cursor-pointer"
+                                    >
+                                        Enregistrer
+                                    </Button>
                                     <SheetClose asChild>
                                         <Button variant="outline">
                                             Fermer
@@ -217,84 +402,58 @@ const Index = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow>
-                                        <TableCell className="font-medium">
-                                            Samedi
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            07h30
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            17h15
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            Merise
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            M.Traore Allassane
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            Salle Info
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            IDA 2
-                                        </TableCell>
-                                        <TableCell className="flex gap-2">
-                                            <Link>
-                                                <Edit
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
-                                            <Link>
-                                                <Trash
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell className="font-medium">
-                                            Dimanche
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            07h30
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            17h15
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            Merise
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            M.Traore Allassane
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            Salle Info
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            IDA 2
-                                        </TableCell>
-                                        <TableCell className="flex gap-2">
-                                            <Link>
-                                            <Edit
-                                                size={20}
-                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                            />
-                                        </Link>
+                                    {seances?.data.map((seance) => (
+                                        <TableRow key={seance.id}>
+                                            <TableCell className="font-medium">
+                                                {seance.jours}
+                                            </TableCell>
+                                            <TableCell className="font-medium">
+                                                {seance.heure_debut}
+                                            </TableCell>
+                                            <TableCell className="font-medium">
+                                                {seance.heure_fin}
+                                            </TableCell>
+                                            <TableCell className="font-medium">
+                                                {seance.cours?.nom}
+                                            </TableCell>
+                                            <TableCell className="font-medium">
+                                                {seance.professeur?.nom}{' '}
+                                                {seance.professeur?.prenom}
+                                            </TableCell>
+                                            <TableCell className="font-medium">
+                                                {seance.salle?.nom}
+                                            </TableCell>
+                                            <TableCell className="font-medium">
+                                                {seance.niveau?.nom}
+                                            </TableCell>
+                                            <TableCell className="flex gap-2">
+                                                <Link
+                                                    href={`/seance/${seance.id}/edit`}
+                                                >
+                                                    <Edit
+                                                        size={20}
+                                                        className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                                    />
+                                                </Link>
 
-                                        <Link>
-                                            <Trash
-                                                size={20}
-                                                className="cursor-pointer text-red-600 hover:text-red-800"
-                                            />
-                                        </Link>
-                                        </TableCell>
-                                    </TableRow>
+                                                <Link
+                                                    onClick={() =>
+                                                        handleDelete(seance.id)
+                                                    }
+                                                >
+                                                    <Trash
+                                                        size={20}
+                                                        className="cursor-pointer text-red-600 hover:text-red-800"
+                                                    />
+                                                </Link>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
                                 </TableBody>
                             </Table>
                         </CardContent>
+
+                        <PaginationLinks links={seances.meta.links} />
                     </Card>
                 </div>
             </AppLayout>
