@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnneeScolaireController;
 use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\NiveauController;
+use App\Http\Controllers\ProfesseurController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -14,18 +15,7 @@ Route::get('/', function () {
 })->name('home');
 
 //Routes proivisoire
-// Route::get("/annee", function () {
-//     return Inertia::render("annee/Index");
-// })->name("annee");
-Route::get("/niveau", function () {
-    return Inertia::render("niveau/Index");
-})->name("niveau");
-// Route::get("/filiere", function () {
-//     return Inertia::render("filiere/Index");
-// })->name("filiere");
-Route::get("/professeur", function () {
-    return Inertia::render("professeur/Index");
-})->name("professeur");
+
 Route::get("/cours", function () {
     return Inertia::render("cours/Index");
 })->name("cours");
@@ -66,6 +56,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("niveau/{niveau}/edit", "edit")->name("niveau.edit");
         Route::put("niveau/{niveau}/update", "update")->name("niveau.update");
         Route::delete("niveau/{niveau}/delete", "delete")->name("niveau.delete");
+    });
+
+     // Routes Professeur
+    Route::controller(ProfesseurController::class)->group(function() {
+        Route::get("professeur", "index")->name("professeur");
+        Route::post("professeur", "store")->name("professeur.store");
+        Route::get("professeur/{professeur}/edit", "edit")->name("professeur.edit");
+        Route::put("professeur/{professeur}/update", "update")->name("professeur.update");
+        Route::delete("professeur/{professeur}/delete", "delete")->name("professeur.delete");
     });
 });
 

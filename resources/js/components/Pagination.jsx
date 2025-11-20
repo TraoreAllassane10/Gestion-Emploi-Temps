@@ -53,7 +53,7 @@ const PaginationLinks = ({ links }) => {
                                 <PaginationLink
                                     href={link.url || '#'}
                                     isActive={link.active}
-                                    className={`${link.active && 'bg-red-500 text-white'}`}
+                                    className={`${link.active && 'bg-red-500 text-white'} text-sm`}
                                     onClick={(e) => {
                                         e.preventDefault();
                                         if (link.url) router.visit(link.url);

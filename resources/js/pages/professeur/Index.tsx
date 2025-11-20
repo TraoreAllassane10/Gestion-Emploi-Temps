@@ -1,3 +1,4 @@
+import PaginationLinks from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,10 +21,13 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import useProfesseur from '@/hooks/useProfesseur';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Edit, Trash } from 'lucide-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,7 +36,69 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+interface Data {
+    id: number;
+    nom: string;
+    prenom: string;
+    email: string;
+    telephone: string;
+}
+
+interface Meta {
+    current_page: number;
+    from: number;
+    last_page: number;
+    links: {
+        active: boolean;
+        label: string;
+        page: number;
+        url: string;
+    }[];
+}
+
+interface Professeur {
+    data: Data[];
+    meta: Meta;
+}
+
+interface ProfesseurProps {
+    professeurs: Professeur;
+    [key: string]: unknown;
+}
+
 const Index = () => {
+    const { professeurs } = usePage<ProfesseurProps>().props;
+
+    const [nom, setNom] = useState('');
+    const [prenom, setPrenom] = useState('');
+    const [email, setEmail] = useState('');
+    const [telephone, setTelephone] = useState('');
+
+    const { createProfesseur, deleteProfesseur } = useProfesseur();
+
+    // Enregistrement d'un professeur
+    const handleSubmit = () => {
+        // Verification des données
+        if (nom == '' || prenom == '' || email == '' || telephone == '') {
+            toast.error('Veuillez remplir tous les champs!');
+            return;
+        }
+
+        // Création d'un professeur
+        createProfesseur({ nom, prenom, email, telephone });
+
+        // Nettoyage de l'etat
+        setNom('');
+        setPrenom('');
+        setEmail('');
+        setTelephone('');
+    };
+
+    // Suppression d'un professeur
+    const handleDelete = (id: number) => {
+        if (id) deleteProfesseur(id);
+    };
+
     return (
         <div>
             <AppLayout breadcrumbs={breadcrumbs}>
@@ -62,38 +128,55 @@ const Index = () => {
                                         <Label htmlFor="sheet-demo-name">
                                             Nom
                                         </Label>
-                                        <Input id="sheet-demo-name" />
+                                        <Input
+                                            value={nom}
+                                            onChange={(e) =>
+                                                setNom(e.target.value)
+                                            }
+                                        />
                                     </div>
 
                                     <div className="grid gap-3">
                                         <Label htmlFor="sheet-demo-name">
                                             Prenom
                                         </Label>
-                                        <Input id="sheet-demo-name" />
+                                        <Input
+                                            value={prenom}
+                                            onChange={(e) =>
+                                                setPrenom(e.target.value)
+                                            }
+                                        />
                                     </div>
 
                                     <div className="grid gap-3">
                                         <Label htmlFor="sheet-demo-name">
                                             Email
                                         </Label>
-                                        <Input id="sheet-demo-name" />
+                                        <Input
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) =>
+                                                setEmail(e.target.value)
+                                            }
+                                        />
                                     </div>
 
                                     <div className="grid gap-3">
                                         <Label htmlFor="sheet-demo-name">
                                             Telephone
                                         </Label>
-                                        <Input id="sheet-demo-name" />
-                                    </div>
-                                        <div className="grid gap-3">
-                                        <Label htmlFor="sheet-demo-name">
-                                            Discipline Enseigné
-                                        </Label>
-                                        <Input id="sheet-demo-name" />
+                                        <Input
+                                            value={telephone}
+                                            onChange={(e) =>
+                                                setTelephone(e.target.value)
+                                            }
+                                        />
                                     </div>
                                 </div>
                                 <SheetFooter>
-                                    <Button type="submit">Enregistrer</Button>
+                                    <Button onClick={handleSubmit}>
+                                        Enregistrer
+                                    </Button>
                                     <SheetClose asChild>
                                         <Button variant="outline">
                                             Fermer
@@ -113,108 +196,55 @@ const Index = () => {
                                         <TableHead>Prenom</TableHead>
                                         <TableHead>Email</TableHead>
                                         <TableHead>Télephone</TableHead>
-                                        <TableHead>Discipline</TableHead>
+
                                         <TableHead>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow>
-                                        <TableCell className="font-medium">
-                                            Traore 
-                                        </TableCell>
-                                          <TableCell className="font-medium">
-                                             Allassane
-                                        </TableCell>
-                                         <TableCell className="font-medium">
-                                             Allassane@gmail.com
-                                        </TableCell>
-                                         <TableCell className="font-medium">
-                                             0564639933
-                                        </TableCell>
-                                         <TableCell className="font-medium">
-                                             Engenerie Backend
-                                        </TableCell>
-                                        <TableCell className="flex gap-2">
-                                            <Link>
-                                                <Edit
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
-                                            <Link>
-                                                <Trash
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                      <TableCell className="font-medium">
-                                            Kouassi
-                                        </TableCell>
-                                          <TableCell className="font-medium">
-                                             Jean
-                                        </TableCell>
-                                         <TableCell className="font-medium">
-                                             jean@gmail.com
-                                        </TableCell>
-                                         <TableCell className="font-medium">
-                                             0708036954
-                                        </TableCell>
-                                         <TableCell className="font-medium">
-                                             Merise
-                                        </TableCell>
-                                        <TableCell className="flex gap-2">
-                                            <Link>
-                                                <Edit
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
-                                            <Link>
-                                                <Trash
-                                                    size={24}
-                                                    className="text-gray-500"
-                                                />
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                      <TableCell className="font-medium">
-                                            Kone
-                                        </TableCell>
-                                          <TableCell className="font-medium">
-                                             Ibrahim
-                                        </TableCell>
-                                         <TableCell className="font-medium">
-                                             ibrahim@gmail.com
-                                        </TableCell>
-                                         <TableCell className="font-medium">
-                                             0506874596
-                                        </TableCell>
-                                         <TableCell className="font-medium">
-                                             Algorithmique
-                                        </TableCell>
-                                        <TableCell className="flex gap-2">
-                                            <Link>
-                                            <Edit
-                                                size={20}
-                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                            />
-                                        </Link>
+                                    {professeurs?.data.map((prof) => (
+                                        <TableRow key={prof.id}>
+                                            <TableCell className="font-medium">
+                                                {prof.nom}
+                                            </TableCell>
+                                            <TableCell className="font-medium">
+                                                {prof.prenom}
+                                            </TableCell>
+                                            <TableCell className="font-medium">
+                                                {prof.email}
+                                            </TableCell>
+                                            <TableCell className="font-medium">
+                                                {prof.telephone}
+                                            </TableCell>
 
-                                        <Link>
-                                            <Trash
-                                                size={20}
-                                                className="cursor-pointer text-red-600 hover:text-red-800"
-                                            />
-                                        </Link>
-                                        </TableCell>
-                                    </TableRow>
+                                            <TableCell className="flex gap-2">
+                                                <Link
+                                                    href={`professeur/${prof.id}/edit`}
+                                                >
+                                                    <Edit
+                                                        size={20}
+                                                        className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                                    />
+                                                </Link>
+
+                                                <Link
+                                                    onClick={() =>
+                                                        handleDelete(prof.id)
+                                                    }
+                                                >
+                                                    <Trash
+                                                        size={20}
+                                                        className="cursor-pointer text-red-600 hover:text-red-800"
+                                                    />
+                                                </Link>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
                                 </TableBody>
                             </Table>
                         </CardContent>
+
+                        {/* Systeme de pagination */}
+                        <PaginationLinks links={professeurs.meta.links} />
                     </Card>
                 </div>
             </AppLayout>
