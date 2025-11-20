@@ -4,6 +4,7 @@ use App\Http\Controllers\AnneeScolaireController;
 use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\NiveauController;
 use App\Http\Controllers\ProfesseurController;
+use App\Http\Controllers\SalleController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -19,9 +20,7 @@ Route::get('/', function () {
 Route::get("/cours", function () {
     return Inertia::render("cours/Index");
 })->name("cours");
-Route::get("/salle", function () {
-    return Inertia::render("salle/Index");
-})->name("salle");
+
 Route::get("/seance", function () {
     return Inertia::render("seance/Index");
 })->name("seance");
@@ -65,6 +64,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("professeur/{professeur}/edit", "edit")->name("professeur.edit");
         Route::put("professeur/{professeur}/update", "update")->name("professeur.update");
         Route::delete("professeur/{professeur}/delete", "delete")->name("professeur.delete");
+    });
+
+    //Routes salle
+    Route::controller(SalleController::class)->group(function() {
+        Route::get("salle", "index")->name("salle");
+        Route::post("salle", "store")->name("salle.store");
+        Route::get("salle/{salle}/edit", "edit")->name("salle.edit");
+        Route::put("salle/{salle}/update", "update")->name("salle.update");
+        Route::delete("salle/{salle}/delete", "delete")->name("salle.delete");
     });
 });
 

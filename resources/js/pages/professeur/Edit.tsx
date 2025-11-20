@@ -72,7 +72,7 @@ const Edit = () => {
             <AppLayout breadcrumbs={breadcrumbs}>
                 <div className="p-4">
                     <h1 className="mb-6 text-xl font-semibold">
-                        Modification d'une filière
+                        Modification d'un professeur
                     </h1>
 
                     <form action="" className="space-y-6">

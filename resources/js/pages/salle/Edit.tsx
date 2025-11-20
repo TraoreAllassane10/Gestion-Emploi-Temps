@@ -1,18 +1,17 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import useAnnee from '@/hooks/useAnnee';
-import useFiliere from '@/hooks/useFiliere';
+import useSalle from '@/hooks/useSalle';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { router, usePage } from '@inertiajs/react';
+import {  usePage } from '@inertiajs/react';
 import { FormEvent, useState } from 'react';
 import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Filiere',
-        href: '/filiere',
+        title: 'Salle',
+        href: '/salle',
     },
     {
         title: 'Modification',
@@ -20,36 +19,36 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface Filiere {
+interface Salle {
     id: number;
     nom: string;
 }
 
-interface FiliereProps {
-    filiere: Filiere;
+interface salleProps {
+    salle: Salle;
     [key: string] : unknown;
 }
 
 const Edit = () => {
-    const { filiere } = usePage<FiliereProps>().props;
+    const { salle } = usePage<salleProps>().props;
 
-    const [nom, setNom] = useState(filiere.nom);
+    const [nom, setNom] = useState(salle.nom);
 
-    const {updateFiliere} = useFiliere();
+    const {updateSalle} = useSalle();
 
-    // Mise à jour d'une filiere
+    // Mise à jour d'une salee
     const handleUpdate = (e: FormEvent) => {
 
         e.preventDefault();
 
          // Verification des données
         if (nom == '') {
-            toast.error('Veuillez entrer le nom de la filière!');
+            toast.error('Veuillez entrer le nom de la salle!');
             return;
         }
 
-        // modification d'une salle
-        updateFiliere(filiere.id, {
+        // modification d'une  salle
+        updateSalle(salle.id, {
             nom
         });
 
@@ -62,12 +61,12 @@ const Edit = () => {
             <AppLayout breadcrumbs={breadcrumbs}>
                 <div className="p-4">
 
-                    <h1 className='text-xl font-semibold mb-6'>Modification d'une filière</h1>
+                    <h1 className='text-xl font-semibold mb-6'>Modification d'une Salle</h1>
 
                     <form action="" className="space-y-6">
                         <div className="flex flex-col gap-4">
                             <Label className="text-md font-semibold">
-                                Nom de la filière
+                                Nom de la salle
                             </Label>
                             <Input
                                 value={nom}
