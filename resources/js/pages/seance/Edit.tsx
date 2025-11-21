@@ -26,6 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 interface Seance {
     id: string;
     jours: string;
+    date: string;
     heure_debut: string;
     heure_fin: string;
     professeur_id: string;
@@ -78,6 +79,7 @@ const Edit = () => {
         usePage<SeanceProps>().props;
 
     const [jours, setJours] = useState(seance.jours);
+    const [date, setDate] = useState(seance.date);
     const [heure_debut, setHeureDebut] = useState(seance.heure_debut);
     const [heure_fin, setHeureFin] = useState(seance.heure_fin);
     const [cours_id, setCoursId] = useState(seance.cours_id);
@@ -118,6 +120,7 @@ const Edit = () => {
         // modification d'une seance
         updateSeance(seance.id, {
             jours,
+            date,
             heure_debut,
             heure_fin,
             professeur_id,
@@ -162,6 +165,11 @@ const Edit = () => {
                                     </NativeSelectOption>
                                 ))}
                             </NativeSelect>
+                        </div>
+
+                        <div className="grid gap-3">
+                            <Label htmlFor="sheet-demo-name">Date du programme</Label>
+                            <Input type='date' value={date} onChange={(e) => setDate(e.target.value)} />
                         </div>
 
                         <div className="flex flex-col gap-4">

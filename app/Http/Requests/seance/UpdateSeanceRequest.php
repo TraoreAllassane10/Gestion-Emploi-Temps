@@ -23,6 +23,7 @@ class UpdateSeanceRequest extends FormRequest
     {
         return [
             "jours" => "required|string",
+            "date" => "required",
             "heure_debut" => "required|before:heure_fin",
             "heure_fin" => "required|after:heure_debut",
             "cours_id" => "required",

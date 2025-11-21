@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('seances', function (Blueprint $table) {
             $table->id();
             $table->string("jours");
+            $table->timestamp("date");
             $table->time("heure_debut");
             $table->time("heure_fin");
             $table->foreignId("cours_id")->constrained()->onDelete("cascade");

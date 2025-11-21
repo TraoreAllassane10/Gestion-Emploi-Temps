@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 
 interface Data {
     jours: string;
+    date: string;
     heure_debut: string;
     heure_fin: string;
     professeur_id: string;

@@ -10,7 +10,11 @@ class Seance extends Model
     /** @use HasFactory<\Database\Factories\SeanceFactory> */
     use HasFactory;
 
-    protected $fillable = ["jours", "heure_debut", "heure_fin", "cours_id", "professeur_id", "salle_id", "niveau_id", "annee_scolaire_id"];
+    protected $fillable = ["jours", "date", "heure_debut", "heure_fin", "cours_id", "professeur_id", "salle_id", "niveau_id", "annee_scolaire_id"];
+
+    // protected $casts = [
+    //   "date" =>
+    // ];
 
     protected $with = ["cours", "professeur", "salle", "niveau"];
 

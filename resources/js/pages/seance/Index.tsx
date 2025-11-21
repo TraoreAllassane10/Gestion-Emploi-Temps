@@ -29,6 +29,7 @@ import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { Edit, Search, Trash } from 'lucide-react';
+import { format } from 'path';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -42,6 +43,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 interface Data {
     id: number;
     jours: string;
+    date: string;
     heure_debut: string;
     heure_fin: string;
     professeur: Professeur;
@@ -111,6 +113,7 @@ const Index = () => {
         usePage<SeanceProps>().props;
 
     const [jours, setJours] = useState('');
+    const [date, setDate] = useState("");
     const [heure_debut, setHeureDebut] = useState('');
     const [heure_fin, setHeureFin] = useState('');
     const [cours_id, setCoursId] = useState('');
@@ -130,6 +133,7 @@ const Index = () => {
         // Verification des données
         if (
             jours == '' ||
+            date == '' ||
             heure_debut == '' ||
             heure_fin == '' ||
             professeur_id == '' ||
@@ -144,6 +148,7 @@ const Index = () => {
         // Création d'une seance
         createSeance({
             jours,
+            date,
             heure_debut,
             heure_fin,
             professeur_id,
@@ -154,6 +159,7 @@ const Index = () => {
 
         // Nettoyage de l'etat
         setJours('');
+        setDate('');
         setHeureDebut('');
         setHeureFin('');
         setProfesseurId('');
@@ -301,8 +307,9 @@ const Index = () => {
                                         </NativeSelect>
                                     </div>
 
-                                    <div className="grid gap-3">
-                                        <Label htmlFor="sheet-demo-name">
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <Label htmlFor="sheet-demo-name">
                                             Jour
                                         </Label>
                                         <NativeSelect
@@ -335,6 +342,12 @@ const Index = () => {
                                                 Dimanche
                                             </NativeSelectOption>
                                         </NativeSelect>
+                                        </div>
+
+                                        <div>
+                                            <Label>Date du programme</Label>
+                                            <Input type='date' value={date} onChange={(e) => setDate(e.target.value)}/>
+                                        </div>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-3">
@@ -472,6 +485,9 @@ const Index = () => {
                                         <TableHead className="font-semibold">
                                             Jour
                                         </TableHead>
+                                         <TableHead className="font-semibold">
+                                            Date
+                                        </TableHead>
                                         <TableHead className="font-semibold">
                                             Début
                                         </TableHead>
@@ -500,6 +516,9 @@ const Index = () => {
                                         <TableRow key={seance.id}>
                                             <TableCell className="font-medium">
                                                 {seance.jours}
+                                            </TableCell>
+                                              <TableCell className="font-medium">
+                                                {new Date(seance.date).toLocaleDateString("fr-FR")}
                                             </TableCell>
                                             <TableCell className="font-medium">
                                                 {seance.heure_debut}
