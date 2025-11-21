@@ -1,10 +1,11 @@
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import useAnnee from '@/hooks/useAnnee';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { router, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { FormEvent, useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -28,7 +29,7 @@ interface Annee {
 
 interface AnneeProps {
     annee: Annee;
-    [key: string] : unknown;
+    [key: string]: unknown;
 }
 
 const Edit = () => {
@@ -38,14 +39,13 @@ const Edit = () => {
     const [date_debut, setDateDebut] = useState(annee.date_debut);
     const [date_fin, setDateFin] = useState(annee.date_fin);
 
-    const {updateAnnee} = useAnnee();
+    const { updateAnnee } = useAnnee();
 
     // Mise à jour d'une annné
     const handleUpdate = (e: FormEvent) => {
-
         e.preventDefault();
 
-         // Verification des données
+        // Verification des données
         if (libelle == '' || date_debut == undefined || date_fin == undefined) {
             toast.error('Veuillez remplir tous les champs svp !');
             return;
@@ -62,56 +62,60 @@ const Edit = () => {
         setLibelle('');
         setDateDebut('');
         setDateFin('');
-    }
+    };
 
     return (
         <div>
             <AppLayout breadcrumbs={breadcrumbs}>
                 <div className="p-4">
+                    <Card className="p-4">
+                        <h1 className="mb-6 text-xl font-semibold">
+                            Modification d'une année
+                        </h1>
 
-                    <h1 className='text-xl font-semibold mb-6'>Modification d'une année</h1>
+                        <form action="" className="space-y-6">
+                            <div className="flex flex-col gap-4">
+                                <Label className="text-md font-semibold">
+                                    Libelle
+                                </Label>
+                                <Input
+                                    value={libelle}
+                                    onChange={(e) => setLibelle(e.target.value)}
+                                />
+                            </div>
 
-                    <form action="" className="space-y-6">
-                        <div className="flex flex-col gap-4">
-                            <Label className="text-md font-semibold">
-                                Libelle
-                            </Label>
-                            <Input
-                                value={libelle}
-                                onChange={(e) => setLibelle(e.target.value)}
-                            />
-                        </div>
+                            <div className="flex flex-col gap-4">
+                                <Label className="text-md font-semibold">
+                                    Date de Debut
+                                </Label>
+                                <Input
+                                    type="date"
+                                    value={date_debut}
+                                    onChange={(e) =>
+                                        setDateDebut(e.target.value)
+                                    }
+                                />
+                            </div>
 
-                        <div className="flex flex-col gap-4">
-                            <Label className="text-md font-semibold">
-                                Date de Debut
-                            </Label>
-                            <Input
-                                type="date"
-                                value={date_debut}
-                                onChange={(e) =>
-                                    setDateDebut(e.target.value)
-                                }
-                            />
-                        </div>
+                            <div className="flex flex-col gap-4">
+                                <Label className="text-md font-semibold">
+                                    Date de Fin
+                                </Label>
+                                <Input
+                                    type="date"
+                                    value={date_fin}
+                                    onChange={(e) => setDateFin(e.target.value)}
+                                />
+                            </div>
 
-                        <div className="flex flex-col gap-4">
-                            <Label className="text-md font-semibold">
-                                Date de Fin
-                            </Label>
-                            <Input
-                                type="date"
-                                value={date_fin}
-                                onChange={(e) =>
-                                    setDateFin(e.target.value)
-                                }
-                            />
-                        </div>
-
-                        <Button onClick={handleUpdate} className="float-right cursor-pointer hover:bg-primary/80">
-                            Mettre à jour
-                        </Button>
-                    </form>
+                            <Button
+                                onClick={handleUpdate}
+                                className="float-right cursor-pointer hover:bg-primary/80"
+                            >
+                                Mettre à jour
+                            </Button>
+                        </form>
+                    </Card>
                 </div>
             </AppLayout>
         </div>

@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
@@ -74,7 +75,8 @@ const Edit = () => {
         <div>
             <AppLayout breadcrumbs={breadcrumbs}>
                 <div className="p-4">
-                    <h1 className="mb-6 text-xl font-semibold">
+                    <Card className='p-4'>
+                        <h1 className="mb-6 text-xl font-semibold">
                         Modification d'une filière
                     </h1>
 
@@ -115,6 +117,7 @@ const Edit = () => {
                             Mettre à jour
                         </Button>
                     </form>
+                    </Card>
                 </div>
             </AppLayout>
         </div>
