@@ -27,8 +27,8 @@ import {
 import useSeance from '@/hooks/useSeance';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
-import { Edit, Trash } from 'lucide-react';
+import { Link, router, usePage } from '@inertiajs/react';
+import { Edit, Search, Trash } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -94,21 +94,21 @@ interface SeanceProps {
     professeurs: {
         data: Professeur[];
     };
-     cours: {
+    cours: {
         data: Cours[];
     };
-     salles: {
+    salles: {
         data: Salle[];
     };
-     niveaux: {
+    niveaux: {
         data: Niveau[];
     };
     [key: string]: unknown;
 }
 
-
 const Index = () => {
-    const { seances, professeurs, cours, salles, niveaux } = usePage<SeanceProps>().props;
+    const { seances, professeurs, cours, salles, niveaux } =
+        usePage<SeanceProps>().props;
 
     const [jours, setJours] = useState('');
     const [heure_debut, setHeureDebut] = useState('');
@@ -118,7 +118,12 @@ const Index = () => {
     const [salle_id, setSalleId] = useState('');
     const [niveau_id, setNiveauId] = useState('');
 
-    const { createSeance, deleteSeance } = useSeance();
+    //Les states pour la recherche et le filtrage
+    const [rechercheProfesseur, setRechercheProfesseur] = useState('');
+    const [rechercheNiveau, setRechercheNiveau] = useState('');
+    const [rechercheSalle, setRechercheSalle] = useState('');
+
+    const { createSeance, deleteSeance, searchAndSort } = useSeance();
 
     // Enregistrement d'un cours
     const handleSubmit = () => {
@@ -160,6 +165,15 @@ const Index = () => {
     // Suppression d'une
     const handleDelete = (id: number) => {
         if (id) deleteSeance(id);
+    };
+
+    // Recherche et filtrage
+    const handleSearch = () => {
+        router.get('/seance', {
+            niveau: rechercheNiveau,
+            professeur: rechercheProfesseur,
+            salle: rechercheSalle,
+        });
     };
 
     return (
@@ -370,6 +384,86 @@ const Index = () => {
                         </Sheet>
                     </div>
 
+                    {/* Recherche et Filtrage */}
+                    <Card className="mb-4">
+                        <div className="flex place-items-center items-center gap-4 px-4">
+                            <div>
+                                <Label className="text-gray-500">Niveau</Label>
+                                <NativeSelect
+                                    className="w-full"
+                                    value={rechercheNiveau}
+                                    onChange={(e) =>
+                                        setRechercheNiveau(e.target.value)
+                                    }
+                                >
+                                    <NativeSelectOption value="">
+                                        {' '}
+                                    </NativeSelectOption>
+
+                                    {niveaux.data.map((niveau) => (
+                                        <NativeSelectOption value={niveau.id}>
+                                            {niveau.nom}
+                                        </NativeSelectOption>
+                                    ))}
+                                </NativeSelect>
+                            </div>
+
+                            <div>
+                                <Label className="text-gray-500">Salle</Label>
+                                <NativeSelect
+                                    className="w-full"
+                                    value={rechercheSalle}
+                                    onChange={(e) =>
+                                        setRechercheSalle(e.target.value)
+                                    }
+                                >
+                                    <NativeSelectOption value="">
+                                        {' '}
+                                    </NativeSelectOption>
+
+                                    {salles.data.map((salle) => (
+                                        <NativeSelectOption value={salle.id}>
+                                            {salle.nom}
+                                        </NativeSelectOption>
+                                    ))}
+                                </NativeSelect>
+                            </div>
+
+                            <div>
+                                <Label className="text-gray-500">
+                                    Professeur
+                                </Label>
+                                <NativeSelect
+                                    className="w-full"
+                                    value={rechercheProfesseur}
+                                    onChange={(e) =>
+                                        setRechercheProfesseur(e.target.value)
+                                    }
+                                >
+                                    <NativeSelectOption value="">
+                                        {' '}
+                                    </NativeSelectOption>
+
+                                    {professeurs.data.map((professeur) => (
+                                        <NativeSelectOption
+                                            value={professeur.id}
+                                        >
+                                            {professeur.nom} {professeur.prenom}
+                                        </NativeSelectOption>
+                                    ))}
+                                </NativeSelect>
+                            </div>
+
+                            <button
+                                onClick={handleSearch}
+                                className="cursor-pointer rounded-md bg-blue-500 p-2 text-white hover:bg-blue-500/80"
+                            >
+                                <Search />
+                            </button>
+                        </div>
+                    </Card>
+
+                    {/* Affichage des données */}
                     <Card>
                         <CardContent>
                             <Table>

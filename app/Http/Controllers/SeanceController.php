@@ -17,13 +17,27 @@ use App\Http\Resources\NiveauResource;
 use App\Http\Resources\SeanceResource;
 use App\Http\Resources\ProfesseurResource;
 use App\Models\AnneeScolaire;
+use Illuminate\Http\Request;
 
 class SeanceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $salle = $request->query("salle");
+        $niveau = $request->query("niveau");
+        $professeur = $request->query("professeur");
+
         try {
-            $seances = SeanceResource::collection(Seance::latest()->paginate(10));
+            if ($salle) {
+                $seances = SeanceResource::collection(Seance::where("salle_id", $salle)->paginate(10));
+            } elseif ($niveau) {
+                $seances = SeanceResource::collection(Seance::where("niveau_id", $niveau)->paginate(10));
+            } elseif ($professeur) {
+                $seances = SeanceResource::collection(Seance::where("professeur_id", $professeur)->paginate(10));
+            } else {
+                $seances = SeanceResource::collection(Seance::latest()->paginate(10));
+            }
+
 
             return Inertia::render("seance/Index", [
                 "seances" => $seances,

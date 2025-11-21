@@ -13,7 +13,23 @@ interface Data {
     niveau_id: string;
 }
 
+interface DataSearch {
+    recherchecours: string;
+    rechercheProfesseur: string;
+    rechercheNiveau: string;
+    rechercheSalle: string
+}
+
 export default function useSeance() {
+    //Recherche et filtrage
+    const searchAndSort = async (dataSearch: DataSearch) => {
+        try {
+            await axios.get(`/seance?cours=${dataSearch.recherchecours}&professeur=${dataSearch.rechercheProfesseur}&niveau=${dataSearch.rechercheNiveau}&salle=${dataSearch.rechercheSalle}`)
+        } catch (error) {
+             toast.error('Erreur survenue au seance du serveur');
+        }
+    }
+
     // Création d'une séance
     const createSeance = async (data: Data) => {
         try {
@@ -71,5 +87,6 @@ export default function useSeance() {
         }
     };
 
-    return { createSeance, updateSeance, deleteSeance };
+
+    return { createSeance, updateSeance, deleteSeance, searchAndSort };
 }
