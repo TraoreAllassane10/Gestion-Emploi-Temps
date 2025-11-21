@@ -124,7 +124,7 @@ export default function Dashboard() {
                     </Card>
                 </div>
 
-                {/* ________ Last Seances Section _________ */}
+              
                 <Card className="shadow-sm">
                     <CardHeader>
                         <div className="flex items-center justify-between">
@@ -174,37 +174,61 @@ export default function Dashboard() {
                             </TableHeader>
 
                             <TableBody>
-                                {seances?.map((seance) => (
-                                    <TableRow key={seance.id}>
-                                        <TableCell className="font-medium">
-                                            {seance.jours}
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            {new Date(
-                                                seance.date,
-                                            ).toLocaleDateString('fr-FR')}
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            {seance.heure_debut}
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            {seance.heure_fin}
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            {seance.cours?.nom}
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            {seance.professeur?.nom}{' '}
-                                            {seance.professeur?.prenom}
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            {seance.salle?.nom}
-                                        </TableCell>
-                                        <TableCell className="font-medium">
-                                            {seance.niveau?.nom}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
+                                <TableRow className="border-b">
+                                    <TableCell className="font-medium">
+                                        Samedi
+                                    </TableCell>
+                                    <TableCell>07h30</TableCell>
+                                    <TableCell>17h15</TableCell>
+                                    <TableCell>Merise</TableCell>
+                                    <TableCell> M. Traore Allassane</TableCell>
+                                    <TableCell> Salle Info</TableCell>
+                                    <TableCell> IDA 2</TableCell>
+
+                                    <TableCell className="flex justify-center gap-3">
+                                        <Link>
+                                            <Edit
+                                                size={20}
+                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                            />
+                                        </Link>
+
+                                        <Link>
+                                            <Trash
+                                                size={20}
+                                                className="cursor-pointer text-red-600 hover:text-red-800"
+                                            />
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
+
+                                    <TableRow className="border-b">
+                                    <TableCell className="font-medium">
+                                        Dimanche
+                                    </TableCell>
+                                    <TableCell>07h30</TableCell>
+                                    <TableCell>17h15</TableCell>
+                                    <TableCell>Merise</TableCell>
+                                    <TableCell> M. Traore Allassane</TableCell>
+                                    <TableCell> Salle Info</TableCell>
+                                    <TableCell> IDA 2</TableCell>
+
+                                    <TableCell className="flex justify-center gap-3">
+                                        <Link>
+                                            <Edit
+                                                size={20}
+                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                            />
+                                        </Link>
+
+                                        <Link>
+                                            <Trash
+                                                size={20}
+                                                className="cursor-pointer text-red-600 hover:text-red-800"
+                                            />
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
                             </TableBody>
                         </Table>
                     </CardContent>

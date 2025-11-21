@@ -18,18 +18,20 @@ interface DataSearch {
     recherchecours: string;
     rechercheProfesseur: string;
     rechercheNiveau: string;
-    rechercheSalle: string
+    rechercheSalle: string;
 }
 
 export default function useSeance() {
     //Recherche et filtrage
     const searchAndSort = async (dataSearch: DataSearch) => {
         try {
-            await axios.get(`/seance?cours=${dataSearch.recherchecours}&professeur=${dataSearch.rechercheProfesseur}&niveau=${dataSearch.rechercheNiveau}&salle=${dataSearch.rechercheSalle}`)
+            await axios.get(
+                `/seance?cours=${dataSearch.recherchecours}&professeur=${dataSearch.rechercheProfesseur}&niveau=${dataSearch.rechercheNiveau}&salle=${dataSearch.rechercheSalle}`,
+            );
         } catch (error) {
-             toast.error('Erreur survenue au seance du serveur');
+            toast.error('Erreur survenue au seance du serveur');
         }
-    }
+    };
 
     // Création d'une séance
     const createSeance = async (data: Data) => {
@@ -37,11 +39,15 @@ export default function useSeance() {
             await axios
                 .post('/seance', data)
                 .then((res) => {
+                    if (res.data.message) {
+                        toast.error(res.data.message);
+                        return;
+                    }
+
                     toast.success('seance crée avec succès !');
+
                     // Redirection vers la page d'affichage des seances
                     router.visit(seance());
-
-                    console.log(res);
                 })
                 .catch((error) => {
                     toast.error(error.response.data.message);
@@ -87,7 +93,6 @@ export default function useSeance() {
             toast.success('Erreur survenue au seance du serveur');
         }
     };
-
 
     return { createSeance, updateSeance, deleteSeance, searchAndSort };
 }
