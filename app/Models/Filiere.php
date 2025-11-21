@@ -15,4 +15,5 @@ class Filiere extends Model
     public function niveaux() {
         return $this->hasMany(Niveau::class);
     }
+
 }

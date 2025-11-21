@@ -16,4 +16,6 @@ class Cours extends Model
     {
         return $this->belongsTo(Professeur::class);
     }
+
+
 }

@@ -10,15 +10,13 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { dashboard, seance } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowRight,
     BookOpen,
     Building2,
     Clock,
-    Edit,
     GraduationCap,
-    Trash,
 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -28,7 +26,51 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+interface Professeur {
+    id: number;
+    nom: string;
+    prenom: string;
+}
+
+interface Cours {
+    id: number;
+    nom: string;
+}
+
+interface Salle {
+    id: number;
+    nom: string;
+}
+
+interface Niveau {
+    id: number;
+    nom: string;
+}
+
+interface Seance {
+    id: number;
+    jours: string;
+    date: string;
+    heure_debut: string;
+    heure_fin: string;
+    professeur: Professeur;
+    cours: Cours;
+    salle: Salle;
+    niveau: Niveau;
+}
+
+interface DashboardProps {
+    seances: Seance[];
+    nombreCours: number;
+    nombreFiliere: number;
+    nombreSalle: number;
+    [key: string] : unknown;
+}
+
 export default function Dashboard() {
+    const { seances, nombreCours, nombreFiliere, nombreSalle } =
+        usePage<DashboardProps>().props;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -46,7 +88,7 @@ export default function Dashboard() {
                                 Nombre de filières
                             </h3>
                             <span className="text-2xl font-bold text-primary">
-                                10
+                                {nombreFiliere}
                             </span>
                         </CardContent>
                     </Card>
@@ -61,7 +103,7 @@ export default function Dashboard() {
                                 Nombre de salles
                             </h3>
                             <span className="text-2xl font-bold text-blue-500">
-                                10
+                                {nombreSalle}
                             </span>
                         </CardContent>
                     </Card>
@@ -76,7 +118,7 @@ export default function Dashboard() {
                                 Nombre de cours
                             </h3>
                             <span className="text-2xl font-bold text-green-600">
-                                10
+                                {nombreCours}
                             </span>
                         </CardContent>
                     </Card>
@@ -108,6 +150,9 @@ export default function Dashboard() {
                                         Jour
                                     </TableHead>
                                     <TableHead className="font-semibold">
+                                        Date
+                                    </TableHead>
+                                    <TableHead className="font-semibold">
                                         Début
                                     </TableHead>
                                     <TableHead className="font-semibold">
@@ -125,68 +170,41 @@ export default function Dashboard() {
                                     <TableHead className="font-semibold">
                                         Niveau
                                     </TableHead>
-                                    <TableHead className="text-center font-semibold">
-                                        Actions
-                                    </TableHead>
                                 </TableRow>
                             </TableHeader>
 
                             <TableBody>
-                                <TableRow className="border-b">
-                                    <TableCell className="font-medium">
-                                        Samedi
-                                    </TableCell>
-                                    <TableCell>07h30</TableCell>
-                                    <TableCell>17h15</TableCell>
-                                    <TableCell>Merise</TableCell>
-                                    <TableCell> M. Traore Allassane</TableCell>
-                                    <TableCell> Salle Info</TableCell>
-                                    <TableCell> IDA 2</TableCell>
-
-                                    <TableCell className="flex justify-center gap-3">
-                                        <Link>
-                                            <Edit
-                                                size={20}
-                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                            />
-                                        </Link>
-
-                                        <Link>
-                                            <Trash
-                                                size={20}
-                                                className="cursor-pointer text-red-600 hover:text-red-800"
-                                            />
-                                        </Link>
-                                    </TableCell>
-                                </TableRow>
-
-                                    <TableRow className="border-b">
-                                    <TableCell className="font-medium">
-                                        Dimanche
-                                    </TableCell>
-                                    <TableCell>07h30</TableCell>
-                                    <TableCell>17h15</TableCell>
-                                    <TableCell>Merise</TableCell>
-                                    <TableCell> M. Traore Allassane</TableCell>
-                                    <TableCell> Salle Info</TableCell>
-                                    <TableCell> IDA 2</TableCell>
-
-                                    <TableCell className="flex justify-center gap-3">
-                                        <Link>
-                                            <Edit
-                                                size={20}
-                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                            />
-                                        </Link>
-
-                                        <Link>
-                                            <Trash
-                                                size={20}
-                                                className="cursor-pointer text-red-600 hover:text-red-800"
-                                            />
-                                        </Link>
-                                    </TableCell>
-                                </TableRow>
+                                {seances?.map((seance) => (
+                                    <TableRow key={seance.id}>
+                                        <TableCell className="font-medium">
+                                            {seance.jours}
+                                        </TableCell>
+                                        <TableCell className="font-medium">
+                                            {new Date(
+                                                seance.date,
+                                            ).toLocaleDateString('fr-FR')}
+                                        </TableCell>
+                                        <TableCell className="font-medium">
+                                            {seance.heure_debut}
+                                        </TableCell>
+                                        <TableCell className="font-medium">
+                                            {seance.heure_fin}
+                                        </TableCell>
+                                        <TableCell className="font-medium">
+                                            {seance.cours?.nom}
+                                        </TableCell>
+                                        <TableCell className="font-medium">
+                                            {seance.professeur?.nom}{' '}
+                                            {seance.professeur?.prenom}
+                                        </TableCell>
+                                        <TableCell className="font-medium">
+                                            {seance.salle?.nom}
+                                        </TableCell>
+                                        <TableCell className="font-medium">
+                                            {seance.niveau?.nom}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </CardContent>
