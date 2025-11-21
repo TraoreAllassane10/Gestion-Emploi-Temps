@@ -171,21 +171,7 @@ export default function Dashboard() {
                                     <TableCell> Salle Info</TableCell>
                                     <TableCell> IDA 2</TableCell>
 
-                                    <TableCell className="flex justify-center gap-3">
-                                        <Link>
-                                            <Edit
-                                                size={20}
-                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                            />
-                                        </Link>
-
-                                        <Link>
-                                            <Trash
-                                                size={20}
-                                                className="cursor-pointer text-red-600 hover:text-red-800"
-                                            />
-                                        </Link>
-                                    </TableCell>
+                                
                                 </TableRow>
                             </TableBody>
                         </Table>

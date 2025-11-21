@@ -61,6 +61,16 @@ class SeanceController extends Controller
             // Recupere la derniere année enregistrée et l'envoyer dans les données à stocker
             $data["annee_scolaire_id"] = AnneeScolaire::latest("created_at")->first()->id;
 
+            $date = $data['date'];
+            $salle = $data["salle_id"];
+            $heure_debut = $data["heure_debut"];
+            $heure_fin = $data['heure_fin'];
+
+            if (Seance::salleOccupee($salle, $date, $heure_debut, $heure_fin))
+            {
+                throw new Exception("Cette salle est occupée sur cette plage horaire");
+            }
+
             //Creation d'une séance
             Seance::create($data);
 

@@ -29,7 +29,6 @@ import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { Edit, Search, Trash } from 'lucide-react';
-import { format } from 'path';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -113,7 +112,7 @@ const Index = () => {
         usePage<SeanceProps>().props;
 
     const [jours, setJours] = useState('');
-    const [date, setDate] = useState("");
+    const [date, setDate] = useState('');
     const [heure_debut, setHeureDebut] = useState('');
     const [heure_fin, setHeureFin] = useState('');
     const [cours_id, setCoursId] = useState('');
@@ -204,149 +203,163 @@ const Index = () => {
                                     <SheetTitle>Nouvelle séance</SheetTitle>
                                 </SheetHeader>
                                 <div className="grid flex-1 auto-rows-min gap-6 px-4">
-                                    <div className="grid gap-3">
-                                        <Label htmlFor="sheet-demo-name">
-                                            Niveau
-                                        </Label>
-                                        <NativeSelect
-                                            className="w-full"
-                                            value={niveau_id}
-                                            onChange={(e) =>
-                                                setNiveauId(e.target.value)
-                                            }
-                                        >
-                                            <NativeSelectOption value="">
-                                                {' '}
-                                            </NativeSelectOption>
-
-                                            {niveaux.data.map((niveau) => (
-                                                <NativeSelectOption
-                                                    value={niveau.id}
-                                                >
-                                                    {niveau.nom}
+                                    <div className="grid grid-cols-2">
+                                        <div>
+                                            <Label htmlFor="sheet-demo-name">
+                                                Niveau
+                                            </Label>
+                                            <NativeSelect
+                                                className="w-full"
+                                                value={niveau_id}
+                                                onChange={(e) =>
+                                                    setNiveauId(e.target.value)
+                                                }
+                                            >
+                                                <NativeSelectOption value="">
+                                                    {' '}
                                                 </NativeSelectOption>
-                                            ))}
-                                        </NativeSelect>
-                                    </div>
 
-                                    <div className="grid gap-3">
-                                        <Label htmlFor="sheet-demo-name">
-                                            Cours
-                                        </Label>
-                                        <NativeSelect
-                                            className="w-full"
-                                            value={cours_id}
-                                            onChange={(e) =>
-                                                setCoursId(e.target.value)
-                                            }
-                                        >
-                                            <NativeSelectOption value="">
-                                                {' '}
-                                            </NativeSelectOption>
-
-                                            {cours.data.map((cours) => (
-                                                <NativeSelectOption
-                                                    value={cours.id}
-                                                >
-                                                    {cours.nom}
-                                                </NativeSelectOption>
-                                            ))}
-                                        </NativeSelect>
-                                    </div>
-
-                                    <div className="grid gap-3">
-                                        <Label htmlFor="sheet-demo-name">
-                                            Professeur
-                                        </Label>
-                                        <NativeSelect
-                                            className="w-full"
-                                            value={professeur_id}
-                                            onChange={(e) =>
-                                                setProfesseurId(e.target.value)
-                                            }
-                                        >
-                                            <NativeSelectOption value="">
-                                                {' '}
-                                            </NativeSelectOption>
-
-                                            {professeurs.data.map(
-                                                (professeur) => (
+                                                {niveaux.data.map((niveau) => (
                                                     <NativeSelectOption
-                                                        value={professeur.id}
+                                                        value={niveau.id}
                                                     >
-                                                        {professeur.nom}{' '}
-                                                        {professeur.prenom}
+                                                        {niveau.nom}
                                                     </NativeSelectOption>
-                                                ),
-                                            )}
-                                        </NativeSelect>
+                                                ))}
+                                            </NativeSelect>
+                                        </div>
+
+                                        <div>
+                                            <Label htmlFor="sheet-demo-name">
+                                                Salle
+                                            </Label>
+                                            <NativeSelect
+                                                className="w-full"
+                                                value={salle_id}
+                                                onChange={(e) =>
+                                                    setSalleId(e.target.value)
+                                                }
+                                            >
+                                                <NativeSelectOption value="">
+                                                    {' '}
+                                                </NativeSelectOption>
+
+                                                {salles.data.map((salle) => (
+                                                    <NativeSelectOption
+                                                        value={salle.id}
+                                                    >
+                                                        {salle.nom}
+                                                    </NativeSelectOption>
+                                                ))}
+                                            </NativeSelect>
+                                        </div>
                                     </div>
 
-                                    <div className="grid gap-3">
-                                        <Label htmlFor="sheet-demo-name">
-                                            Salle
-                                        </Label>
-                                        <NativeSelect
-                                            className="w-full"
-                                            value={salle_id}
-                                            onChange={(e) =>
-                                                setSalleId(e.target.value)
-                                            }
-                                        >
-                                            <NativeSelectOption value="">
-                                                {' '}
-                                            </NativeSelectOption>
-
-                                            {salles.data.map((salle) => (
-                                                <NativeSelectOption
-                                                    value={salle.id}
-                                                >
-                                                    {salle.nom}
+                                    <div className="grid grid-cols-2">
+                                        <div>
+                                            <Label htmlFor="sheet-demo-name">
+                                                Cours
+                                            </Label>
+                                            <NativeSelect
+                                                className="w-full"
+                                                value={cours_id}
+                                                onChange={(e) =>
+                                                    setCoursId(e.target.value)
+                                                }
+                                            >
+                                                <NativeSelectOption value="">
+                                                    {' '}
                                                 </NativeSelectOption>
-                                            ))}
-                                        </NativeSelect>
+
+                                                {cours.data.map((cours) => (
+                                                    <NativeSelectOption
+                                                        value={cours.id}
+                                                    >
+                                                        {cours.nom}
+                                                    </NativeSelectOption>
+                                                ))}
+                                            </NativeSelect>
+                                        </div>
+
+                                        <div>
+                                            <Label htmlFor="sheet-demo-name">
+                                                Professeur
+                                            </Label>
+                                            <NativeSelect
+                                                className="w-full"
+                                                value={professeur_id}
+                                                onChange={(e) =>
+                                                    setProfesseurId(
+                                                        e.target.value,
+                                                    )
+                                                }
+                                            >
+                                                <NativeSelectOption value="">
+                                                    {' '}
+                                                </NativeSelectOption>
+
+                                                {professeurs.data.map(
+                                                    (professeur) => (
+                                                        <NativeSelectOption
+                                                            value={
+                                                                professeur.id
+                                                            }
+                                                        >
+                                                            {professeur.nom}{' '}
+                                                            {professeur.prenom}
+                                                        </NativeSelectOption>
+                                                    ),
+                                                )}
+                                            </NativeSelect>
+                                        </div>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-3">
                                         <div>
                                             <Label htmlFor="sheet-demo-name">
-                                            Jour
-                                        </Label>
-                                        <NativeSelect
-                                            className="w-full"
-                                            value={jours}
-                                            onChange={(e) =>
-                                                setJours(e.target.value)
-                                            }
-                                        >
-                                            <NativeSelectOption value=""></NativeSelectOption>
-                                            <NativeSelectOption value="Lundi">
-                                                Lundi
-                                            </NativeSelectOption>
-                                            <NativeSelectOption value="Mardi">
-                                                Mardi
-                                            </NativeSelectOption>
-                                            <NativeSelectOption value="Mercredi">
-                                                Mercredi
-                                            </NativeSelectOption>
-                                            <NativeSelectOption value="Jeudi">
-                                                Jeudi
-                                            </NativeSelectOption>
-                                            <NativeSelectOption value="Vendredi">
-                                                Vendredi
-                                            </NativeSelectOption>
-                                            <NativeSelectOption value="Samedi">
-                                                Samedi
-                                            </NativeSelectOption>
-                                            <NativeSelectOption value="Dimanche">
-                                                Dimanche
-                                            </NativeSelectOption>
-                                        </NativeSelect>
+                                                Jour
+                                            </Label>
+                                            <NativeSelect
+                                                className="w-full"
+                                                value={jours}
+                                                onChange={(e) =>
+                                                    setJours(e.target.value)
+                                                }
+                                            >
+                                                <NativeSelectOption value=""></NativeSelectOption>
+                                                <NativeSelectOption value="Lundi">
+                                                    Lundi
+                                                </NativeSelectOption>
+                                                <NativeSelectOption value="Mardi">
+                                                    Mardi
+                                                </NativeSelectOption>
+                                                <NativeSelectOption value="Mercredi">
+                                                    Mercredi
+                                                </NativeSelectOption>
+                                                <NativeSelectOption value="Jeudi">
+                                                    Jeudi
+                                                </NativeSelectOption>
+                                                <NativeSelectOption value="Vendredi">
+                                                    Vendredi
+                                                </NativeSelectOption>
+                                                <NativeSelectOption value="Samedi">
+                                                    Samedi
+                                                </NativeSelectOption>
+                                                <NativeSelectOption value="Dimanche">
+                                                    Dimanche
+                                                </NativeSelectOption>
+                                            </NativeSelect>
                                         </div>
 
                                         <div>
                                             <Label>Date du programme</Label>
-                                            <Input type='date' value={date} onChange={(e) => setDate(e.target.value)}/>
+                                            <Input
+                                                type="date"
+                                                value={date}
+                                                onChange={(e) =>
+                                                    setDate(e.target.value)
+                                                }
+                                            />
                                         </div>
                                     </div>
 
@@ -485,7 +498,7 @@ const Index = () => {
                                         <TableHead className="font-semibold">
                                             Jour
                                         </TableHead>
-                                         <TableHead className="font-semibold">
+                                        <TableHead className="font-semibold">
                                             Date
                                         </TableHead>
                                         <TableHead className="font-semibold">
@@ -517,8 +530,10 @@ const Index = () => {
                                             <TableCell className="font-medium">
                                                 {seance.jours}
                                             </TableCell>
-                                              <TableCell className="font-medium">
-                                                {new Date(seance.date).toLocaleDateString("fr-FR")}
+                                            <TableCell className="font-medium">
+                                                {new Date(
+                                                    seance.date,
+                                                ).toLocaleDateString('fr-FR')}
                                             </TableCell>
                                             <TableCell className="font-medium">
                                                 {seance.heure_debut}
