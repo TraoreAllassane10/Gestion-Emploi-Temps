@@ -179,8 +179,20 @@ const Index = () => {
             niveau: rechercheNiveau,
             professeur: rechercheProfesseur,
             salle: rechercheSalle,
-            date: rechercheDate
+            date: rechercheDate,
         });
+    };
+
+    // Exportation en pdf
+    const exportPDF = () => {
+        const url =
+            `/seance/export?` +
+            `niveau=${rechercheNiveau}&` +
+            `professeur=${rechercheProfesseur}&` +
+            `salle=${rechercheSalle}&` +
+            `date=${rechercheDate}`;
+
+        window.open(url);
     };
 
     return (
@@ -514,8 +526,11 @@ const Index = () => {
                             </div>
 
                             <div>
-                                <button className="flex gap-2 rounded bg-green-500 p-2 text-sm text-white">
-                                    <Printer /> Imprimer
+                                <button
+                                    onClick={exportPDF}
+                                    className="flex cursor-pointer items-center gap-2 rounded bg-green-500 p-2 text-sm text-white hover:bg-green-500/90"
+                                >
+                                    <Printer size={16} /> Imprimer
                                 </button>
                             </div>
                         </div>

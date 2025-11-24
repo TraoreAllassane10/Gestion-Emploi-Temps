@@ -83,6 +83,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("seance/{seance}/edit", "edit")->name("seance.edit");
         Route::put("seance/{seance}/update", "update")->name("seance.update");
         Route::delete("seance/{seance}/delete", "delete")->name("seance.delete");
+        Route::get("seance/export", "exportPDF")->name("seance.pdf");
     });
 });
 

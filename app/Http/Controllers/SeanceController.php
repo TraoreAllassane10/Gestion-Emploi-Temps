@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\seance\CreateSeanceRequest;
-use App\Http\Requests\seance\UpdateSeanceRequest;
-use Carbon\Carbon;
 use Exception;
+use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Cours;
 use App\Models\Salle;
 use App\Models\Niveau;
 use App\Models\Seance;
 use App\Models\Professeur;
+use Illuminate\Http\Request;
+use App\Models\AnneeScolaire;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Resources\CoursResource;
 use App\Http\Resources\SalleResource;
 use App\Http\Resources\NiveauResource;
 use App\Http\Resources\SeanceResource;
 use App\Http\Resources\ProfesseurResource;
-use App\Models\AnneeScolaire;
-use Illuminate\Http\Request;
+use App\Http\Requests\seance\CreateSeanceRequest;
+use App\Http\Requests\seance\UpdateSeanceRequest;
 
 class SeanceController extends Controller
 {
@@ -28,8 +29,6 @@ class SeanceController extends Controller
         $niveau = $request->query("niveau");
         $professeur = $request->query("professeur");
         $date = $request->query("date");
-
-        // if ($date) dd($date);
 
         try {
             if ($salle) {
@@ -117,6 +116,39 @@ class SeanceController extends Controller
             $seance->delete();
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
+        }
+    }
+
+    public function exportPDF(Request $request)
+    {
+      
+        $salle = $request->query("salle");
+        $niveau = $request->query("niveau");
+        $professeur = $request->query("professeur");
+        $date = $request->query("date");
+
+           
+
+        try {
+            if ($salle) {
+                $seances = Seance::where("salle_id", $salle)->get();
+            } elseif ($niveau) {
+                $seances = Seance::where("niveau_id", $niveau)->get();
+            } elseif ($professeur) {
+                $seances = Seance::where("professeur_id", $professeur)->get();
+            } elseif ($date) {
+                $seances = Seance::where("date", $date)->get();
+            } else {
+                $seances = Seance::orderByDesc("date")->get();
+            }
+
+
+            $pdf = Pdf::loadView('pdf.emploi', compact("seances"));
+
+            return $pdf->download('Emploi_du_temps.pdf');
+
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
     }
 }
