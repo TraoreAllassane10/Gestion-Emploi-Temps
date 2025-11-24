@@ -193,7 +193,7 @@ const Index = () => {
                                 <TableBody>
                                     {niveaux.data.map((niveau) => (
                                         <TableRow>
-                                            <TableCell className="font-medium">
+                                            <TableCell >
                                                 {niveau.nom}
                                             </TableCell>
                                             <TableCell className="flex gap-2">

@@ -193,7 +193,7 @@ const Index = () => {
                                 <TableBody>
                                     {cours?.data.map((cours) => (
                                         <TableRow key={cours.id}>
-                                            <TableCell className="font-medium">
+                                            <TableCell>
                                                 {cours.nom}
                                             </TableCell>
                                             <TableCell className="flex gap-2">

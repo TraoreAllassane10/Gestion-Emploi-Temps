@@ -157,7 +157,7 @@ const Index = () => {
                                 <TableBody>
                                     {salles?.data.map((salle) => (
                                         <TableRow>
-                                            <TableCell className="font-medium">
+                                            <TableCell>
                                                {salle.nom}
                                             </TableCell>
                                             <TableCell className="flex gap-2">

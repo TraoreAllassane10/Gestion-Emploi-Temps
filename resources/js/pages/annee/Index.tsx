@@ -195,7 +195,7 @@ const Index = () => {
                                 <TableBody>
                                     {annees?.data.map((annee) => (
                                         <TableRow key={annee.id}>
-                                            <TableCell className="font-medium">
+                                            <TableCell >
                                                 {annee.libelle}
                                             </TableCell>
                                             <TableCell>

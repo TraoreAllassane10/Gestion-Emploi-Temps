@@ -157,7 +157,7 @@ const Index = () => {
                                 <TableBody>
                                     {filieres?.data.map((filiere) => (
                                         <TableRow>
-                                            <TableCell className="font-medium">{filiere.nom}</TableCell>
+                                            <TableCell >{filiere.nom}</TableCell>
                                             <TableCell className="flex gap-2">
                                                 <Link href={`filiere/${filiere.id}/edit`}>
                                                     <Edit

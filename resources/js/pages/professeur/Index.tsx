@@ -203,16 +203,16 @@ const Index = () => {
                                 <TableBody>
                                     {professeurs?.data.map((prof) => (
                                         <TableRow key={prof.id}>
-                                            <TableCell className="font-medium">
+                                            <TableCell >
                                                 {prof.nom}
                                             </TableCell>
-                                            <TableCell className="font-medium">
+                                            <TableCell>
                                                 {prof.prenom}
                                             </TableCell>
-                                            <TableCell className="font-medium">
+                                            <TableCell>
                                                 {prof.email}
                                             </TableCell>
-                                            <TableCell className="font-medium">
+                                            <TableCell>
                                                 {prof.telephone}
                                             </TableCell>
 

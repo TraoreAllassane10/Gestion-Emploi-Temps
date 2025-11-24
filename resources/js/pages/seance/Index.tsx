@@ -574,31 +574,31 @@ const Index = () => {
                                 <TableBody>
                                     {seances?.data.map((seance) => (
                                         <TableRow key={seance.id}>
-                                            <TableCell className="font-medium">
+                                            <TableCell >
                                                 {seance.jours}
                                             </TableCell>
-                                            <TableCell className="font-medium">
+                                            <TableCell >
                                                 {new Date(
                                                     seance.date,
                                                 ).toLocaleDateString('fr-FR')}
                                             </TableCell>
-                                            <TableCell className="font-medium">
+                                            <TableCell >
                                                 {seance.heure_debut}
                                             </TableCell>
-                                            <TableCell className="font-medium">
+                                            <TableCell >
                                                 {seance.heure_fin}
                                             </TableCell>
-                                            <TableCell className="font-medium">
+                                            <TableCell >
                                                 {seance.cours?.nom}
                                             </TableCell>
-                                            <TableCell className="font-medium">
+                                            <TableCell>
                                                 {seance.professeur?.nom}{' '}
                                                 {seance.professeur?.prenom}
                                             </TableCell>
-                                            <TableCell className="font-medium">
+                                            <TableCell>
                                                 {seance.salle?.nom}
                                             </TableCell>
-                                            <TableCell className="font-medium">
+                                            <TableCell >
                                                 {seance.niveau?.nom}
                                             </TableCell>
                                             <TableCell className="flex gap-2">
