@@ -64,7 +64,7 @@ interface DashboardProps {
     nombreCours: number;
     nombreFiliere: number;
     nombreSalle: number;
-    [key: string] : unknown;
+    [key: string]: unknown;
 }
 
 export default function Dashboard() {
@@ -124,7 +124,6 @@ export default function Dashboard() {
                     </Card>
                 </div>
 
-              
                 <Card className="shadow-sm">
                     <CardHeader>
                         <div className="flex items-center justify-between">
@@ -174,61 +173,35 @@ export default function Dashboard() {
                             </TableHeader>
 
                             <TableBody>
-                                <TableRow className="border-b">
-                                    <TableCell className="font-medium">
-                                        Samedi
-                                    </TableCell>
-                                    <TableCell>07h30</TableCell>
-                                    <TableCell>17h15</TableCell>
-                                    <TableCell>Merise</TableCell>
-                                    <TableCell> M. Traore Allassane</TableCell>
-                                    <TableCell> Salle Info</TableCell>
-                                    <TableCell> IDA 2</TableCell>
-
-                                    <TableCell className="flex justify-center gap-3">
-                                        <Link>
-                                            <Edit
-                                                size={20}
-                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                            />
-                                        </Link>
-
-                                        <Link>
-                                            <Trash
-                                                size={20}
-                                                className="cursor-pointer text-red-600 hover:text-red-800"
-                                            />
-                                        </Link>
-                                    </TableCell>
-                                </TableRow>
-
-                                    <TableRow className="border-b">
-                                    <TableCell className="font-medium">
-                                        Dimanche
-                                    </TableCell>
-                                    <TableCell>07h30</TableCell>
-                                    <TableCell>17h15</TableCell>
-                                    <TableCell>Merise</TableCell>
-                                    <TableCell> M. Traore Allassane</TableCell>
-                                    <TableCell> Salle Info</TableCell>
-                                    <TableCell> IDA 2</TableCell>
-
-                                    <TableCell className="flex justify-center gap-3">
-                                        <Link>
-                                            <Edit
-                                                size={20}
-                                                className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                            />
-                                        </Link>
-
-                                        <Link>
-                                            <Trash
-                                                size={20}
-                                                className="cursor-pointer text-red-600 hover:text-red-800"
-                                            />
-                                        </Link>
-                                    </TableCell>
-                                </TableRow>
+                                {seances?.map((seance) => (
+                                    <TableRow
+                                        className="border-b"
+                                        key={seance.id}
+                                    >
+                                        <TableCell className="font-medium">
+                                            {seance.jours}
+                                        </TableCell>
+                                        <TableCell>{seance.date}</TableCell>
+                                        <TableCell>
+                                            {seance.heure_debut}
+                                        </TableCell>
+                                        <TableCell>
+                                            {seance.heure_fin}
+                                        </TableCell>
+                                        <TableCell>
+                                            {seance.cours?.nom}
+                                        </TableCell>
+                                        <TableCell>
+                                            M. {seance.professeur?.nom}
+                                        </TableCell>
+                                        <TableCell>
+                                            {seance.salle?.nom}
+                                        </TableCell>
+                                        <TableCell>
+                                            {seance.niveau.nom}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </CardContent>

@@ -14,7 +14,7 @@ class DashboardController extends Controller
     public function index() 
     {
         return Inertia::render("dashboard", [
-            "seances" => Seance::latest()->limit(15)->get(),
+            "seances" => Seance::latest()->limit(5)->get(),
             "nombreCours" => Cours::count(),
             "nombreFiliere" => Filiere::count(),
             "nombreSalle" => Salle::count()

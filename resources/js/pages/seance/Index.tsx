@@ -28,7 +28,7 @@ import useSeance from '@/hooks/useSeance';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
-import { Edit, Search, Trash } from 'lucide-react';
+import { Edit, Printer, Search, Trash } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -124,6 +124,7 @@ const Index = () => {
     const [rechercheProfesseur, setRechercheProfesseur] = useState('');
     const [rechercheNiveau, setRechercheNiveau] = useState('');
     const [rechercheSalle, setRechercheSalle] = useState('');
+    const [rechercheDate, setRechercheDate] = useState('');
 
     const { createSeance, deleteSeance, searchAndSort } = useSeance();
 
@@ -178,6 +179,7 @@ const Index = () => {
             niveau: rechercheNiveau,
             professeur: rechercheProfesseur,
             salle: rechercheSalle,
+            date: rechercheDate
         });
     };
 
@@ -412,80 +414,110 @@ const Index = () => {
 
                     {/* Recherche et Filtrage */}
                     <Card className="mb-4">
-                        <div className="flex place-items-center items-center gap-4 px-4">
-                            <div>
-                                <Label className="text-gray-500">Niveau</Label>
-                                <NativeSelect
-                                    className="w-full"
-                                    value={rechercheNiveau}
-                                    onChange={(e) =>
-                                        setRechercheNiveau(e.target.value)
-                                    }
-                                >
-                                    <NativeSelectOption value="">
-                                        {' '}
-                                    </NativeSelectOption>
-
-                                    {niveaux.data.map((niveau) => (
-                                        <NativeSelectOption value={niveau.id}>
-                                            {niveau.nom}
+                        <div className="flex place-items-center justify-between px-4">
+                            <div className="flex place-items-center gap-4">
+                                <div>
+                                    <Label className="text-gray-500">
+                                        Niveau
+                                    </Label>
+                                    <NativeSelect
+                                        className="w-full"
+                                        value={rechercheNiveau}
+                                        onChange={(e) =>
+                                            setRechercheNiveau(e.target.value)
+                                        }
+                                    >
+                                        <NativeSelectOption value="">
+                                            {' '}
                                         </NativeSelectOption>
-                                    ))}
-                                </NativeSelect>
+
+                                        {niveaux.data.map((niveau) => (
+                                            <NativeSelectOption
+                                                value={niveau.id}
+                                            >
+                                                {niveau.nom}
+                                            </NativeSelectOption>
+                                        ))}
+                                    </NativeSelect>
+                                </div>
+
+                                <div>
+                                    <Label className="text-gray-500">
+                                        Salle
+                                    </Label>
+                                    <NativeSelect
+                                        className="w-full"
+                                        value={rechercheSalle}
+                                        onChange={(e) =>
+                                            setRechercheSalle(e.target.value)
+                                        }
+                                    >
+                                        <NativeSelectOption value="">
+                                            {' '}
+                                        </NativeSelectOption>
+
+                                        {salles.data.map((salle) => (
+                                            <NativeSelectOption
+                                                value={salle.id}
+                                            >
+                                                {salle.nom}
+                                            </NativeSelectOption>
+                                        ))}
+                                    </NativeSelect>
+                                </div>
+
+                                <div>
+                                    <Label className="text-gray-500">
+                                        Professeur
+                                    </Label>
+                                    <NativeSelect
+                                        className="w-full"
+                                        value={rechercheProfesseur}
+                                        onChange={(e) =>
+                                            setRechercheProfesseur(
+                                                e.target.value,
+                                            )
+                                        }
+                                    >
+                                        <NativeSelectOption value="">
+                                            {' '}
+                                        </NativeSelectOption>
+
+                                        {professeurs.data.map((professeur) => (
+                                            <NativeSelectOption
+                                                value={professeur.id}
+                                            >
+                                                {professeur.nom}{' '}
+                                                {professeur.prenom}
+                                            </NativeSelectOption>
+                                        ))}
+                                    </NativeSelect>
+                                </div>
+
+                                <div>
+                                    <Label>Date</Label>
+                                    <Input
+                                        type="date"
+                                        value={rechercheDate}
+                                        onChange={(e) =>
+                                            setRechercheDate(e.target.value)
+                                        }
+                                    />
+                                </div>
+
+                                <button
+                                    onClick={handleSearch}
+                                    className="mt-6 cursor-pointer rounded-md bg-blue-500 p-2 text-white hover:bg-blue-500/80"
+                                >
+                                    <Search size={16} />
+                                </button>
                             </div>
 
                             <div>
-                                <Label className="text-gray-500">Salle</Label>
-                                <NativeSelect
-                                    className="w-full"
-                                    value={rechercheSalle}
-                                    onChange={(e) =>
-                                        setRechercheSalle(e.target.value)
-                                    }
-                                >
-                                    <NativeSelectOption value="">
-                                        {' '}
-                                    </NativeSelectOption>
-
-                                    {salles.data.map((salle) => (
-                                        <NativeSelectOption value={salle.id}>
-                                            {salle.nom}
-                                        </NativeSelectOption>
-                                    ))}
-                                </NativeSelect>
+                                <button className="flex gap-2 rounded bg-green-500 p-2 text-sm text-white">
+                                    <Printer /> Imprimer
+                                </button>
                             </div>
-
-                            <div>
-                                <Label className="text-gray-500">
-                                    Professeur
-                                </Label>
-                                <NativeSelect
-                                    className="w-full"
-                                    value={rechercheProfesseur}
-                                    onChange={(e) =>
-                                        setRechercheProfesseur(e.target.value)
-                                    }
-                                >
-                                    <NativeSelectOption value="">
-                                        {' '}
-                                    </NativeSelectOption>
-
-                                    {professeurs.data.map((professeur) => (
-                                        <NativeSelectOption
-                                            value={professeur.id}
-                                        >
-                                            {professeur.nom} {professeur.prenom}
-                                        </NativeSelectOption>
-                                    ))}
-                                </NativeSelect>
-                            </div>
-
-                            <button
-                                onClick={handleSearch}
-                                className="cursor-pointer rounded-md bg-blue-500 p-2 text-white hover:bg-blue-500/80"
-                            >
-                                <Search />
-                            </button>
                         </div>
                     </Card>
 

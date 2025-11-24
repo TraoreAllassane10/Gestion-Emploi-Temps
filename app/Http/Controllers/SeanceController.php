@@ -27,6 +27,9 @@ class SeanceController extends Controller
         $salle = $request->query("salle");
         $niveau = $request->query("niveau");
         $professeur = $request->query("professeur");
+        $date = $request->query("date");
+
+        // if ($date) dd($date);
 
         try {
             if ($salle) {
@@ -35,8 +38,10 @@ class SeanceController extends Controller
                 $seances = SeanceResource::collection(Seance::where("niveau_id", $niveau)->paginate(10));
             } elseif ($professeur) {
                 $seances = SeanceResource::collection(Seance::where("professeur_id", $professeur)->paginate(10));
+            } elseif ($date) {
+                $seances = SeanceResource::collection(Seance::where("date", $date)->paginate(10));
             } else {
-                $seances = SeanceResource::collection(Seance::latest()->paginate(10));
+                $seances = SeanceResource::collection(Seance::orderByDesc("date")->paginate(10));
             }
 
 
@@ -67,8 +72,7 @@ class SeanceController extends Controller
             $heure_debut = $data["heure_debut"];
             $heure_fin = $data['heure_fin'];
             // Nous verifions si la salle est occupé sur la plage horaire qu'on souhaite ajouté selon la date
-            if (Seance::salleOccupee($salle, $date, $heure_debut, $heure_fin))
-            {
+            if (Seance::salleOccupee($salle, $date, $heure_debut, $heure_fin)) {
                 throw new Exception("Cette salle est occupée sur cette plage horaire");
             }
 
