@@ -43,6 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Routes Niveau
     Route::controller(NiveauController::class)->group(function () {
         Route::get("niveau", "index")->name("niveau");
+        Route::get("/niveau/{niveau}/emploi-du-temps", "emploiParNiveau")->name("niveau.emploi");
         Route::post("niveau", "store")->name("niveau.store");
         Route::get("niveau/{niveau}/edit", "edit")->name("niveau.edit");
         Route::put("niveau/{niveau}/update", "update")->name("niveau.update");

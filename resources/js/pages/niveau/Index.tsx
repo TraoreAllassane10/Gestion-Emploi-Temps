@@ -187,7 +187,7 @@ const Index = () => {
                                 <TableHeader>
                                     <TableRow className="bg-muted">
                                         <TableHead>Libellé</TableHead>
-                                        <TableHead>Actions</TableHead>
+                                        <TableHead className='float-end pr-10'>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -196,7 +196,8 @@ const Index = () => {
                                             <TableCell >
                                                 {niveau.nom}
                                             </TableCell>
-                                            <TableCell className="flex gap-2">
+                                            <TableCell className="flex place-items-center gap-2 float-end">
+
                                                 <Link href={`/niveau/${niveau.id}/edit`}>
                                                     <Edit
                                                         size={20}
@@ -214,6 +215,8 @@ const Index = () => {
                                                         className="cursor-pointer text-red-600 hover:text-red-800"
                                                     />
                                                 </Link>
+
+                                                <Link href={`/niveau/${niveau.id}/emploi-du-temps`} className='p-1 bg-yellow-500 hover:bg-yellow-500/80 text-sm text-white rounded-md cursor-pointer'>Emploi Du Temps</Link>
                                             </TableCell>
                                         </TableRow>
                                     ))}

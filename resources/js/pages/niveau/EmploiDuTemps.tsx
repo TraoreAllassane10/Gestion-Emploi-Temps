@@ -1,0 +1,391 @@
+import PaginationLinks from '@/components/Pagination';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+    NativeSelect,
+    NativeSelectOption,
+} from '@/components/ui/native-select';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import useSeance from '@/hooks/useSeance';
+import AppLayout from '@/layouts/app-layout';
+import { BreadcrumbItem } from '@/types';
+import { Link, router, usePage } from '@inertiajs/react';
+import { Edit, Printer, Search, Trash } from 'lucide-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Niveau',
+        href: '/niveau',
+    },
+    {
+        title: 'Emploi Du Temps',
+        href: '/emploi',
+    },
+];
+
+interface Data {
+    id: number;
+    jours: string;
+    date: string;
+    heure_debut: string;
+    heure_fin: string;
+    professeur: Professeur;
+    cours: Cours;
+    salle: Salle;
+    niveau: Niveau;
+}
+
+interface Meta {
+    current_page: number;
+    from: number;
+    last_page: number;
+    links: {
+        active: boolean;
+        label: string;
+        page: number;
+        url: string;
+    }[];
+}
+
+interface Seance {
+    data: Data[];
+    meta: Meta;
+}
+
+// Type des données du professeur
+interface Professeur {
+    id: number;
+    nom: string;
+    prenom: string;
+}
+
+interface Cours {
+    id: number;
+    nom: string;
+}
+
+interface Salle {
+    id: number;
+    nom: string;
+}
+
+interface Niveau {
+    id: number;
+    nom: string;
+}
+
+interface SeanceProps {
+    seances: Seance;
+    professeurs: {
+        data: Professeur[];
+    };
+    cours: {
+        data: Cours[];
+    };
+    salles: {
+        data: Salle[];
+    };
+    niveaux: {
+        data: Niveau[];
+    };
+    [key: string]: unknown;
+}
+
+const EmploiDuTemps = () => {
+    const { seances, professeurs, cours, salles, niveaux } =
+        usePage<SeanceProps>().props;
+
+
+    //Les states pour la recherche et le filtrage
+    const [rechercheProfesseur, setRechercheProfesseur] = useState('');
+
+    const [rechercheSalle, setRechercheSalle] = useState('');
+    const [rechercheDate, setRechercheDate] = useState('');
+
+    const { deleteSeance } = useSeance();
+
+    // const handleSubmit = () => {
+        // Verification des données
+        // if (
+        //     jours == '' ||
+        //     date == '' ||
+        //     heure_debut == '' ||
+        //     heure_fin == '' ||
+        //     professeur_id == '' ||
+        //     cours_id == '' ||
+        //     salle_id == '' ||
+        //     niveau_id == ''
+        // ) {
+        //     toast.error('Veuillez remplir tous les champs!');
+        //     return;
+        // }
+
+        // // Création d'une seance
+        // createSeance({
+        //     jours,
+        //     date,
+        //     heure_debut,
+        //     heure_fin,
+        //     professeur_id,
+        //     cours_id,
+        //     niveau_id,
+        //     salle_id,
+        // });
+
+        // Nettoyage de l'etat
+        // setJours('');
+        // setDate('');
+        // setHeureDebut('');
+        // setHeureFin('');
+        // setProfesseurId('');
+        // setCoursId('');
+        // setSalleId('');
+        // setNiveauId('');
+    // };
+
+    // Suppression d'une
+    const handleDelete = (id: number) => {
+        if (id) deleteSeance(id);
+    };
+
+    // Recherche et filtrage
+    const handleSearch = () => {
+        // Je recupere le niveau id de la premiere données car elles sont toute le meme niveau id
+        const niveauId = seances.data[0]?.niveau.id.toString();
+
+        if (niveauId) {
+            router.get(`/niveau/${niveauId}/emploi-du-temps`, {
+                niveau: niveauId,
+                professeur: rechercheProfesseur,
+                salle: rechercheSalle,
+                date: rechercheDate,
+            });
+        }
+    };
+
+    // Exportation en pdf
+    const exportPDF = () => {
+      // Je recupere le niveau id de la premiere données car elles sont toute le meme niveau id
+        const niveauId = seances.data[0]?.niveau.id;
+
+        const url =
+            `/seance/export?` +
+            `niveau=${niveauId}&` +
+            `professeur=${rechercheProfesseur}&` +
+            `salle=${rechercheSalle}&` +
+            `date=${rechercheDate}`;
+
+        window.open(url);
+    };
+
+    return (
+        <div>
+            <AppLayout breadcrumbs={breadcrumbs}>
+                <div className="p-4">
+                    {/* Entete et le bouton d'ajout */}
+                    <div className="my-2 flex place-items-center justify-between">
+                        <h1 className="text-2xl font-bold">
+                            Emploi du temps : {seances.data[0]?.niveau.nom}
+                        </h1>
+                    </div>
+
+                    {/* Recherche et Filtrage */}
+                    <Card className="mb-4">
+                        <div className="flex place-items-center justify-between px-4">
+                            <div className="flex place-items-center gap-4">
+                                <div>
+                                    <Label className="text-gray-500">
+                                        Salle
+                                    </Label>
+                                    <NativeSelect
+                                        className="w-full"
+                                        value={rechercheSalle}
+                                        onChange={(e) =>
+                                            setRechercheSalle(e.target.value)
+                                        }
+                                    >
+                                        <NativeSelectOption value="">
+                                            {' '}
+                                        </NativeSelectOption>
+
+                                        {salles.data.map((salle) => (
+                                            <NativeSelectOption
+                                                value={salle.id}
+                                                key={salle.id}
+                                            >
+                                                {salle.nom}
+                                            </NativeSelectOption>
+                                        ))}
+                                    </NativeSelect>
+                                </div>
+
+                                <div>
+                                    <Label className="text-gray-500">
+                                        Professeur
+                                    </Label>
+                                    <NativeSelect
+                                        className="w-full"
+                                        value={rechercheProfesseur}
+                                        onChange={(e) =>
+                                            setRechercheProfesseur(
+                                                e.target.value,
+                                            )
+                                        }
+                                    >
+                                        <NativeSelectOption value="">
+                                            {' '}
+                                        </NativeSelectOption>
+
+                                        {professeurs.data.map((professeur) => (
+                                            <NativeSelectOption
+                                                value={professeur.id}
+                                                key={professeur.id}
+                                            >
+                                                {professeur.nom}{' '}
+                                                {professeur.prenom}
+                                            </NativeSelectOption>
+                                        ))}
+                                    </NativeSelect>
+                                </div>
+
+                                <div>
+                                    <Label>Date</Label>
+                                    <Input
+                                        type="date"
+                                        value={rechercheDate}
+                                        onChange={(e) =>
+                                            setRechercheDate(e.target.value)
+                                        }
+                                    />
+                                </div>
+
+                                <button
+                                    onClick={handleSearch}
+                                    className="mt-6 cursor-pointer rounded-md bg-blue-500 p-2 text-white hover:bg-blue-500/80"
+                                >
+                                    <Search size={16} />
+                                </button>
+                            </div>
+
+                            <div>
+                                <button
+                                    onClick={exportPDF}
+                                    className="flex cursor-pointer items-center gap-2 rounded bg-green-500 p-2 text-sm text-white hover:bg-green-500/90"
+                                >
+                                    <Printer size={16} /> Imprimer
+                                </button>
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Affichage des données */}
+                    <Card>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className="bg-muted/60">
+                                        <TableHead className="font-semibold">
+                                            Jour
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Date
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Début
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Fin
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Cours
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Professeur
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Salle
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Niveau
+                                        </TableHead>
+                                        <TableHead className="text-center font-semibold">
+                                            Actions
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {seances?.data.map((seance) => (
+                                        <TableRow key={seance.id}>
+                                            <TableCell>
+                                                {seance.jours}
+                                            </TableCell>
+                                            <TableCell>
+                                                {new Date(
+                                                    seance.date,
+                                                ).toLocaleDateString('fr-FR')}
+                                            </TableCell>
+                                            <TableCell>
+                                                {seance.heure_debut}
+                                            </TableCell>
+                                            <TableCell>
+                                                {seance.heure_fin}
+                                            </TableCell>
+                                            <TableCell>
+                                                {seance.cours?.nom}
+                                            </TableCell>
+                                            <TableCell>
+                                                {seance.professeur?.nom}{' '}
+                                                {seance.professeur?.prenom}
+                                            </TableCell>
+                                            <TableCell>
+                                                {seance.salle?.nom}
+                                            </TableCell>
+                                            <TableCell>
+                                                {seance.niveau?.nom}
+                                            </TableCell>
+                                            <TableCell className="flex gap-2">
+                                                <Link
+                                                    href={`/seance/${seance.id}/edit`}
+                                                >
+                                                    <Edit
+                                                        size={20}
+                                                        className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                                    />
+                                                </Link>
+
+                                                <Link
+                                                    onClick={() =>
+                                                        handleDelete(seance.id)
+                                                    }
+                                                >
+                                                    <Trash
+                                                        size={20}
+                                                        className="cursor-pointer text-red-600 hover:text-red-800"
+                                                    />
+                                                </Link>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+
+                        <PaginationLinks links={seances?.meta.links} />
+                    </Card>
+                </div>
+            </AppLayout>
+        </div>
+    );
+};
+
+export default EmploiDuTemps;

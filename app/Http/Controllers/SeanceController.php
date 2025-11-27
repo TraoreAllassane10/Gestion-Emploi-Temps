@@ -31,20 +31,20 @@ class SeanceController extends Controller
 
         try {
             // Filtrage dynamique des séances
-            $seances = Seance::when($salle, function($query) use($salle) {
+            $seances = Seance::when($salle, function ($query) use ($salle) {
                 $query->where("salle_id", $salle);
             })
-            ->when($niveau, function($query) use ($niveau) {
-                $query->where("niveau_id", $niveau);
-            })
-            ->when($professeur, function($query) use ($professeur) {
-                $query->where("professeur_id", $professeur);
-            })
-             ->when($date, function($query) use ($date) {
-                $query->where("date", $date);
-            })
-            ->orderByDesc('date')
-            ->paginate(10);
+                ->when($niveau, function ($query) use ($niveau) {
+                    $query->where("niveau_id", $niveau);
+                })
+                ->when($professeur, function ($query) use ($professeur) {
+                    $query->where("professeur_id", $professeur);
+                })
+                ->when($date, function ($query) use ($date) {
+                    $query->where("date", $date);
+                })
+                ->orderByDesc('date')
+                ->paginate(10);
 
 
             return Inertia::render("seance/Index", [
@@ -130,32 +130,46 @@ class SeanceController extends Controller
 
     public function exportPDF(Request $request)
     {
-      
+
         $salle = $request->query("salle");
         $niveau = $request->query("niveau");
         $professeur = $request->query("professeur");
         $date = $request->query("date");
 
-           
+
 
         try {
-            if ($salle) {
-                $seances = Seance::where("salle_id", $salle)->get();
-            } elseif ($niveau) {
-                $seances = Seance::where("niveau_id", $niveau)->get();
-            } elseif ($professeur) {
-                $seances = Seance::where("professeur_id", $professeur)->get();
-            } elseif ($date) {
-                $seances = Seance::where("date", $date)->get();
-            } else {
-                $seances = Seance::orderByDesc("date")->get();
-            }
+            // if ($salle) {
+            //     $seances = Seance::where("salle_id", $salle)->get();
+            // } elseif ($niveau) {
+            //     $seances = Seance::where("niveau_id", $niveau)->get();
+            // } elseif ($professeur) {
+            //     $seances = Seance::where("professeur_id", $professeur)->get();
+            // } elseif ($date) {
+            //     $seances = Seance::where("date", $date)->get();
+            // } else {
+            //     $seances = Seance::orderByDesc("date")->get();
+            // }
+
+            $seances = Seance::when($salle, function ($query) use ($salle) {
+                $query->where("salle_id", $salle);
+            })
+                ->when($niveau, function ($query) use ($niveau) {
+                    $query->where("niveau_id", $niveau);
+                })
+                ->when($professeur, function ($query) use ($professeur) {
+                    $query->where("professeur_id", $professeur);
+                })
+                ->when($date, function ($query) use ($date) {
+                    $query->where("date", $date);
+                })
+                ->orderByDesc('date')->get();
+
 
 
             $pdf = Pdf::loadView('pdf.emploi', compact("seances"));
 
             return $pdf->download('Emploi_du_temps.pdf');
-
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
         }
