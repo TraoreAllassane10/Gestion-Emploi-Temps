@@ -1,3 +1,5 @@
+import AuthImage from '@/assets/auth-image.png';
+import Logo from '@/assets/logo.jpg';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { home } from '@/routes';
 import { type SharedData } from '@/types';
@@ -18,27 +20,22 @@ export default function AuthSplitLayout({
 
     return (
         <div className="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
-            <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
-                <div className="absolute inset-0 bg-zinc-900" />
+            <div
+                className={`relative hidden h-full flex-col p-10 text-white lg:flex dark:border-r`}
+                style={{ backgroundImage: `url(${AuthImage})` }}
+            >
+                <div className="absolute inset-0 bg-zinc-900 opacity-45" />
                 <Link
                     href={home()}
                     className="relative z-20 flex items-center text-lg font-medium"
                 >
-                    <AppLogoIcon className="mr-2 size-8 fill-current text-white" />
-                    {name}
+                    {/* <AppLogoIcon className="mr-2 size-8 fill-current text-white" /> */}
+                    <img src={Logo} alt="logo" className="mr-2 size-20" />
+                    INEC DALOA
                 </Link>
-                {quote && (
-                    <div className="relative z-20 mt-auto">
-                        <blockquote className="space-y-2">
-                            <p className="text-lg">
-                                &ldquo;{quote.message}&rdquo;
-                            </p>
-                            <footer className="text-sm text-neutral-300">
-                                {quote.author}
-                            </footer>
-                        </blockquote>
-                    </div>
-                )}
+                <div className="relative z-20 mt-38">
+                    <h1 className='text-4xl font-bold w-[600px]'>Plateforme de Gestion des Emplois du Temps</h1>
+                </div>
             </div>
             <div className="w-full lg:p-8">
                 <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
