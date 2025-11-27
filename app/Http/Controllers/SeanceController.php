@@ -139,18 +139,6 @@ class SeanceController extends Controller
 
 
         try {
-            // if ($salle) {
-            //     $seances = Seance::where("salle_id", $salle)->get();
-            // } elseif ($niveau) {
-            //     $seances = Seance::where("niveau_id", $niveau)->get();
-            // } elseif ($professeur) {
-            //     $seances = Seance::where("professeur_id", $professeur)->get();
-            // } elseif ($date) {
-            //     $seances = Seance::where("date", $date)->get();
-            // } else {
-            //     $seances = Seance::orderByDesc("date")->get();
-            // }
-
             $seances = Seance::when($salle, function ($query) use ($salle) {
                 $query->where("salle_id", $salle);
             })

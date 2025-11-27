@@ -64,11 +64,12 @@ interface DashboardProps {
     nombreCours: number;
     nombreFiliere: number;
     nombreSalle: number;
+    sallesNonOccupees: Salle[];
     [key: string]: unknown;
 }
 
 export default function Dashboard() {
-    const { seances, nombreCours, nombreFiliere, nombreSalle } =
+    const { seances, nombreCours, nombreFiliere, nombreSalle,sallesNonOccupees } =
         usePage<DashboardProps>().props;
 
     return (
@@ -124,88 +125,131 @@ export default function Dashboard() {
                     </Card>
                 </div>
 
-                <Card className="shadow-sm">
-                    <CardHeader>
-                        <div className="flex items-center justify-between">
-                            <h2 className="flex items-center gap-2 text-xl font-semibold">
-                                <Clock size={20} /> 5 dernières séances
-                                enregistrées
-                            </h2>
+                <div className="flex gap-2">
+                    {/* Salles disponible */}
+                    <Card className="shadow-sm w-[33%]">
+                        <CardHeader>
+                            <div className="flex items-center justify-between">
+                                <h2 className="flex items-center gap-2 text-md font-medium text-primary">
+                                    <Building2 size={20} /> Salles Libre actuellement
+                                </h2>
 
-                            <Link
-                                href={seance()}
-                                className="flex items-center gap-1 rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground hover:bg-primary/90"
-                            >
-                                Voir plus <ArrowRight size={18} />
-                            </Link>
-                        </div>
-                    </CardHeader>
+                               
+                            </div>
+                        </CardHeader>
 
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow className="bg-muted/60">
-                                    <TableHead className="font-semibold">
-                                        Jour
-                                    </TableHead>
-                                    <TableHead className="font-semibold">
-                                        Date
-                                    </TableHead>
-                                    <TableHead className="font-semibold">
-                                        Début
-                                    </TableHead>
-                                    <TableHead className="font-semibold">
-                                        Fin
-                                    </TableHead>
-                                    <TableHead className="font-semibold">
-                                        Cours
-                                    </TableHead>
-                                    <TableHead className="font-semibold">
-                                        Professeur
-                                    </TableHead>
-                                    <TableHead className="font-semibold">
-                                        Salle
-                                    </TableHead>
-                                    <TableHead className="font-semibold">
-                                        Niveau
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-
-                            <TableBody>
-                                {seances?.map((seance) => (
-                                    <TableRow
-                                        className="border-b"
-                                        key={seance.id}
-                                    >
-                                        <TableCell className="font-medium">
-                                            {seance.jours}
-                                        </TableCell>
-                                        <TableCell>{seance.date}</TableCell>
-                                        <TableCell>
-                                            {seance.heure_debut}
-                                        </TableCell>
-                                        <TableCell>
-                                            {seance.heure_fin}
-                                        </TableCell>
-                                        <TableCell>
-                                            {seance.cours?.nom}
-                                        </TableCell>
-                                        <TableCell>
-                                            M. {seance.professeur?.nom}
-                                        </TableCell>
-                                        <TableCell>
-                                            {seance.salle?.nom}
-                                        </TableCell>
-                                        <TableCell>
-                                            {seance.niveau.nom}
-                                        </TableCell>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className="bg-muted/60">
+                                        <TableHead className="font-semibold">
+                                            Nom des salles
+                                        </TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </Card>
+                                </TableHeader>
+
+                                <TableBody>
+                                    {sallesNonOccupees?.map((seance) => (
+                                        <TableRow
+                                            className="border-b"
+                                            key={seance.id}
+                                        >
+                                            <TableCell className="font-medium">
+                                                {seance.nom}
+                                            </TableCell>
+                                           
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+
+                    {/* 5 Dernieres seances enregistrés */}
+                    <Card className="shadow-sm w-[67%]">
+                        <CardHeader>
+                            <div className="flex items-center justify-between">
+                                <h2 className="flex items-center gap-2 text-md font-medium text-primary">
+                                    <Clock size={20} /> 5 dernières séances
+                                    enregistrées
+                                </h2>
+
+                                <Link
+                                    href={seance()}
+                                    className="flex items-center gap-1 rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground hover:bg-primary/90"
+                                >
+                                    Voir plus <ArrowRight size={18} />
+                                </Link>
+                            </div>
+                        </CardHeader>
+
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className="bg-muted/60">
+                                        <TableHead className="font-semibold">
+                                            Jour
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Date
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Début
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Fin
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Cours
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Professeur
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Salle
+                                        </TableHead>
+                                        <TableHead className="font-semibold">
+                                            Niveau
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+
+                                <TableBody>
+                                    {seances?.map((seance) => (
+                                        <TableRow
+                                            className="border-b"
+                                            key={seance.id}
+                                        >
+                                            <TableCell className="font-medium">
+                                                {seance.jours}
+                                            </TableCell>
+                                            <TableCell>{seance.date}</TableCell>
+                                            <TableCell>
+                                                {seance.heure_debut}
+                                            </TableCell>
+                                            <TableCell>
+                                                {seance.heure_fin}
+                                            </TableCell>
+                                            <TableCell>
+                                                {seance.cours?.nom}
+                                            </TableCell>
+                                            <TableCell>
+                                                {seance.professeur?.nom}{' '}
+                                                {seance.professeur?.prenom}
+                                            </TableCell>
+                                            <TableCell>
+                                                {seance.salle?.nom}
+                                            </TableCell>
+                                            <TableCell>
+                                                {seance.niveau.nom}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </AppLayout>
     );
