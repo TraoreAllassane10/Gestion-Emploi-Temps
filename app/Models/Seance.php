@@ -38,7 +38,7 @@ class Seance extends Model
     return $this->belongsTo(Niveau::class);
   }
 
-  //Permet de savoir si une salle est occupée durant une plage horaire
+  //Permet de savoir si une salle est occupée durant une plage horaire selon une date
   public static function salleOccupee($salle_id, $date, $debut, $fin)
   {
     return self::where("salle_id", $salle_id)
@@ -47,4 +47,14 @@ class Seance extends Model
         return $query->where('heure_debut', '<', $fin)->where('heure_fin', '>', $debut);
       })->exists();
   }
+
+   //Permet de savoir si un un professeur est occupée durant une plage horaire selon une date
+   public static function professeurOccupe($professeur_id, $date, $debut, $fin)
+   {
+    return self::where("professeur_id", $professeur_id)
+      ->where("date", $date)
+      ->where(function($query) use ($debut, $fin) {
+        return $query->where('heure_debut', '<', $fin)->where('heure_fin', '>', $debut);
+      })->exists();
+   }
 }

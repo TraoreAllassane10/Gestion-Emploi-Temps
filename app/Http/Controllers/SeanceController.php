@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Cours;
 use App\Models\Salle;
@@ -31,21 +30,25 @@ class SeanceController extends Controller
         $date = $request->query("date");
 
         try {
-            if ($salle) {
-                $seances = SeanceResource::collection(Seance::where("salle_id", $salle)->paginate(10));
-            } elseif ($niveau) {
-                $seances = SeanceResource::collection(Seance::where("niveau_id", $niveau)->paginate(10));
-            } elseif ($professeur) {
-                $seances = SeanceResource::collection(Seance::where("professeur_id", $professeur)->paginate(10));
-            } elseif ($date) {
-                $seances = SeanceResource::collection(Seance::where("date", $date)->paginate(10));
-            } else {
-                $seances = SeanceResource::collection(Seance::orderByDesc("date")->paginate(10));
-            }
+            // Filtrage dynamique des séances
+            $seances = Seance::when($salle, function($query) use($salle) {
+                $query->where("salle_id", $salle);
+            })
+            ->when($niveau, function($query) use ($niveau) {
+                $query->where("niveau_id", $niveau);
+            })
+            ->when($professeur, function($query) use ($professeur) {
+                $query->where("professeur_id", $professeur);
+            })
+             ->when($date, function($query) use ($date) {
+                $query->where("date", $date);
+            })
+            ->orderByDesc('date')
+            ->paginate(10);
 
 
             return Inertia::render("seance/Index", [
-                "seances" => $seances,
+                "seances" => SeanceResource::collection($seances),
                 "professeurs" => ProfesseurResource::collection(Professeur::latest()->get()),
                 "cours" => CoursResource::collection(Cours::latest()->get()),
                 "salles" => SalleResource::collection(Salle::latest()->get()),
@@ -65,14 +68,20 @@ class SeanceController extends Controller
             // Recupere la derniere année enregistrée et l'envoyer dans les données à stocker
             $data["annee_scolaire_id"] = AnneeScolaire::latest("created_at")->first()->id;
 
-
             $date = $data['date'];
             $salle = $data["salle_id"];
             $heure_debut = $data["heure_debut"];
             $heure_fin = $data['heure_fin'];
-            // Nous verifions si la salle est occupé sur la plage horaire qu'on souhaite ajouté selon la date
+            $professeur = $data['professeur_id'];
+
+            // Nous verifions si la salle est occupée sur la plage horaire qu'on souhaite ajouté selon la date
             if (Seance::salleOccupee($salle, $date, $heure_debut, $heure_fin)) {
                 throw new Exception("Cette salle est occupée sur cette plage horaire");
+            }
+
+            // Nous verifions si le professeur est occupé sur la plage horaire qu'on souhaite ajouté selon la date
+            if (Seance::professeurOccupe($professeur, $date, $heure_debut, $heure_fin)) {
+                throw new Exception("Cet professeur est occupé sur cette plage horaire");
             }
 
             //Creation d'une séance
