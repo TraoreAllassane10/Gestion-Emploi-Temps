@@ -21,9 +21,11 @@ export default function useAnnee() {
                     toast.success(
                         "Erreur survenue lors de la creation de l'annee",
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
+            console.log(error)
         }
     };
 
@@ -42,9 +44,11 @@ export default function useAnnee() {
                     toast.success(
                         "Erreur survenue lors de la modification de l'annee",
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
+            console.log(error)
         }
     };
 
@@ -60,8 +64,10 @@ export default function useAnnee() {
                     toast.success(
                         "Erreur survenue lors de la suppression de l'annee",
                     );
+                    console.log(error)
                 });
         } catch (error) {
+            console.log(error)
             toast.success('Erreur survenue au niveau du serveur');
         }
     };

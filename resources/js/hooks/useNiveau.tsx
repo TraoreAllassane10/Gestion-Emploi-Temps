@@ -23,9 +23,11 @@ export default function useNiveau() {
                     toast.success(
                         "Erreur survenue lors de la creation d'un niveau",
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
+            console.log(error)
         }
     };
 
@@ -44,9 +46,11 @@ export default function useNiveau() {
                     toast.success(
                         "Erreur survenue lors de la modification d'un niveau",
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
+            console.log(error)
         }
     };
 
@@ -62,9 +66,11 @@ export default function useNiveau() {
                     toast.success(
                         'Erreur survenue lors de la suppression du niveau',
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
+            console.log(error)
         }
     };
 

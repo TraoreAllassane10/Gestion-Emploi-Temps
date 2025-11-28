@@ -102,7 +102,7 @@ interface SeanceProps {
 }
 
 const EmploiDuTemps = () => {
-    const { seances, professeurs, cours, salles, niveaux } =
+    const { seances, professeurs, salles } =
         usePage<SeanceProps>().props;
 
 

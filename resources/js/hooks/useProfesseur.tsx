@@ -26,9 +26,11 @@ export default function useProfesseur() {
                     toast.success(
                         "Erreur survenue lors de la creation d'un professeur",
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au professeur du serveur');
+            console.log(error)
         }
     };
 
@@ -47,9 +49,11 @@ export default function useProfesseur() {
                     toast.success(
                         "Erreur survenue lors de la modification d'un professeur",
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au professeur du serveur');
+            console.log(error)
         }
     };
 
@@ -65,9 +69,11 @@ export default function useProfesseur() {
                     toast.success(
                         'Erreur survenue lors de la suppression du professeur',
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
+            console.log(error)
         }
     };
 

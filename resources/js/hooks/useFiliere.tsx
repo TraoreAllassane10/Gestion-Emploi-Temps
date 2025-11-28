@@ -19,9 +19,11 @@ export default function useFiliere() {
                     toast.success(
                         "Erreur survenue lors de la creation de la filière",
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
+            console.log(error)
         }
     };
 
@@ -40,9 +42,11 @@ export default function useFiliere() {
                     toast.success(
                         "Erreur survenue lors de la modification de la filière",
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
+            console.log(error)
         }
     };
 
@@ -58,9 +62,11 @@ export default function useFiliere() {
                     toast.success(
                         "Erreur survenue lors de la suppression de la filière",
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
+            console.log(error)
         }
     };
 

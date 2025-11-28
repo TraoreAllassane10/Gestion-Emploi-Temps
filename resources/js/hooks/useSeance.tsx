@@ -30,6 +30,7 @@ export default function useSeance() {
             );
         } catch (error) {
             toast.error('Erreur survenue au seance du serveur');
+            console.log(error)
         }
     };
 
@@ -51,9 +52,11 @@ export default function useSeance() {
                 })
                 .catch((error) => {
                     toast.error(error.response.data.message);
+                    console.log(error)
                 });
         } catch (error) {
             toast.error('Erreur survenue au seance du serveur');
+            console.log(error)
         }
     };
 
@@ -70,9 +73,11 @@ export default function useSeance() {
                 })
                 .catch((error) => {
                     toast.error(error.response.data.message);
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au seance du serveur');
+            console.log(error)
         }
     };
 
@@ -88,9 +93,11 @@ export default function useSeance() {
                     toast.success(
                         'Erreur survenue lors de la suppression du seance',
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au seance du serveur');
+            console.log(error)
         }
     };
 

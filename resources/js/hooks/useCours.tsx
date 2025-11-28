@@ -23,9 +23,11 @@ export default function useCours() {
                     toast.success(
                         "Erreur survenue lors de la creation d'un cours",
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au cours du serveur');
+            console.log(error)
         }
     };
 
@@ -44,9 +46,11 @@ export default function useCours() {
                     toast.success(
                         "Erreur survenue lors de la modification d'un cours",
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au cours du serveur');
+            console.log(error)
         }
     };
 
@@ -62,9 +66,11 @@ export default function useCours() {
                     toast.success(
                         'Erreur survenue lors de la suppression du cours',
                     );
+                    console.log(error)
                 });
         } catch (error) {
             toast.success('Erreur survenue au cours du serveur');
+            console.log(error)
         }
     };
 

@@ -126,7 +126,7 @@ const Index = () => {
     const [rechercheSalle, setRechercheSalle] = useState('');
     const [rechercheDate, setRechercheDate] = useState('');
 
-    const { createSeance, deleteSeance, searchAndSort } = useSeance();
+    const { createSeance, deleteSeance } = useSeance();
 
     // Enregistrement d'un cours
     const handleSubmit = () => {
