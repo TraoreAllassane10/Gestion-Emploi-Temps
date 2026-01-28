@@ -122,76 +122,86 @@ const Create = () => {
                                 />
                             </div>
 
-                            <div className="flex flex-col gap-4">
-                                <Label className="text-md font-semibold">
-                                    Nom
-                                </Label>
-                                <Input
-                                    type="text"
-                                    value={nom}
-                                    onChange={(e) => setNom(e.target.value)}
-                                />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="flex flex-col gap-4">
+                                    <Label className="text-md font-semibold">
+                                        Nom
+                                    </Label>
+                                    <Input
+                                        type="text"
+                                        value={nom}
+                                        onChange={(e) => setNom(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col gap-4">
+                                    <Label className="text-md font-semibold">
+                                        Prenom
+                                    </Label>
+                                    <Input
+                                        type="text"
+                                        value={prenom}
+                                        onChange={(e) =>
+                                            setPrenom(e.target.value)
+                                        }
+                                    />
+                                </div>
                             </div>
 
-                            <div className="flex flex-col gap-4">
-                                <Label className="text-md font-semibold">
-                                    Prenom
-                                </Label>
-                                <Input
-                                    type="text"
-                                    value={prenom}
-                                    onChange={(e) => setPrenom(e.target.value)}
-                                />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="flex flex-col gap-4">
+                                    <Label className="text-md font-semibold">
+                                        Date de naissance
+                                    </Label>
+                                    <Input
+                                        type="date"
+                                        value={date_naissance}
+                                        onChange={(e) =>
+                                            setDate_naissance(e.target.value)
+                                        }
+                                    />
+                                </div>
+
+                                <div className="flex flex-col gap-4">
+                                    <Label className="text-md font-semibold">
+                                        Lieu de naissane
+                                    </Label>
+                                    <Input
+                                        type="text"
+                                        value={lieu_naissance}
+                                        onChange={(e) =>
+                                            setLieu_naissance(e.target.value)
+                                        }
+                                    />
+                                </div>
                             </div>
 
-                            <div className="flex flex-col gap-4">
-                                <Label className="text-md font-semibold">
-                                    Date de naissance
-                                </Label>
-                                <Input
-                                    type="date"
-                                    value={date_naissance}
-                                    onChange={(e) =>
-                                        setDate_naissance(e.target.value)
-                                    }
-                                />
-                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="flex flex-col gap-4">
+                                    <Label className="text-md font-semibold">
+                                        Numero de téléphone
+                                    </Label>
+                                    <Input
+                                        type="number"
+                                        value={numero}
+                                        onChange={(e) =>
+                                            setNumero(e.target.value)
+                                        }
+                                    />
+                                </div>
 
-                            <div className="flex flex-col gap-4">
-                                <Label className="text-md font-semibold">
-                                    Lieu de naissane
-                                </Label>
-                                <Input
-                                    type="text"
-                                    value={lieu_naissance}
-                                    onChange={(e) =>
-                                        setLieu_naissance(e.target.value)
-                                    }
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-4">
-                                <Label className="text-md font-semibold">
-                                    Numero de téléphone
-                                </Label>
-                                <Input
-                                    type="number"
-                                    value={numero}
-                                    onChange={(e) => setNumero(e.target.value)}
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-4">
-                                <Label className="text-md font-semibold">
-                                    Nom du père / Mère / Tuteur
-                                </Label>
-                                <Input
-                                    type="text"
-                                    value={nom_parent}
-                                    onChange={(e) =>
-                                        setNom_parent(e.target.value)
-                                    }
-                                />
+                                <div className="flex flex-col gap-4">
+                                    <Label className="text-md font-semibold">
+                                        Nom du père / Mère / Tuteur
+                                    </Label>
+                                    <Input
+                                        type="text"
+                                        value={nom_parent}
+                                        onChange={(e) =>
+                                            setNom_parent(e.target.value)
+                                        }
+                                    />
+                                </div>
                             </div>
 
                             <div className="flex flex-col gap-4">
@@ -207,7 +217,7 @@ const Create = () => {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2">
+                            <div className="">
                                 <div>
                                     <Label htmlFor="sheet-demo-name">
                                         Niveau
@@ -234,7 +244,7 @@ const Create = () => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2">
+                            <div className="">
                                 <div>
                                     <Label htmlFor="sheet-demo-name">
                                         Année scolaire

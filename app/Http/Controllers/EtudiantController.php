@@ -17,7 +17,9 @@ class EtudiantController extends Controller
     public function index()
     {
         try {
-            $etudiants = EtudiantRessource::collection(Etudiant::latest()->paginate(10));
+            $etudiants = EtudiantRessource::collection(Etudiant::with(["niveaux" => function($query) {
+                $query->wherePivot("annee_scolaire_id", 1);
+            }])->latest()->paginate(10));
             return Inertia::render("etudiant/Index", [
                 "etudiants" => $etudiants
             ]);

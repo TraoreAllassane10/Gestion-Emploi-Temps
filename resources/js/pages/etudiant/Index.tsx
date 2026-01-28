@@ -1,8 +1,10 @@
+import PaginationLinks from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
     Table,
     TableBody,
+    TableCell,
     TableHead,
     TableHeader,
     TableRow,
@@ -12,6 +14,7 @@ import AppLayout from '@/layouts/app-layout';
 import { annee } from '@/routes';
 import { BreadcrumbItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
+import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -22,11 +25,18 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface Annee {
-    id: number;
-    libelle: string;
-    date_debut: string;
-    date_fin: string;
+interface Etudiant {
+    ip: string;
+    nom: string;
+    prenom: string;
+    date_naissance: string;
+    lieu_naissance: string;
+    numero: number;
+    nom_parent: string;
+    numero_parent: number;
+    niveaux: { id: string; nom: string }[];
+    niveau_id: string;
+    annee_id: string;
 }
 
 interface Meta {
@@ -41,18 +51,18 @@ interface Meta {
     }[];
 }
 
-interface Annees {
-    data: Annee[];
+interface Etudiants {
+    data: Etudiant[];
     meta: Meta;
 }
 
-interface AnneeProps {
-    annees: Annees;
+interface EtudiantProps {
+    etudiants: Etudiants;
     [key: string]: unknown;
 }
 
 const Index = () => {
-    const { annees } = usePage<AnneeProps>().props;
+    const { etudiants } = usePage<EtudiantProps>().props;
 
     const [libelle, setLibelle] = useState('');
     const [date_debut, setDateDebut] = useState('');
@@ -112,39 +122,57 @@ const Index = () => {
                             <Table>
                                 <TableHeader>
                                     <TableRow className="bg-muted">
-                                        <TableHead>Libellé</TableHead>
-                                        <TableHead>Date de Début</TableHead>
-                                        <TableHead>Date de Fin</TableHead>
+                                        <TableHead>IP</TableHead>
+                                        <TableHead>Nom</TableHead>
+                                        <TableHead>Prenom</TableHead>
+                                        <TableHead>Niveaux</TableHead>
+                                        <TableHead>Date de naissance</TableHead>
+                                        <TableHead>Lieu de naissane</TableHead>
+                                        <TableHead>
+                                            Numero de telephone
+                                        </TableHead>
                                         <TableHead>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {/* {annees?.data.map((annee) => (
-                                        <TableRow key={annee.id}>
-                                            <TableCell >
-                                                {annee.libelle}
+                                    {etudiants?.data.map((etudiant) => (
+                                        <TableRow key={etudiant.ip}>
+                                            <TableCell>{etudiant.ip}</TableCell>
+                                            <TableCell>
+                                                {etudiant.nom}
                                             </TableCell>
                                             <TableCell>
-                                                {annee.date_debut}
+                                                {etudiant.prenom}
                                             </TableCell>
                                             <TableCell>
-                                                {annee.date_debut}
+                                                {etudiant.niveaux.map(
+                                                    (niveau) => (
+                                                        <p className="flex gap-1">
+                                                            <span>
+                                                                {niveau.nom}
+                                                            </span>
+                                                        </p>
+                                                    ),
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {etudiant.date_naissance}
+                                            </TableCell>
+                                            <TableCell>
+                                                {etudiant.lieu_naissance}
+                                            </TableCell>
+                                            <TableCell>
+                                                {etudiant.numero}
                                             </TableCell>
                                             <TableCell className="flex gap-2">
-                                                <Link
-                                                    href={`annee/${annee.id}/edit`}
-                                                >
+                                                <Link>
                                                     <Edit
                                                         size={20}
                                                         className="cursor-pointer text-blue-600 hover:text-blue-800"
                                                     />
                                                 </Link>
 
-                                                <Link
-                                                    onClick={() =>
-                                                        handleDelete(annee.id)
-                                                    }
-                                                >
+                                                <Link>
                                                     <Trash
                                                         size={20}
                                                         className="cursor-pointer text-red-600 hover:text-red-800"
@@ -152,12 +180,12 @@ const Index = () => {
                                                 </Link>
                                             </TableCell>
                                         </TableRow>
-                                    ))} */}
+                                    ))}
                                 </TableBody>
                             </Table>
 
                             {/* Systeme de pagination */}
-                            {/* <PaginationLinks links={annees.meta.links} /> */}
+                            <PaginationLinks links={etudiants.meta.links} />
                         </CardContent>
                     </Card>
                 </div>
