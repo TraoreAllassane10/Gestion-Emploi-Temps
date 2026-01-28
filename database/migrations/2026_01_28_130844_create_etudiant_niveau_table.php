@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId("ip")->constrained("etudiants", "ip")->cascadeOnDelete();
             $table->foreignId("niveau_id")->constrained("niveaux", "id")->cascadeOnDelete();
-            $table->foreignId("annee_id")->constrained("annee_scolaires", "id")->cascadeOnDelete();
+            $table->foreignId("annee_scolaire_id")->constrained("annee_scolaires", "id")->cascadeOnDelete();
             $table->timestamps();
+
+            // Empêche les doublons
+            $table->unique(["ip", "niveau_id", "annee_scolaire_id"]);
         });
     }
 

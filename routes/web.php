@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnneeScolaireController;
 use App\Http\Controllers\CoursController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\NiveauController;
 use App\Http\Controllers\ProfesseurController;
@@ -77,7 +78,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete("cours/{cours}/delete", "delete")->name("cours.delete");
     });
 
-     //Routes seance
+    //Routes seance
     Route::controller(SeanceController::class)->group(function () {
         Route::get("seance", "index")->name("seance");
         Route::post("seance", "store")->name("seance.store");
@@ -85,6 +86,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put("seance/{seance}/update", "update")->name("seance.update");
         Route::delete("seance/{seance}/delete", "delete")->name("seance.delete");
         Route::get("seance/export", "exportPDF")->name("seance.pdf");
+    });
+
+    //Routes Etudiant
+    Route::controller(EtudiantController::class)->group(function () {
+        Route::get("etudiants", "index")->name("etudiants");
+        Route::get("etudiants/create", "create")->name("etudiants.create");
+        Route::post("etudiants", "store")->name("etudiants.store");
+        Route::get("etudiants/{etudiant}/edit", "edit")->name("etudiants.edit");
+        Route::put("etudiants/{etudiant}/update", "update")->name("etudiants.update");
+        Route::delete("etudiants/{etudiant}/delete", "delete")->name("etudiants.delete");
     });
 });
 

@@ -17,8 +17,8 @@ return new class extends Migration
             
             $table->string("nom");
             $table->string("prenom");
-            $table->date("date_naissane");
-            $table->string("lieu_naissane");
+            $table->date("date_naissance");
+            $table->string("lieu_naissance");
             $table->integer("numero");
             $table->string("nom_parent");
             $table->integer("numero_parent");

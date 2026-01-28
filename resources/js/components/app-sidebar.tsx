@@ -14,6 +14,7 @@ import {
     annee,
     cours,
     dashboard,
+    etudiants,
     filiere,
     niveau,
     professeur,
@@ -32,6 +33,7 @@ import {
     LayoutGrid,
     LucideMoveUpLeft,
     User,
+    User2,
 } from 'lucide-react';
 import AppLogo from './app-logo';
 
@@ -45,6 +47,11 @@ const mainNavItems: NavItem[] = [
         title: 'Annee Scolaire',
         href: annee(),
         icon: Book,
+    },
+        {
+        title: 'Etudiant',
+        href: etudiants(),
+        icon: User2,
     },
     {
         title: 'Filière',
