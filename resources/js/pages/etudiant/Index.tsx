@@ -9,14 +9,11 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import useAnnee from '@/hooks/useAnnee';
+import useEtudiant from '@/hooks/useEtudiant';
 import AppLayout from '@/layouts/app-layout';
-import { annee } from '@/routes';
 import { BreadcrumbItem } from '@/types';
-import { Link, router, usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Edit, Trash } from 'lucide-react';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,7 +23,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface Etudiant {
-    ip: string;
+    ip: number;
     nom: string;
     prenom: string;
     date_naissance: string;
@@ -64,39 +61,11 @@ interface EtudiantProps {
 const Index = () => {
     const { etudiants } = usePage<EtudiantProps>().props;
 
-    const [libelle, setLibelle] = useState('');
-    const [date_debut, setDateDebut] = useState('');
-    const [date_fin, setDateFin] = useState('');
+    const { deleteEtudiant } = useEtudiant();
 
-    const { createAnnee, deleteAnnee } = useAnnee();
-
-    // Enregistrement d'une annee
-    const handleSubmit = () => {
-        // Verification des données
-        if (libelle == '' || date_debut == undefined || date_fin == undefined) {
-            toast.error('Veuillez remplir tous les champs svp !');
-            return;
-        }
-
-        // Creation d'une nouvelle année
-        createAnnee({
-            libelle,
-            date_debut: new Date(date_debut),
-            date_fin: new Date(date_fin),
-        });
-
-        // Nettoye de l'etat du composant
-        setLibelle('');
-        setDateDebut('');
-        setDateFin('');
-
-        //Redirection sur la page d'affiche
-        router.visit(annee());
-    };
-
-    // Suppression d'une année
+    // Suppression d'un etudiant
     const handleDelete = (id: number) => {
-        if (id) deleteAnnee(id);
+        if (id) deleteEtudiant(id);
     };
 
     return (
@@ -145,7 +114,7 @@ const Index = () => {
                                                 {etudiant.prenom}
                                             </TableCell>
                                             <TableCell>
-                                                {etudiant.niveaux.map(
+                                                {etudiant.niveaux?.map(
                                                     (niveau) => (
                                                         <p className="flex gap-1">
                                                             <span>
@@ -172,7 +141,13 @@ const Index = () => {
                                                     />
                                                 </Link>
 
-                                                <Link>
+                                                <Link
+                                                    onClick={() =>
+                                                        handleDelete(
+                                                            etudiant.ip,
+                                                        )
+                                                    }
+                                                >
                                                     <Trash
                                                         size={20}
                                                         className="cursor-pointer text-red-600 hover:text-red-800"

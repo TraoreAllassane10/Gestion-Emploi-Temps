@@ -7,7 +7,6 @@ use App\Http\Requests\etudiant\UpdateEtudiantRequest;
 use Exception;
 use Inertia\Inertia;
 use App\Models\Etudiant;
-use Illuminate\Http\Request;
 use App\Http\Resources\EtudiantRessource;
 use App\Models\AnneeScolaire;
 use App\Models\Niveau;
@@ -17,8 +16,10 @@ class EtudiantController extends Controller
     public function index()
     {
         try {
-            $etudiants = EtudiantRessource::collection(Etudiant::with(["niveaux" => function($query) {
-                $query->wherePivot("annee_scolaire_id", 1);
+            $derniereAnnee = AnneeScolaire::latest()->first();
+
+            $etudiants = EtudiantRessource::collection(Etudiant::with(["niveaux" => function ($query) use ($derniereAnnee) {
+                $query->wherePivot("annee_scolaire_id", $derniereAnnee->id);
             }])->latest()->paginate(10));
             return Inertia::render("etudiant/Index", [
                 "etudiants" => $etudiants

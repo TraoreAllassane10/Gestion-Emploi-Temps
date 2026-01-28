@@ -8,8 +8,9 @@ import {
 } from '@/components/ui/native-select';
 import useEtudiant from '@/hooks/useEtudiant';
 import AppLayout from '@/layouts/app-layout';
+import { etudiants } from '@/routes';
 import { BreadcrumbItem } from '@/types';
-import { usePage } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -100,6 +101,9 @@ const Create = () => {
         setNumero_parent('');
         setNiveauId('');
         setAnneeId('');
+
+        //Redirection sur la page d'affiche
+        router.visit(etudiants());
     };
 
     return (
