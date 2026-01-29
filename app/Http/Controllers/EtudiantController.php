@@ -71,18 +71,43 @@ class EtudiantController extends Controller
 
     public function edit(Etudiant $etudiant)
     {
+        $niveaux = Niveau::select(["id", "nom"])->get();
+        $annees = AnneeScolaire::select(["id", "libelle"])->get();
+
         return Inertia::render("etudiant/Edit", [
-            "etudiant" => $etudiant
+            "etudiant" => $etudiant->load('niveaux'),
+            "annees" => $annees,
+            "niveaux" => $niveaux
         ]);
     }
 
-    public function update(UpdateEtudiantRequest $request, Etudiant $etudiant)
+    public function update(UpdateEtudiantRequest $request, string $etudiant)
     {
         try {
             // Validation des entrées
             $data = $request->validated();
 
+            $etudiant = Etudiant::find($etudiant);
 
+            $etudiantUpdated = $etudiant->update([
+                "ip" => $data['ip'],
+                "nom" => $data['nom'],
+                "prenom" => $data['prenom'],
+                "date_naissance" => $data['date_naissance'],
+                "lieu_naissance" => $data['lieu_naissance'],
+                "numero" => $data['numero'],
+                "nom_parent" => $data['nom_parent'],
+                "numero_parent" =>  $data['numero_parent'],
+            ]);
+
+            if ($etudiantUpdated) {
+                $etudiant->niveaux()->syncWithPivotValues(
+                    $data["niveau_id"],
+                    [
+                        "annee_scolaire_id" => $data["annee_id"]
+                    ]
+                );
+            }
 
             return response()->json(["success" => "true"]);
         } catch (Exception $e) {

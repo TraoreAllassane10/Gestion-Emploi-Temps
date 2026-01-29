@@ -134,7 +134,7 @@ const Index = () => {
                                                 {etudiant.numero}
                                             </TableCell>
                                             <TableCell className="flex gap-2">
-                                                <Link>
+                                                <Link href={`/etudiants/${etudiant.ip}/edit`}>
                                                     <Edit
                                                         size={20}
                                                         className="cursor-pointer text-blue-600 hover:text-blue-800"

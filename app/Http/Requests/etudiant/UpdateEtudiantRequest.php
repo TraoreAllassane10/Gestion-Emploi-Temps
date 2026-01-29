@@ -23,11 +23,11 @@ class UpdateEtudiantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "ip" => "required|string|min:10|" . Rule::unique('etudiants', "ip")->ignore($this->ip),
+            "ip" => "required|string|min:10|" ,
             "nom" => "required|string",
             "prenom" => "required|string",
-            "date_naissane" => "required",
-            "lieu_naissane" => "required|string",
+            "date_naissance" => "required",
+            "lieu_naissance" => "required|string",
             "numero" => "required|numeric",
             "nom_parent" => "required|string",
             "numero_parent" => "required|numeric",

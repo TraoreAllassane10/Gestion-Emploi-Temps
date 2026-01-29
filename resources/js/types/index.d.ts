@@ -41,3 +41,23 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Niveau {
+    id: string;
+    nom: string;
+    pivot: {
+        annee_scolaire_id: string;
+    }
+}
+
+export interface Etudiant {
+    ip: string;
+    nom: string;
+    prenom: string;
+    date_naissance: string;
+    lieu_naissance: string;
+    numero: string;
+    nom_parent: string;
+    numero_parent: string;
+    niveaux: Niveau[]
+}
