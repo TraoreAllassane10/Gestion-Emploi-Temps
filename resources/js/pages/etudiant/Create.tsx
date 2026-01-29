@@ -11,6 +11,7 @@ import AppLayout from '@/layouts/app-layout';
 import { etudiants } from '@/routes';
 import { BreadcrumbItem } from '@/types';
 import { router, usePage } from '@inertiajs/react';
+import { X } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -52,10 +53,21 @@ const Create = () => {
     const [numero, setNumero] = useState('');
     const [nom_parent, setNom_parent] = useState('');
     const [numero_parent, setNumero_parent] = useState('');
-    const [niveau_id, setNiveauId] = useState('');
+    const [niveau_id, setNiveauId] = useState<string[]>([]);
     const [annee_id, setAnneeId] = useState('');
 
     const { createEtudiant, updateEtudiant, deleteEtudiant } = useEtudiant();
+
+    // Gestion des niveaux
+    const addNiveaux = (niveauId: string) => {
+        setNiveauId((prev) =>
+            prev.includes(niveauId) ? prev : [...prev, niveauId],
+        );
+    };
+
+    const deleteNiveau = (niveauId: string) => {
+        setNiveauId((prev) => prev.filter((nv) => nv !== niveauId));
+    };
 
     // Enregistrement d'un etudiant
     const handleSubmit = () => {
@@ -69,7 +81,7 @@ const Create = () => {
             numero?.toString() == '' ||
             nom_parent == '' ||
             numero_parent?.toString() == '' ||
-            niveau_id == '' ||
+            niveau_id.length == 0 ||
             annee_id == ''
         ) {
             toast.error('Veuillez remplir tous les champs!');
@@ -99,7 +111,7 @@ const Create = () => {
         setNumero('');
         setNom_parent('');
         setNumero_parent('');
-        setNiveauId('');
+        setNiveauId([]);
         setAnneeId('');
 
         //Redirection sur la page d'affiche
@@ -115,6 +127,7 @@ const Create = () => {
                             Creation d'un nouvel etudiant
                         </h1>
 
+                        {/* Formulaire d'ajout */}
                         <form action="" className="space-y-6">
                             <div className="flex flex-col gap-4">
                                 <Label className="text-md font-semibold">
@@ -230,7 +243,7 @@ const Create = () => {
                                         className="w-full"
                                         value={niveau_id}
                                         onChange={(e) =>
-                                            setNiveauId(e.target.value)
+                                            addNiveaux(e.target.value)
                                         }
                                     >
                                         <NativeSelectOption value="">
@@ -245,6 +258,31 @@ const Create = () => {
                                             </NativeSelectOption>
                                         ))}
                                     </NativeSelect>
+                                </div>
+
+                                {/* Liste des niveaux selectionnés */}
+                                <div className="mt-2 flex gap-2">
+                                    {niveau_id.map((niveauId) => {
+                                        const niveau = niveaux.find(
+                                            (nv) => String(nv.id) == niveauId,
+                                        );
+
+                                        return (
+                                            <span
+                                                key={niveauId}
+                                                className="flex place-items-center gap-1 rounded-sm bg-gray-200 px-2 py-1 text-sm font-medium"
+                                            >
+                                                {niveau?.nom}{' '}
+                                                <span
+                                                    onClick={() =>
+                                                        deleteNiveau(niveauId)
+                                                    }
+                                                >
+                                                    <X size={14} />
+                                                </span>
+                                            </span>
+                                        );
+                                    })}
                                 </div>
                             </div>
 

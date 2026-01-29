@@ -31,6 +31,8 @@ class UpdateEtudiantRequest extends FormRequest
             "numero" => "required|numeric",
             "nom_parent" => "required|string",
             "numero_parent" => "required|numeric",
+            "niveau_id" => "required",
+            "annee_id" => "required|exists:annee_scolaires,id"
         ];
     }
 

@@ -114,15 +114,15 @@ const Index = () => {
                                                 {etudiant.prenom}
                                             </TableCell>
                                             <TableCell>
-                                                {etudiant.niveaux?.map(
-                                                    (niveau) => (
-                                                        <p className="flex gap-1">
-                                                            <span>
+                                                <div className="flex gap-1">
+                                                    {etudiant.niveaux?.map(
+                                                        (niveau) => (
+                                                            <span className='rounded-sm bg-gray-200 px-2 py-1 text-sm font-medium'>
                                                                 {niveau.nom}
                                                             </span>
-                                                        </p>
-                                                    ),
-                                                )}
+                                                        ),
+                                                    )}
+                                                </div>
                                             </TableCell>
                                             <TableCell>
                                                 {etudiant.date_naissance}

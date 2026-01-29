@@ -12,7 +12,7 @@ interface Data {
     numero: number ;
     nom_parent: string;
     numero_parent: number;
-    niveau_id: string;
+    niveau_id: string[];
     annee_id: string;
 }
 
@@ -24,17 +24,6 @@ interface DataSearch {
 }
 
 export default function useEtudiant() {
-    // //Recherche et filtrage
-    // const searchAndSort = async (dataSearch: DataSearch) => {
-    //     try {
-    //         await axios.get(
-    //             `/seance?cours=${dataSearch.recherchecours}&professeur=${dataSearch.rechercheProfesseur}&niveau=${dataSearch.rechercheNiveau}&salle=${dataSearch.rechercheSalle}`,
-    //         );
-    //     } catch (error) {
-    //         toast.error('Erreur survenue au seance du serveur');
-    //         console.log(error)
-    //     }
-    // };
 
     // Création d'un etudiant
     const createEtudiant = async (data: Data) => {
