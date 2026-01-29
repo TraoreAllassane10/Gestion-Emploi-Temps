@@ -91,6 +91,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //Routes Etudiant
     Route::controller(EtudiantController::class)->group(function () {
         Route::get("etudiants", "index")->name("etudiants");
+         Route::get("etudiants/{etudiant}/show", "show")->name("etudiants.show");
         Route::get("etudiants/create", "create")->name("etudiants.create");
         Route::post("etudiants", "store")->name("etudiants.store");
         Route::get("etudiants/{etudiant}/edit", "edit")->name("etudiants.edit");

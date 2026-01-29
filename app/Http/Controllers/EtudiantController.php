@@ -29,6 +29,13 @@ class EtudiantController extends Controller
         }
     }
 
+    public function show(Etudiant $etudiant)
+    {
+        return Inertia::render("etudiant/Show", [
+            "etudiant" => $etudiant->load('niveaux'),
+        ]);
+    }
+
     public function create()
     {
         $niveaux = Niveau::select(["id", "nom"])->get();

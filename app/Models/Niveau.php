@@ -13,6 +13,8 @@ class Niveau extends Model
 
     protected $fillable = ["nom", "filiere_id"];
 
+    protected $with = ['filiere'];
+
     public function filiere()
     {
         return $this->belongsTo(Filiere::class);

@@ -56,7 +56,7 @@ const Create = () => {
     const [niveau_id, setNiveauId] = useState<string[]>([]);
     const [annee_id, setAnneeId] = useState('');
 
-    const { createEtudiant, updateEtudiant, deleteEtudiant } = useEtudiant();
+    const { createEtudiant } = useEtudiant();
 
     // Gestion des niveaux
     const addNiveaux = (niveauId: string) => {

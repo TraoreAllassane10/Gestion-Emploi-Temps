@@ -13,7 +13,7 @@ import useEtudiant from '@/hooks/useEtudiant';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Edit, Trash } from 'lucide-react';
+import { Edit, Eye, Trash } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -117,7 +117,7 @@ const Index = () => {
                                                 <div className="flex gap-1">
                                                     {etudiant.niveaux?.map(
                                                         (niveau) => (
-                                                            <span className='rounded-sm bg-gray-200 px-2 py-1 text-sm font-medium'>
+                                                            <span className="rounded-sm bg-gray-200 px-2 py-1 text-sm font-medium">
                                                                 {niveau.nom}
                                                             </span>
                                                         ),
@@ -133,8 +133,19 @@ const Index = () => {
                                             <TableCell>
                                                 {etudiant.numero}
                                             </TableCell>
-                                            <TableCell className="flex gap-2">
-                                                <Link href={`/etudiants/${etudiant.ip}/edit`}>
+                                            <TableCell className="flex gap-4">
+                                                <Link
+                                                    href={`/etudiants/${etudiant.ip}/show`}
+                                                >
+                                                    <Eye
+                                                        size={20}
+                                                        className="cursor-pointer text-green-600 hover:text-green-800"
+                                                    />
+                                                </Link>
+
+                                                <Link
+                                                    href={`/etudiants/${etudiant.ip}/edit`}
+                                                >
                                                     <Edit
                                                         size={20}
                                                         className="cursor-pointer text-blue-600 hover:text-blue-800"
