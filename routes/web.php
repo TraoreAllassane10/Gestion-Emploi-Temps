@@ -21,6 +21,22 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/admin', function () {
+        echo "Administareur";
+    });
+
+    Route::get('/pedagogie', function () {
+        echo "pedagogie";
+    })->middleware('pedagodique');
+
+    Route::get('/enseignant', function () {
+        echo "enseignant";
+    })->middleware('enseignant');
+
+    Route::get('/scolarite', function () {
+        echo "scolarite";
+    })->middleware('service_scolarite');
+
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     //Routes annnée scolaire
@@ -91,7 +107,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //Routes Etudiant
     Route::controller(EtudiantController::class)->group(function () {
         Route::get("etudiants", "index")->name("etudiants");
-         Route::get("etudiants/{etudiant}/show", "show")->name("etudiants.show");
+        Route::get("etudiants/{etudiant}/show", "show")->name("etudiants.show");
         Route::get("etudiants/create", "create")->name("etudiants.create");
         Route::post("etudiants", "store")->name("etudiants.store");
         Route::get("etudiants/{etudiant}/edit", "edit")->name("etudiants.edit");
