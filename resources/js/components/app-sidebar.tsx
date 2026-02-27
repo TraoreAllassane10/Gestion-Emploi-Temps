@@ -10,31 +10,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import {
-    annee,
-    cours,
-    dashboard,
-    etudiants,
-    filiere,
-    niveau,
-    professeur,
-    salle,
-    seance,
-} from '@/routes';
+import { dashboard, seance } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import {
-    Book,
-    BookOpen,
-    Building2,
-    Calendar1,
-    Folder,
-    GraduationCap,
-    LayoutGrid,
-    LucideMoveUpLeft,
-    User,
-    User2,
-} from 'lucide-react';
+import { Calendar1, LayoutGrid, Settings2 } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -44,40 +23,62 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Annee Scolaire',
-        href: annee(),
-        icon: Book,
-    },
-        {
-        title: 'Etudiant',
-        href: etudiants(),
-        icon: User2,
+        title: 'Inscriptions',
+        href: '#',
+        icon: LayoutGrid,
     },
     {
-        title: 'Filière',
-        href: filiere(),
-        icon: GraduationCap,
+        title: 'Personnel',
+        href: dashboard(),
+        icon: LayoutGrid,
     },
     {
         title: 'Niveau',
-        href: niveau(),
-        icon: LucideMoveUpLeft,
+        href: dashboard(),
+        icon: LayoutGrid,
     },
-    {
-        title: 'Professeur',
-        href: professeur(),
-        icon: User,
-    },
-    {
-        title: 'Salle',
-        href: salle(),
-        icon: Building2,
-    },
-    {
-        title: 'Cours',
-        href: cours(),
-        icon: BookOpen,
-    },
+
+    // {
+    //     title: 'Paiement Scolarité',
+    //     href: dashboard(),
+    //     icon: LayoutGrid,
+    // },
+
+    // {
+    //     title: 'Annee Scolaire',
+    //     href: annee(),
+    //     icon: Book,
+    // },
+    // {
+    //     title: 'Etudiant',
+    //     href: etudiants(),
+    //     icon: User2,
+    // },
+    // {
+    //     title: 'Filière',
+    //     href: filiere(),
+    //     icon: GraduationCap,
+    // },
+    // {
+    //     title: 'Niveau',
+    //     href: niveau(),
+    //     icon: LucideMoveUpLeft,
+    // },
+    // {
+    //     title: 'Professeur',
+    //     href: professeur(),
+    //     icon: User,
+    // },
+    // {
+    //     title: 'Salle',
+    //     href: salle(),
+    //     icon: Building2,
+    // },
+    // {
+    //     title: 'Cours',
+    //     href: cours(),
+    //     icon: BookOpen,
+    // },
     {
         title: 'Emploi du temps',
         href: seance(),
@@ -87,14 +88,9 @@ const mainNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Configurations',
+        href: '/configurations',
+        icon: Settings2,
     },
 ];
 

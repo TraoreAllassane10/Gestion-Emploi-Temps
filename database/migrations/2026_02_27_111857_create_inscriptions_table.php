@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('inscriptions', function (Blueprint $table) {
             $table->id();
 
+            $table->date('date');
             $table->string('status')->nullable();
             $table->integer("taux_reduction");
 
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->foreignId("niveau_id")->constrained()->onDelete("cascade");
             $table->foreignId("annee_universitaire_id")->constrained()->onDelete("cascade");
 
-            $table->index(['etudiant_ip','niveau_id','annee_universitaire_id']);
+            $table->index(['etudiant_ip', 'niveau_id', 'annee_universitaire_id']);
 
             $table->timestamps();
         });

@@ -37,6 +37,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         echo "scolarite";
     })->middleware('service_scolarite');
 
+    // Configurations
+    Route::get('/configurations', function () {
+        return Inertia::render('configuration/AnneeAcademiqueActive');
+    });
+
+    // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     //Routes annnée scolaire

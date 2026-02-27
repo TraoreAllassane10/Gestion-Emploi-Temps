@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/table';
 import useSalle from '@/hooks/useSalle';
 import AppLayout from '@/layouts/app-layout';
-import { salle } from '@/routes';
+import ConfigurationLayout from '@/layouts/configurations/ConfigurationLayout';
 import { BreadcrumbItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { Edit, Trash } from 'lucide-react';
@@ -86,7 +86,7 @@ const Index = () => {
         setNom('');
 
         // Redirection vers la page d'affichage des filieres
-        router.visit("/salle");
+        router.visit('/salle');
     };
 
     // Suppression d'une salle
@@ -96,94 +96,104 @@ const Index = () => {
     return (
         <div>
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="p-4">
-                    {/* Entete et le bouton d'ajout */}
-                    <div className="my-2 flex place-items-center justify-between">
-                        <h1 className="text-2xl font-bold">Salle</h1>
+                <ConfigurationLayout>
+                    <div>
+                        {/* Entete et le bouton d'ajout */}
+                        <div className="my-2 flex place-items-center justify-between">
+                            <h1 className="text-2xl font-bold">Salle</h1>
 
-                        <Sheet>
-                            <SheetTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground"
-                                >
-                                    Ajouter une salle
-                                </Button>
-                            </SheetTrigger>
-                            <SheetContent>
-                                <SheetHeader>
-                                    <SheetTitle>Nouvelle Salle</SheetTitle>
-                                    <SheetDescription>
-                                        Ajouter une nouvelle salle
-                                    </SheetDescription>
-                                </SheetHeader>
-                                <div className="grid flex-1 auto-rows-min gap-6 px-4">
-                                    <div className="grid gap-3">
-                                        <Label htmlFor="sheet-demo-name">
-                                            Nom de la salle
-                                        </Label>
-                                        <Input
-                                            value={nom}
-                                            onChange={(e) =>
-                                                setNom(e.target.value)
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <SheetFooter>
-                                    <Button onClick={handleSubmit}>
-                                        Enregistrer
+                            <Sheet>
+                                <SheetTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground"
+                                    >
+                                        Ajouter une salle
                                     </Button>
-                                    <SheetClose asChild>
-                                        <Button variant="outline">
-                                            Fermer
+                                </SheetTrigger>
+                                <SheetContent>
+                                    <SheetHeader>
+                                        <SheetTitle>Nouvelle Salle</SheetTitle>
+                                        <SheetDescription>
+                                            Ajouter une nouvelle salle
+                                        </SheetDescription>
+                                    </SheetHeader>
+                                    <div className="grid flex-1 auto-rows-min gap-6 px-4">
+                                        <div className="grid gap-3">
+                                            <Label htmlFor="sheet-demo-name">
+                                                Nom de la salle
+                                            </Label>
+                                            <Input
+                                                value={nom}
+                                                onChange={(e) =>
+                                                    setNom(e.target.value)
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    <SheetFooter>
+                                        <Button onClick={handleSubmit}>
+                                            Enregistrer
                                         </Button>
-                                    </SheetClose>
-                                </SheetFooter>
-                            </SheetContent>
-                        </Sheet>
-                    </div>
+                                        <SheetClose asChild>
+                                            <Button variant="outline">
+                                                Fermer
+                                            </Button>
+                                        </SheetClose>
+                                    </SheetFooter>
+                                </SheetContent>
+                            </Sheet>
+                        </div>
 
-                    <Card>
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="bg-muted">
-                                        <TableHead>Nom de salles</TableHead>
+                        <Card>
+                            <CardContent>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow className="bg-muted">
+                                            <TableHead>Nom de salles</TableHead>
 
-                                        <TableHead>Actions</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {salles?.data.map((salle) => (
-                                        <TableRow>
-                                            <TableCell>
-                                               {salle.nom}
-                                            </TableCell>
-                                            <TableCell className="flex gap-2">
-                                                <Link href={`/salle/${salle.id}/edit`}>
-                                                    <Edit
-                                                        size={20}
-                                                        className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                                    />
-                                                </Link>
-
-                                                <Link onClick={() => handleDelete(salle.id)}>
-                                                    <Trash
-                                                        size={20}
-                                                        className="cursor-pointer text-red-600 hover:text-red-800"
-                                                    />
-                                                </Link>
-                                            </TableCell>
+                                            <TableHead>Actions</TableHead>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {salles?.data.map((salle) => (
+                                            <TableRow>
+                                                <TableCell>
+                                                    {salle.nom}
+                                                </TableCell>
+                                                <TableCell className="flex gap-2">
+                                                    <Link
+                                                        href={`/salle/${salle.id}/edit`}
+                                                    >
+                                                        <Edit
+                                                            size={20}
+                                                            className="cursor-pointer text-blue-600 hover:text-blue-800"
+                                                        />
+                                                    </Link>
 
-                        <PaginationLinks links={salles.meta.links} />
-                    </Card>
-                </div>
+                                                    <Link
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                salle.id,
+                                                            )
+                                                        }
+                                                    >
+                                                        <Trash
+                                                            size={20}
+                                                            className="cursor-pointer text-red-600 hover:text-red-800"
+                                                        />
+                                                    </Link>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+
+                            <PaginationLinks links={salles.meta.links} />
+                        </Card>
+                    </div>
+                </ConfigurationLayout>
             </AppLayout>
         </div>
     );
