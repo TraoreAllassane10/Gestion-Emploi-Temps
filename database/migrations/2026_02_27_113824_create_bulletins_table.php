@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('niveaux', function (Blueprint $table) {
+        Schema::create('bulletins', function (Blueprint $table) {
             $table->id();
-            $table->string("nom");
+            $table->integer("moyenne");
+            $table->string('mention');
+            $table->string('decision');
 
-            $table->foreignId('filiere_id')->constrained()->onDelete("cascade");
-            $table->foreignId("annee_universitaire_id")->constrained()->onDelete("cascade");
-
-            $table->index(['filiere_id','annee_universitaire_id']);
+            $table->foreignId('inscription_id')->constrained();
+            $table->foreignId('periode_academique_id')->constrained();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('niveaux');
+        Schema::dropIfExists('bulletins');
     }
 };

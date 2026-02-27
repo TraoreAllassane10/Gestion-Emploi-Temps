@@ -1,11 +1,4 @@
-import PaginationLinks from '@/components/Pagination';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-    NativeSelect,
-    NativeSelectOption,
-} from '@/components/ui/native-select';
 import {
     Table,
     TableBody,
@@ -17,10 +10,8 @@ import {
 import useSeance from '@/hooks/useSeance';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Link, router, usePage } from '@inertiajs/react';
-import { Edit, Printer, Search, Trash } from 'lucide-react';
+import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -102,9 +93,7 @@ interface SeanceProps {
 }
 
 const EmploiDuTemps = () => {
-    const { seances, professeurs, salles } =
-        usePage<SeanceProps>().props;
-
+    const { seances, professeurs, salles } = usePage<SeanceProps>().props;
 
     //Les states pour la recherche et le filtrage
     const [rechercheProfesseur, setRechercheProfesseur] = useState('');
@@ -115,42 +104,42 @@ const EmploiDuTemps = () => {
     const { deleteSeance } = useSeance();
 
     // const handleSubmit = () => {
-        // Verification des données
-        // if (
-        //     jours == '' ||
-        //     date == '' ||
-        //     heure_debut == '' ||
-        //     heure_fin == '' ||
-        //     professeur_id == '' ||
-        //     cours_id == '' ||
-        //     salle_id == '' ||
-        //     niveau_id == ''
-        // ) {
-        //     toast.error('Veuillez remplir tous les champs!');
-        //     return;
-        // }
+    // Verification des données
+    // if (
+    //     jours == '' ||
+    //     date == '' ||
+    //     heure_debut == '' ||
+    //     heure_fin == '' ||
+    //     professeur_id == '' ||
+    //     cours_id == '' ||
+    //     salle_id == '' ||
+    //     niveau_id == ''
+    // ) {
+    //     toast.error('Veuillez remplir tous les champs!');
+    //     return;
+    // }
 
-        // // Création d'une seance
-        // createSeance({
-        //     jours,
-        //     date,
-        //     heure_debut,
-        //     heure_fin,
-        //     professeur_id,
-        //     cours_id,
-        //     niveau_id,
-        //     salle_id,
-        // });
+    // // Création d'une seance
+    // createSeance({
+    //     jours,
+    //     date,
+    //     heure_debut,
+    //     heure_fin,
+    //     professeur_id,
+    //     cours_id,
+    //     niveau_id,
+    //     salle_id,
+    // });
 
-        // Nettoyage de l'etat
-        // setJours('');
-        // setDate('');
-        // setHeureDebut('');
-        // setHeureFin('');
-        // setProfesseurId('');
-        // setCoursId('');
-        // setSalleId('');
-        // setNiveauId('');
+    // Nettoyage de l'etat
+    // setJours('');
+    // setDate('');
+    // setHeureDebut('');
+    // setHeureFin('');
+    // setProfesseurId('');
+    // setCoursId('');
+    // setSalleId('');
+    // setNiveauId('');
     // };
 
     // Suppression d'une
@@ -175,7 +164,7 @@ const EmploiDuTemps = () => {
 
     // Exportation en pdf
     const exportPDF = () => {
-      // Je recupere le niveau id de la premiere données car elles sont toute le meme niveau id
+        // Je recupere le niveau id de la premiere données car elles sont toute le meme niveau id
         const niveauId = seances.data[0]?.niveau.id;
 
         const url =
@@ -193,14 +182,14 @@ const EmploiDuTemps = () => {
             <AppLayout breadcrumbs={breadcrumbs}>
                 <div className="p-4">
                     {/* Entete et le bouton d'ajout */}
-                    <div className="my-2 flex place-items-center justify-between">
+                    {/* <div className="my-2 flex place-items-center justify-between">
                         <h1 className="text-2xl font-bold">
                             Emploi du temps : {seances.data[0]?.niveau.nom}
                         </h1>
-                    </div>
+                    </div> */}
 
                     {/* Recherche et Filtrage */}
-                    <Card className="mb-4">
+                    {/* <Card className="mb-4">
                         <div className="flex place-items-center justify-between px-4">
                             <div className="flex place-items-center gap-4">
                                 <div>
@@ -286,10 +275,10 @@ const EmploiDuTemps = () => {
                                 </button>
                             </div>
                         </div>
-                    </Card>
+                    </Card> */}
 
                     {/* Affichage des données */}
-                    <Card>
+                    {/* <Card>
                         <CardContent>
                             <Table>
                                 <TableHeader>
@@ -381,6 +370,76 @@ const EmploiDuTemps = () => {
                         </CardContent>
 
                         <PaginationLinks links={seances?.meta.links} />
+                    </Card> */}
+
+                    <Card>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className="bg-muted/60">
+                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                            Horaires
+                                        </TableHead>
+                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                            Lundi
+                                        </TableHead>
+                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                            Mardi
+                                        </TableHead>
+                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                            Mercredi
+                                        </TableHead>
+                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                            Jeudi
+                                        </TableHead>
+                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                            Vendredi
+                                        </TableHead>
+                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                            Samedi
+                                        </TableHead>
+                                  
+                                        <TableHead className="text-center font-semibold border-2 border-gray-500">
+                                            Dimanche
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell className='border-2 border-gray-500'>7h30-9h30</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Merise</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Architecture</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Langage Php</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Anglais</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Maths</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>UML</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Negociation informatique</TableCell>
+                                    </TableRow>
+
+                                      <TableRow>
+                                        <TableCell className='border-2 border-gray-500'>9h45-11h45</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Merise</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Architecture</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Langage Php</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Anglais</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Maths</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>UML</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Negociation informatique</TableCell>
+                                    </TableRow>
+
+                                      <TableRow>
+                                        <TableCell className='border-2 border-gray-500'>11h45-13h30</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Merise</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Architecture</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Langage Php</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Anglais</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Maths</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>UML</TableCell>
+                                        <TableCell className='border-2 border-gray-500'>Negociation informatique</TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </CardContent>
                     </Card>
                 </div>
             </AppLayout>

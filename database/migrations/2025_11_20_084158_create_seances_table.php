@@ -17,11 +17,16 @@ return new class extends Migration
             $table->timestamp("date");
             $table->time("heure_debut");
             $table->time("heure_fin");
+
+            $table->foreignId("semaine_id")->constrained()->onDelete("cascade");
+            $table->foreignId("horaire_id")->constrained()->onDelete("cascade");
             $table->foreignId("cours_id")->constrained()->onDelete("cascade");
             $table->foreignId("professeur_id")->constrained()->onDelete("cascade");
             $table->foreignId("salle_id")->constrained()->onDelete("cascade");
             $table->foreignId("niveau_id")->constrained()->onDelete("cascade");
-            $table->foreignId("annee_scolaire_id")->constrained()->onDelete("cascade");
+            $table->foreignId("annee_universitaire_id")->constrained()->onDelete("cascade");
+
+            $table->index(['semaine_id', 'cours_id', 'professeur_id', 'niveau_id']);
             $table->timestamps();
         });
     }

@@ -14,7 +14,11 @@ return new class extends Migration
         Schema::create('salles', function (Blueprint $table) {
             $table->id();
             $table->string("nom");
+
+            $table->foreignId('site_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
+
+            $table->index("site_id");
         });
     }
 

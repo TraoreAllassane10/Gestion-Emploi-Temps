@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('niveaux', function (Blueprint $table) {
+        Schema::create('notes', function (Blueprint $table) {
             $table->id();
-            $table->string("nom");
+            $table->integer("note");
 
-            $table->foreignId('filiere_id')->constrained()->onDelete("cascade");
-            $table->foreignId("annee_universitaire_id")->constrained()->onDelete("cascade");
+            $table->foreignId('inscription_id')->constrained()->onDelete("cascade");
+            $table->foreignId("evaluation_id")->constrained()->onDelete("cascade");
 
-            $table->index(['filiere_id','annee_universitaire_id']);
+            $table->index(['inscription_id', 'evaluation_id']);
+
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('niveaux');
+        Schema::dropIfExists('notes');
     }
 };

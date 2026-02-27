@@ -11,14 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('niveaux', function (Blueprint $table) {
+        Schema::create('scolarites', function (Blueprint $table) {
             $table->id();
-            $table->string("nom");
+            
+            $table->integer('frais_inscription');
+            $table->integer('frais_mensuel');
+            $table->integer('nombre_mois');
+            $table->integer('montant_total');
 
-            $table->foreignId('filiere_id')->constrained()->onDelete("cascade");
+
             $table->foreignId("annee_universitaire_id")->constrained()->onDelete("cascade");
 
-            $table->index(['filiere_id','annee_universitaire_id']);
+            $table->index(['annee_universitaire_id']);
             $table->timestamps();
         });
     }
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('niveaux');
+        Schema::dropIfExists('scolarites');
     }
 };
