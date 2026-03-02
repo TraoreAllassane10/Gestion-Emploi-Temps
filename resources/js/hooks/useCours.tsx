@@ -5,7 +5,6 @@ import toast from 'react-hot-toast';
 
 interface Data {
     nom: string;
-    professeur_id: string;
 }
 
 export default function useCours() {
@@ -20,13 +19,13 @@ export default function useCours() {
                     router.visit(cours());
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         "Erreur survenue lors de la creation d'un cours",
                     );
                     console.log(error)
                 });
         } catch (error) {
-            toast.success('Erreur survenue au cours du serveur');
+            toast.error('Erreur survenue au cours du serveur');
             console.log(error)
         }
     };
@@ -43,13 +42,13 @@ export default function useCours() {
                     router.visit('/cours');
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         "Erreur survenue lors de la modification d'un cours",
                     );
                     console.log(error)
                 });
         } catch (error) {
-            toast.success('Erreur survenue au cours du serveur');
+            toast.error('Erreur survenue au cours du serveur');
             console.log(error)
         }
     };
@@ -63,13 +62,13 @@ export default function useCours() {
                     toast.success('Cours supprimé !');
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         'Erreur survenue lors de la suppression du cours',
                     );
                     console.log(error)
                 });
         } catch (error) {
-            toast.success('Erreur survenue au cours du serveur');
+            toast.error('Erreur survenue au cours du serveur');
             console.log(error)
         }
     };

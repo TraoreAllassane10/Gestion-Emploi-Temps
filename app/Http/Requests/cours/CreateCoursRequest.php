@@ -23,7 +23,6 @@ class CreateCoursRequest extends FormRequest
     {
         return [
             "nom" => "required",
-            "professeur_id" => ["required", "numeric"]
         ];
     }
 
@@ -31,7 +30,6 @@ class CreateCoursRequest extends FormRequest
     {
         return [
             "nom.required" => "Le nom du cours est requis",
-            "professeur_id.required" => "Veuillez choisir un professeur",
         ];
     }
 }

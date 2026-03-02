@@ -43,11 +43,7 @@ const sidebarNavItems: NavItem[] = [
         href: filiere(),
         icon: null,
     },
-    {
-        title: 'Scolarites',
-        href: '#',
-        icon: null,
-    },
+
 ];
 
 const ConfigurationLayout = ({ children }: PropsWithChildren) => {

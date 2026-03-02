@@ -1,6 +1,30 @@
 import PaginationLinks from '@/components/Pagination';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+    NativeSelect,
+    NativeSelectOption,
+} from '@/components/ui/native-select';
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from '@/components/ui/sheet';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import useCours from '@/hooks/useCours';
 import AppLayout from '@/layouts/app-layout';
 import ConfigurationLayout from '@/layouts/configurations/ConfigurationLayout';
@@ -39,43 +63,35 @@ interface Cours {
     meta: Meta;
 }
 
-// Type des données du professeur
-interface Professeur {
-    id: number;
-    nom: string;
-    prenom: string;
-}
+
 
 interface CoursProps {
     cours: Cours;
-    professeurs: {
-        data: Professeur[];
-    };
+
     [key: string]: unknown;
 }
 
 const Index = () => {
-    const { cours, professeurs } = usePage<CoursProps>().props;
+    const { cours } = usePage<CoursProps>().props;
 
     const [nom, setNom] = useState('');
-    const [professeur_id, setProfesseurId] = useState('');
 
     const { createCours, deleteCours } = useCours();
 
     // Enregistrement d'un cours
     const handleSubmit = () => {
         // Verification des données
-        if (nom == '' || professeur_id == '') {
+        if (nom == '' ) {
             toast.error('Veuillez remplir tous les champs!');
             return;
         }
 
         // Création d'un cours
-        createCours({ nom, professeur_id });
+        createCours({ nom });
 
         // Nettoyage de l'etat
         setNom('');
-        setProfesseurId('');
+       
     };
 
     // Suppression d'un cours
@@ -90,8 +106,11 @@ const Index = () => {
                     <div>
                         {/* Entete et le bouton d'ajout */}
                         <div className="my-2 flex place-items-center justify-between">
+                            <h1 className="text-2xl font-bold">
+                                Matieres
+                            </h1>
 
-                            {/* <Sheet>
+                            <Sheet>
                                 <SheetTrigger asChild>
                                     <Button
                                         variant="outline"
@@ -120,35 +139,6 @@ const Index = () => {
                                             />
                                         </div>
 
-                                        <div className="grid gap-3">
-                                            <Label htmlFor="sheet-demo-name">
-                                                Professeur
-                                            </Label>
-                                            <NativeSelect
-                                                className="w-full"
-                                                value={professeur_id}
-                                                onChange={(e) =>
-                                                    setProfesseurId(
-                                                        e.target.value,
-                                                    )
-                                                }
-                                            >
-                                                <NativeSelectOption value="">
-                                                    {' '}
-                                                </NativeSelectOption>
-
-                                                {professeurs.data.map(
-                                                    (prof) => (
-                                                        <NativeSelectOption
-                                                            value={prof.id}
-                                                        >
-                                                            {prof.nom}{' '}
-                                                            {prof.prenom}
-                                                        </NativeSelectOption>
-                                                    ),
-                                                )}
-                                            </NativeSelect>
-                                        </div>
                                     </div>
                                     <SheetFooter>
                                         <Button onClick={handleSubmit}>
@@ -161,7 +151,7 @@ const Index = () => {
                                         </SheetClose>
                                     </SheetFooter>
                                 </SheetContent>
-                            </Sheet> */}
+                            </Sheet>
                         </div>
 
                         <Card>

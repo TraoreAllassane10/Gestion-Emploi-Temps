@@ -49,7 +49,6 @@ const Edit = () => {
     const { cours, professeurs } = usePage<ProfesseurProps>().props;
 
     const [nom, setNom] = useState(cours.nom);
-    const [professeur_id, setProfesseurId] = useState(cours.professeur_id);
 
     const { updateCours } = useCours();
 
@@ -58,20 +57,18 @@ const Edit = () => {
         e.preventDefault();
 
         // Verification des données
-        if (nom == '' || professeur_id == '') {
+        if (nom == '') {
             toast.error('Veuillez remplir tous les champs');
             return;
         }
 
         // modification d'un cours
         updateCours(cours.id, {
-            nom,
-            professeur_id,
+            nom
         });
 
         // Nettoye de l'etat du composant
         setNom('');
-        setProfesseurId('');
     };
 
     return (
@@ -93,36 +90,7 @@ const Edit = () => {
                                     onChange={(e) => setNom(e.target.value)}
                                 />
                             </div>
-
-                            <div className="grid gap-3">
-                                <Label htmlFor="sheet-demo-name">
-                                    Professeur
-                                </Label>
-                                <NativeSelect
-                                    className="w-full"
-                                    value={professeur_id}
-                                    onChange={(e) =>
-                                        setProfesseurId(e.target.value)
-                                    }
-                                >
-                                    <NativeSelectOption value="">
-                                        {' '}
-                                    </NativeSelectOption>
-
-                                    {professeurs?.data.map((prof) => (
-                                        <NativeSelectOption
-                                            selected={
-                                                parseInt(professeur_id) ==
-                                                prof.id
-                                            }
-                                            value={prof.id}
-                                        >
-                                            {prof.nom} {prof.prenom}
-                                        </NativeSelectOption>
-                                    ))}
-                                </NativeSelect>
-                            </div>
-
+                            
                             <Button
                                 onClick={handleUpdate}
                                 className="float-right cursor-pointer hover:bg-primary/80"
