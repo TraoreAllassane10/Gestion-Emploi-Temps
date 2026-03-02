@@ -16,9 +16,7 @@ return new class extends Migration
             $table->string("nom");
 
             $table->foreignId('filiere_id')->constrained()->onDelete("cascade");
-            $table->foreignId("annee_universitaire_id")->constrained()->onDelete("cascade");
 
-            $table->index(['filiere_id','annee_universitaire_id']);
             $table->timestamps();
         });
     }

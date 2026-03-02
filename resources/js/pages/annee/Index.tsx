@@ -25,7 +25,7 @@ import useAnnee from '@/hooks/useAnnee';
 import AppLayout from '@/layouts/app-layout';
 import ConfigurationLayout from '@/layouts/configurations/ConfigurationLayout';
 import { annee } from '@/routes';
-import { BreadcrumbItem } from '@/types';
+import { Annee, BreadcrumbItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
@@ -37,13 +37,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/annee',
     },
 ];
-
-interface Annee {
-    id: number;
-    libelle: string;
-    date_debut: string;
-    date_fin: string;
-}
 
 interface Meta {
     current_page: number;
@@ -113,7 +106,7 @@ const Index = () => {
                         {/* Entete et le bouton d'ajout */}
                         <div className="my-2 flex place-items-center justify-between">
                             <h1 className="text-2xl font-bold">
-                                Annee Scolaire
+                                Annee Académique
                             </h1>
 
                             <Sheet>
@@ -128,10 +121,10 @@ const Index = () => {
                                 <SheetContent>
                                     <SheetHeader>
                                         <SheetTitle>
-                                            Nouvelle Annnée Scolaire
+                                            Nouvelle Annnée Académique
                                         </SheetTitle>
                                         <SheetDescription>
-                                            Ajouter une année scolaire
+                                            Ajouter une année académique
                                         </SheetDescription>
                                     </SheetHeader>
                                     <div className="grid flex-1 auto-rows-min gap-6 px-4">
@@ -206,7 +199,7 @@ const Index = () => {
                                                     {annee.date_debut}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {annee.date_debut}
+                                                    {annee.date_fin}
                                                 </TableCell>
                                                 <TableCell className="flex gap-2">
                                                     <Link

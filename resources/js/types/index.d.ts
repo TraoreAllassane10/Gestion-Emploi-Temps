@@ -42,13 +42,13 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-export interface Niveau {
-    id: string;
-    nom: string;
-    pivot: {
-        annee_scolaire_id: string;
-    }
-}
+// export interface Niveau {
+//     id: string;
+//     nom: string;
+//     pivot: {
+//         annee_scolaire_id: string;
+//     }
+// }
 
 export interface Etudiant {
     ip: string;
@@ -60,4 +60,59 @@ export interface Etudiant {
     nom_parent: string;
     numero_parent: string;
     niveaux: Niveau[]
+}
+
+
+export interface Meta {
+    current_page: number;
+    from: number;
+    last_page: number;
+    links: {
+        active: boolean;
+        label: string;
+        page: number;
+        url: string;
+    }[];
+}
+
+interface Meta {
+    current_page: number;
+    from: number;
+    last_page: number;
+    links: {
+        active: boolean;
+        label: string;
+        page: number;
+        url: string;
+    }[];
+}
+
+// Types Annee
+export interface Annee {
+    id: number;
+    libelle: string;
+    date_debut: string;
+    date_fin: string;
+}
+
+export interface Annees {
+    data: Annee[];
+    meta: Meta;
+}
+
+
+// Types Niveau
+export interface DataNiveau {
+    id: number;
+    nom: string;
+    filiere: {nom: string}
+}
+
+export interface Niveau {
+    data: DataNiveau[];
+    meta: Meta;
+}
+export interface FiliereData {
+    id: number;
+    nom: string;
 }

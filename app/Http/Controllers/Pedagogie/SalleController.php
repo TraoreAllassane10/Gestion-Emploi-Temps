@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pedagogie;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\salle\CreateSalleRequest;
 use App\Http\Requests\salle\UpdateSalleRequest;
+use App\Http\Resources\SalleResource;
+use App\Models\Salle;
 use Exception;
 use Inertia\Inertia;
-use App\Models\Salle;
-use App\Http\Resources\SalleResource;
 
 class SalleController extends Controller
 {
-     public function index()
+    public function index()
     {
         try {
             $salles = SalleResource::collection(Salle::latest()->paginate(10));

@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\AnneeScolaireController;
+
+use App\Http\Controllers\Administrateur\AnneeAcademiqueController;
 use App\Http\Controllers\CoursController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EtudiantController;
-use App\Http\Controllers\FiliereController;
-use App\Http\Controllers\NiveauController;
+use App\Http\Controllers\Pedagogie\FiliereController;
+use App\Http\Controllers\Pedagogie\NiveauController;
+use App\Http\Controllers\Pedagogie\SalleController;
+use App\Http\Controllers\Pedagogie\SeanceController;
 use App\Http\Controllers\ProfesseurController;
-use App\Http\Controllers\SalleController;
-use App\Http\Controllers\SeanceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -38,20 +39,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->middleware('service_scolarite');
 
     // Configurations
-    Route::get('/configurations', function () {
-        return Inertia::render('configuration/AnneeAcademiqueActive');
-    });
+    Route::get('/configurations', [AnneeAcademiqueController::class, "editAnneeActive"])->name('edit.anneeActive');
 
     // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    //Routes annnée scolaire
-    Route::controller(AnneeScolaireController::class)->group(function () {
+    //Routes annnée academique
+    Route::controller(AnneeAcademiqueController::class)->group(function () {
         Route::get("annee", "index")->name("annee");
         Route::post("annee", "store")->name("annee.store");
         Route::get("annee/{annee}/edit", "edit")->name("annee.edit");
         Route::put("annee/{annee}/update", "update")->name("annee.update");
         Route::delete("annee/{annee}/delete", "delete")->name("annee.delete");
+
+        Route::get("annee/{annee}/change-annee", "changeAnneeActive")->name("annee.change");
     });
 
     //Routes filiere

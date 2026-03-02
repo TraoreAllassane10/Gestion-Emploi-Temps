@@ -1,24 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pedagogie;
 
-use Exception;
-use Inertia\Inertia;
-use App\Models\Cours;
-use App\Models\Salle;
-use App\Models\Niveau;
-use App\Models\Seance;
-use App\Models\Filiere;
-use App\Models\Professeur;
-use Illuminate\Http\Request;
-use App\Http\Resources\CoursResource;
-use App\Http\Resources\SalleResource;
-use App\Http\Resources\NiveauResource;
-use App\Http\Resources\SeanceResource;
-use App\Http\Resources\FiliereResource;
-use App\Http\Resources\ProfesseurResource;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\niveau\CreateNiveauRequest;
 use App\Http\Requests\niveau\UpdateNiveauRequest;
+use App\Http\Resources\CoursResource;
+use App\Http\Resources\FiliereResource;
+use App\Http\Resources\NiveauResource;
+use App\Http\Resources\ProfesseurResource;
+use App\Http\Resources\SalleResource;
+use App\Http\Resources\SeanceResource;
+use App\Models\Cours;
+use App\Models\Filiere;
+use App\Models\Niveau;
+use App\Models\Professeur;
+use App\Models\Salle;
+use App\Models\Seance;
+use Exception;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class NiveauController extends Controller
 {
@@ -26,10 +27,12 @@ class NiveauController extends Controller
     {
         try {
             $niveaux = NiveauResource::collection(Niveau::latest()->paginate(10));
+
             return Inertia::render("niveau/Index", [
                 "niveaux" => $niveaux,
                 "filieres" => FiliereResource::collection(Filiere::latest()->get())
             ]);
+            
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }

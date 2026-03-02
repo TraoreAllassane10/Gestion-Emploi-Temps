@@ -14,20 +14,22 @@ export default function useNiveau() {
         try {
             await axios
                 .post('/niveau', data)
-                .then(() => {
-                    toast.success('Niveau crée avec succès !');
-                    // Redirection vers la page d'affichage des niveau
-                    router.visit(niveau());
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success('Niveau crée avec succès !');
+                        // Redirection vers la page d'affichage des niveau
+                        router.visit(niveau());
+                    }
                 })
                 .catch((error) => {
                     toast.success(
                         "Erreur survenue lors de la creation d'un niveau",
                     );
-                    console.log(error)
+                    console.log(error);
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
-            console.log(error)
+            console.log(error);
         }
     };
 
@@ -36,21 +38,23 @@ export default function useNiveau() {
         try {
             await axios
                 .put(`/niveau/${id}/update`, data)
-                .then(() => {
-                    toast.success('Niveau modifié avec succès !');
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success('Niveau modifié avec succès !');
 
-                    // Redirection sur la page d'affiche
-                    router.visit('/niveau');
+                        // Redirection sur la page d'affiche
+                        router.visit('/niveau');
+                    }
                 })
                 .catch((error) => {
                     toast.success(
                         "Erreur survenue lors de la modification d'un niveau",
                     );
-                    console.log(error)
+                    console.log(error);
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
-            console.log(error)
+            console.log(error);
         }
     };
 
@@ -59,18 +63,20 @@ export default function useNiveau() {
         try {
             await axios
                 .delete(`/niveau/${id}/delete`)
-                .then(() => {
-                    toast.success('Niveau supprimé !');
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success('Niveau supprimé !');
+                    }
                 })
                 .catch((error) => {
                     toast.success(
                         'Erreur survenue lors de la suppression du niveau',
                     );
-                    console.log(error)
+                    console.log(error);
                 });
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
-            console.log(error)
+            console.log(error);
         }
     };
 

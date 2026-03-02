@@ -1,24 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pedagogie;
 
-use Exception;
-use Inertia\Inertia;
-use App\Models\Cours;
-use App\Models\Salle;
-use App\Models\Niveau;
-use App\Models\Seance;
-use App\Models\Professeur;
-use Illuminate\Http\Request;
-use App\Models\AnneeScolaire;
-use Barryvdh\DomPDF\Facade\Pdf;
-use App\Http\Resources\CoursResource;
-use App\Http\Resources\SalleResource;
-use App\Http\Resources\NiveauResource;
-use App\Http\Resources\SeanceResource;
-use App\Http\Resources\ProfesseurResource;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\seance\CreateSeanceRequest;
 use App\Http\Requests\seance\UpdateSeanceRequest;
+use App\Http\Resources\CoursResource;
+use App\Http\Resources\NiveauResource;
+use App\Http\Resources\ProfesseurResource;
+use App\Http\Resources\SalleResource;
+use App\Http\Resources\SeanceResource;
+use App\Models\AnneeScolaire;
+use App\Models\Cours;
+use App\Models\Niveau;
+use App\Models\Professeur;
+use App\Models\Salle;
+use App\Models\Seance;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SeanceController extends Controller
 {

@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pedagogie;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\filiere\CreateFiliereRequest;
 use App\Http\Requests\filiere\UpdateFiliereRequest;
+use App\Http\Resources\FiliereResource;
+use App\Models\Filiere;
 use Exception;
 use Inertia\Inertia;
-use App\Models\Filiere;
-use App\Http\Resources\FiliereResource;
 
 class FiliereController extends Controller
 {

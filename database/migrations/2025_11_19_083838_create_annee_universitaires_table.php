@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string("libelle");
             $table->date("date_debut");
             $table->date("date_fin");
-            $table->boolean('estActive');
+            $table->boolean('estActive')->default(0);
             $table->timestamps();
         });
     }

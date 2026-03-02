@@ -44,11 +44,6 @@ const sidebarNavItems: NavItem[] = [
         icon: null,
     },
     {
-        title: 'Niveaux',
-        href: niveau(),
-        icon: null,
-    },
-    {
         title: 'Scolarites',
         href: '#',
         icon: null,
@@ -94,7 +89,7 @@ const ConfigurationLayout = ({ children }: PropsWithChildren) => {
                 <Separator className="my-6 lg:hidden" />
 
                 <div className="flex-1">
-                    <section className="w-full space-y-12">{children}</section>
+                    <section className="w-full space-y-8">{children}</section>
                 </div>
             </div>
         </div>

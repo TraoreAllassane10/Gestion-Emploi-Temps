@@ -10,10 +10,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, seance } from '@/routes';
+import { dashboard, niveau, seance } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Calendar1, LayoutGrid, Settings2 } from 'lucide-react';
+import { Building2, Calendar1, LayoutGrid, Settings2 } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -34,8 +34,8 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Niveau',
-        href: dashboard(),
-        icon: LayoutGrid,
+        href: niveau(),
+        icon: Building2,
     },
 
     // {

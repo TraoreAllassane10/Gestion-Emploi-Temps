@@ -16,7 +16,8 @@ class NiveauResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "nom" => $this->nom
+            "nom" => $this->nom,
+            "filiere" => $this->whenLoaded("filiere")
         ];
     }
 }

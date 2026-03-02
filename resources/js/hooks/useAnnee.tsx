@@ -14,18 +14,20 @@ export default function useAnnee() {
         try {
             await axios
                 .post('/annee', data)
-                .then(() => {
-                    toast.success("L'année scolaire créée avec succès !");
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success("L'année scolaire créée avec succès !");
+                    }
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         "Erreur survenue lors de la creation de l'annee",
                     );
-                    console.log(error)
+                    console.log(error);
                 });
         } catch (error) {
-            toast.success('Erreur survenue au niveau du serveur');
-            console.log(error)
+            toast.error('Erreur survenue au niveau du serveur');
+            console.log(error);
         }
     };
 
@@ -34,21 +36,23 @@ export default function useAnnee() {
         try {
             await axios
                 .put(`/annee/${id}/update`, data)
-                .then(() => {
+                .then((response) => {
                     toast.success("L'année scolaire modifiée avec succès !");
 
-                    // Redirection sur la page d'affiche
-                    router.visit('/annee');
+                    if (response.data.success) {
+                        // Redirection sur la page d'affiche
+                        router.visit('/annee');
+                    }
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         "Erreur survenue lors de la modification de l'annee",
                     );
-                    console.log(error)
+                    console.log(error);
                 });
         } catch (error) {
-            toast.success('Erreur survenue au niveau du serveur');
-            console.log(error)
+            toast.error('Erreur survenue au niveau du serveur');
+            console.log(error);
         }
     };
 
@@ -57,20 +61,48 @@ export default function useAnnee() {
         try {
             await axios
                 .delete(`/annee/${id}/delete`)
-                .then(() => {
-                    toast.success('Année scolaire supprimée !');
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success('Année scolaire supprimée !');
+                    }
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         "Erreur survenue lors de la suppression de l'annee",
                     );
-                    console.log(error)
+                    console.log(error);
                 });
         } catch (error) {
-            console.log(error)
-            toast.success('Erreur survenue au niveau du serveur');
+            console.log(error);
+            toast.error('Erreur survenue au niveau du serveur');
         }
     };
 
-    return { createAnnee, updateAnnee, deleteAnnee };
+    // Changement de l'année active
+    const changeAnnee = async (id: string) => {
+        try {
+            await axios
+                .get(`annee/${id}/change-annee`)
+                .then((response) => {
+                    console.log(response);
+
+                    if (response.data.success) {
+                        toast.success("L'année académique changée !");
+                        // Redirection sur la page d'affiche
+                        router.visit('/configurations');
+                    }
+                })
+                .catch((error) => {
+                    toast.error(
+                        "Erreur survenue lors du changement de l'annee",
+                    );
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+            toast.error('Erreur survenue au niveau du serveur');
+        }
+    };
+
+    return { createAnnee, updateAnnee, deleteAnnee, changeAnnee };
 }
