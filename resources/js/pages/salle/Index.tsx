@@ -4,6 +4,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
+    NativeSelect,
+    NativeSelectOption,
+} from '@/components/ui/native-select';
+import {
     Sheet,
     SheetClose,
     SheetContent,
@@ -24,7 +28,7 @@ import {
 import useSalle from '@/hooks/useSalle';
 import AppLayout from '@/layouts/app-layout';
 import ConfigurationLayout from '@/layouts/configurations/ConfigurationLayout';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, Meta, Site } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
@@ -40,18 +44,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 interface Data {
     id: number;
     nom: string;
-}
-
-interface Meta {
-    current_page: number;
-    from: number;
-    last_page: number;
-    links: {
-        active: boolean;
-        label: string;
-        page: number;
-        url: string;
-    }[];
+    site: Site;
 }
 
 interface Salle {
@@ -61,13 +54,15 @@ interface Salle {
 
 interface SalleProps {
     salles: Salle;
+    sites: Site[];
     [key: string]: unknown;
 }
 
 const Index = () => {
-    const { salles } = usePage<SalleProps>().props;
+    const { salles, sites } = usePage<SalleProps>().props;
 
     const [nom, setNom] = useState('');
+    const [site_id, setSiteId] = useState('');
 
     const { createSalle, deleteSalle } = useSalle();
 
@@ -80,7 +75,7 @@ const Index = () => {
         }
 
         // Création d'une salle
-        createSalle({ nom });
+        createSalle({ nom, site_id });
 
         // Nettoyage de l'etat
         setNom('');
@@ -130,6 +125,31 @@ const Index = () => {
                                                 }
                                             />
                                         </div>
+
+                                        <div className="grid gap-3">
+                                            <Label htmlFor="sheet-demo-name">
+                                                Site
+                                            </Label>
+                                            <NativeSelect
+                                                className="w-full"
+                                                value={site_id}
+                                                onChange={(e) =>
+                                                    setSiteId(e.target.value)
+                                                }
+                                            >
+                                                <NativeSelectOption value="">
+                                                    {' '}
+                                                </NativeSelectOption>
+
+                                                {sites.map((site) => (
+                                                    <NativeSelectOption
+                                                        value={site.id}
+                                                    >
+                                                        {site.nom}
+                                                    </NativeSelectOption>
+                                                ))}
+                                            </NativeSelect>
+                                        </div>
                                     </div>
                                     <SheetFooter>
                                         <Button onClick={handleSubmit}>
@@ -150,8 +170,8 @@ const Index = () => {
                                 <Table>
                                     <TableHeader>
                                         <TableRow className="bg-muted">
-                                            <TableHead>Nom de salles</TableHead>
-
+                                            <TableHead>Nom de salle</TableHead>
+                                            <TableHead>Site</TableHead>
                                             <TableHead>Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>
@@ -160,6 +180,9 @@ const Index = () => {
                                             <TableRow>
                                                 <TableCell>
                                                     {salle.nom}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {/* {salle.site.nom} */}
                                                 </TableCell>
                                                 <TableCell className="flex gap-2">
                                                     <Link

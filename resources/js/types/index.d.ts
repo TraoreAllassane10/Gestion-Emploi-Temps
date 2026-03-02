@@ -75,17 +75,6 @@ export interface Meta {
     }[];
 }
 
-interface Meta {
-    current_page: number;
-    from: number;
-    last_page: number;
-    links: {
-        active: boolean;
-        label: string;
-        page: number;
-        url: string;
-    }[];
-}
 
 // Types Annee
 export interface Annee {

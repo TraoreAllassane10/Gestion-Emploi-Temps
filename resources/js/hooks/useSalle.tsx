@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 
 interface Data {
     nom: string;
+    site_id: string;
 }
 
 export default function useSalle() {

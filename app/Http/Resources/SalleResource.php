@@ -14,6 +14,10 @@ class SalleResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+            "nom" => $this->nom,
+            "site" => $this->whenExistsLoaded("site")
+        ];
     }
 }

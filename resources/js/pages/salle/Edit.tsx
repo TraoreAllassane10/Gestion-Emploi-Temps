@@ -2,9 +2,10 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import useSalle from '@/hooks/useSalle';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, Site } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { FormEvent, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -23,17 +24,20 @@ const breadcrumbs: BreadcrumbItem[] = [
 interface Salle {
     id: number;
     nom: string;
+    site_id: number;
 }
 
 interface salleProps {
     salle: Salle;
+    sites: Site[];
     [key: string]: unknown;
 }
 
 const Edit = () => {
-    const { salle } = usePage<salleProps>().props;
+    const { salle,sites } = usePage<salleProps>().props;
 
     const [nom, setNom] = useState(salle.nom);
+    const [site_id, setSiteId] = useState(String(salle.site_id));
 
     const { updateSalle } = useSalle();
 
@@ -50,6 +54,7 @@ const Edit = () => {
         // modification d'une  salle
         updateSalle(salle.id, {
             nom,
+            site_id,
         });
 
         // Nettoye de l'etat du composant
@@ -60,7 +65,7 @@ const Edit = () => {
         <div>
             <AppLayout breadcrumbs={breadcrumbs}>
                 <div className="p-4">
-                    <Card className='p-4'>
+                    <Card className="p-4">
                         <h1 className="mb-6 text-xl font-semibold">
                             Modification d'une Salle
                         </h1>
@@ -74,6 +79,25 @@ const Edit = () => {
                                     value={nom}
                                     onChange={(e) => setNom(e.target.value)}
                                 />
+                            </div>
+
+                            <div className="grid gap-3">
+                                <Label htmlFor="sheet-demo-name">Site</Label>
+                                <NativeSelect
+                                    className="w-full"
+                                    value={site_id}
+                                    onChange={(e) => setSiteId(e.target.value)}
+                                >
+                                    <NativeSelectOption value="">
+                                        {' '}
+                                    </NativeSelectOption>
+
+                                    {sites.map((site) => (
+                                        <NativeSelectOption value={site.id} defaultChecked={parseInt(site_id) === salle.site_id}>
+                                            {site.nom}
+                                        </NativeSelectOption>
+                                    ))}
+                                </NativeSelect>
                             </div>
 
                             <Button

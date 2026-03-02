@@ -22,14 +22,17 @@ class CreateSalleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nom" => "required"
+            "nom" => "required",
+            "site_id" => "required|exists:sites,id"
         ];
     }
 
     public function messages()
     {
         return [
-            "nom.required" => "Le nom de la salle est requise"
+            "nom.required" => "Le nom de la salle est requise",
+            "site_id" => "Veuillez sectionner un site",
+            "site_id.exists" => "Ce site n'existe plus"
         ];
     }
 }

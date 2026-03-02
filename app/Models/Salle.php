@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use phpDocumentor\Reflection\Types\Self_;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Salle extends Model
@@ -12,7 +11,12 @@ class Salle extends Model
     /** @use HasFactory<\Database\Factories\SalleFactory> */
     use HasFactory;
 
-    protected $fillable = ["nom"];
+    protected $fillable = ["nom", "site_id"];
+
+    public function site()
+    {
+        return $this->belongsTo(Site::class);
+    }
 
     public function seances()
     {
@@ -21,7 +25,7 @@ class Salle extends Model
 
     public static function sallesNonOccupeeActuellement($heureActuelle)
     {
-        return Self::whereDoesntHave("seances", function ($query) use ($heureActuelle) {
+        return self::whereDoesntHave("seances", function ($query) use ($heureActuelle) {
             $query->where("date", Carbon::today()->format("Y-m-d"))
                 ->where("heure_debut", "<=", $heureActuelle)
                 ->where("heure_fin", ">=", $heureActuelle);

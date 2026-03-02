@@ -7,6 +7,7 @@ use App\Http\Requests\salle\CreateSalleRequest;
 use App\Http\Requests\salle\UpdateSalleRequest;
 use App\Http\Resources\SalleResource;
 use App\Models\Salle;
+use App\Models\Site;
 use Exception;
 use Inertia\Inertia;
 
@@ -15,8 +16,11 @@ class SalleController extends Controller
     public function index()
     {
         try {
+            $sites = Site::all();
             $salles = SalleResource::collection(Salle::latest()->paginate(10));
+
             return Inertia::render("salle/Index", [
+                "sites" => $sites,
                 "salles" => $salles
             ]);
         } catch (Exception $e) {
@@ -41,7 +45,10 @@ class SalleController extends Controller
 
     public function edit(Salle $salle)
     {
+        $sites = Site::all();
+        
         return Inertia::render("salle/Edit", [
+            "sites" => $sites,
             "salle" => $salle
         ]);
     }
