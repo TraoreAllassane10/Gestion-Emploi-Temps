@@ -116,3 +116,15 @@ export interface FiliereData {
     id: number;
     nom: string;
 }
+
+// Types Sites
+export interface Site {
+    id: number;
+    nom: string;
+}
+
+// Types salle
+export interface Salle {
+    id: number;
+    nom: string;
+}

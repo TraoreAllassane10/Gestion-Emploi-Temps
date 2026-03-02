@@ -9,6 +9,7 @@ use App\Http\Controllers\Pedagogie\FiliereController;
 use App\Http\Controllers\Pedagogie\NiveauController;
 use App\Http\Controllers\Pedagogie\SalleController;
 use App\Http\Controllers\Pedagogie\SeanceController;
+use App\Http\Controllers\Pedagogie\SiteController;
 use App\Http\Controllers\ProfesseurController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -82,6 +83,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put("professeur/{professeur}/update", "update")->name("professeur.update");
         Route::delete("professeur/{professeur}/delete", "delete")->name("professeur.delete");
     });
+
+    //Routes Site
+    Route::controller(SiteController::class)->group(function () {
+        Route::get("site", "index")->name("site");
+        Route::post("site", "store")->name("site.store");
+        Route::get("site/{site}/edit", "edit")->name("site.edit");
+        Route::put("site/{site}/update", "update")->name("site.update");
+        Route::delete("site/{site}/delete", "delete")->name("site.delete");
+    });
+
 
     //Routes salle
     Route::controller(SalleController::class)->group(function () {

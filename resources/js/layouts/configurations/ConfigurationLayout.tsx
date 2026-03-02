@@ -2,7 +2,7 @@ import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
-import { annee, cours, filiere, niveau, salle } from '@/routes';
+import { annee, cours, filiere, niveau, salle, site } from '@/routes';
 import { NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';
@@ -25,7 +25,7 @@ const sidebarNavItems: NavItem[] = [
     },
      {
         title: 'Sites',
-        href: "#",
+        href: site(),
         icon: null,
     },
     {
