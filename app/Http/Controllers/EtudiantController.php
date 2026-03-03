@@ -40,7 +40,9 @@ class EtudiantController extends Controller
 
     public function show(Etudiant $etudiant)
     {
-        return Inertia::render("etudiant/Show");
+        return Inertia::render("etudiant/Show", [
+            "etudiant" => $etudiant
+        ]);
     }
 
     public function create()
@@ -94,7 +96,9 @@ class EtudiantController extends Controller
     public function edit(Etudiant $etudiant)
     {
 
-        return Inertia::render("etudiant/Edit");
+        return Inertia::render("etudiant/Edit", [
+            "etudiant" => $etudiant
+        ]);
     }
 
     public function update(UpdateEtudiantRequest $request, string $etudiant)

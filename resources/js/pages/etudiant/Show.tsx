@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowLeft,
     BookOpen,
@@ -34,6 +34,7 @@ import {
     fmt,
     statutConfig as insStatutConfig,
 } from '../inscription/data/mock';
+import { Etudiant } from '@/types';
 
 // ── Mock ──────────────────────────────────────────────────────────────────────
 const MOCK_IP = 'ETU-2024-001';
@@ -117,8 +118,9 @@ const TABS: {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function Show() {
-    // En production : const { etudiant } = usePage<{ etudiant: Etudiant }>().props
-    const etudiant = ETUDIANTS.find((e) => e.ip === MOCK_IP)!;
+    const { etudiant } = usePage<{ etudiant: Etudiant }>().props
+
+    // A Remplacer par les inscriptions reelles de l'utilisateur
     const inscriptions = INSCRIPTIONS.filter(
         (i) =>
             i.etudiant.ip === MOCK_IP ||

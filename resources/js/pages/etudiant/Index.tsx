@@ -98,13 +98,6 @@ export default function Index() {
         setFiltreGenre('all');
     };
 
-    // const stats = {
-    //     total: ETUDIANTS.length,
-    //     affectes: ETUDIANTS.filter((e) => e.statut === 'Affecté').length,
-    //     naff: ETUDIANTS.filter((e) => e.statut === 'Naff').length,
-    //     transferts: ETUDIANTS.filter((e) => e.statut === 'Transfert').length,
-    // };
-
     return (
         <AppLayout>
             <Head title="Étudiants" />
