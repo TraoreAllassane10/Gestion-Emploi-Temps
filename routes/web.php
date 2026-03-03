@@ -123,14 +123,43 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     //Routes Etudiant
-    Route::controller(EtudiantController::class)->group(function () {
-        Route::get("etudiants", "index")->name("etudiants");
-        Route::get("etudiants/{etudiant}/show", "show")->name("etudiants.show");
-        Route::get("etudiants/create", "create")->name("etudiants.create");
-        Route::post("etudiants", "store")->name("etudiants.store");
-        Route::get("etudiants/{etudiant}/edit", "edit")->name("etudiants.edit");
-        Route::put("etudiants/{etudiant}/update", "update")->name("etudiants.update");
-        Route::delete("etudiants/{etudiant}/delete", "delete")->name("etudiants.delete");
+    // Route::controller(EtudiantController::class)->group(function () {
+    //     Route::get("etudiants", "index")->name("etudiants");
+    //     Route::get("etudiants/{etudiant}/show", "show")->name("etudiants.show");
+    //     Route::get("etudiants/create", "create")->name("etudiants.create");
+    //     Route::post("etudiants", "store")->name("etudiants.store");
+    //     Route::get("etudiants/{etudiant}/edit", "edit")->name("etudiants.edit");
+    //     Route::put("etudiants/{etudiant}/update", "update")->name("etudiants.update");
+    //     Route::delete("etudiants/{etudiant}/delete", "delete")->name("etudiants.delete");
+    // });
+
+    Route::get("/etudiants", function() {
+        return Inertia::render('etudiant/Index');
+    });
+
+      Route::get("/etudiants/create", function() {
+        return Inertia::render('etudiant/Create');
+    });
+
+      Route::get("/etudiants/{id}/show", function() {
+        return Inertia::render('etudiant/Show');
+    });
+
+     Route::get("/etudiants/{id}/edit", function() {
+        return Inertia::render('etudiant/Edit');
+    });
+
+    // Routes Inscription
+    Route::get("/inscriptions", function() {
+        return Inertia::render('inscription/Index');
+    });
+
+      Route::get("/inscriptions/create", function() {
+        return Inertia::render('inscription/Create');
+    });
+
+      Route::get("/inscriptions/{id}", function() {
+        return Inertia::render('inscription/Show');
     });
 });
 

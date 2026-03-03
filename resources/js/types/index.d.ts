@@ -117,3 +117,22 @@ export interface Salle {
     id: number;
     nom: string;
 }
+
+
+
+export interface Student {
+  id: number
+  first_name: string
+  last_name: string
+  matricule: string
+}
+
+export interface Inscription {
+  id: number
+  student: Student
+  annee: string
+  niveau: string
+  statut: "En cours" | "Soldé"
+  total: number
+  total_paye: number
+}

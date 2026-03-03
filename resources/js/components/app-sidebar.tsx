@@ -30,12 +30,12 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Etudiant',
-        href: etudiants(),
+        href: "/etudiants",
         icon: User2,
     },
     {
         title: 'Inscriptions',
-        href: '#',
+        href: "/inscriptions",
         icon: LayoutGrid,
     },
     {
