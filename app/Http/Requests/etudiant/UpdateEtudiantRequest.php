@@ -3,7 +3,6 @@
 namespace App\Http\Requests\etudiant;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateEtudiantRequest extends FormRequest
 {
@@ -23,7 +22,7 @@ class UpdateEtudiantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "ip" => "required|string|min:10|". Rule::unique("etudiants")->ignore($this->route('ip')),
+            "ip" => "required|string|min:10",
             "civilite" => "required|string",
             "genre" => "required|string",
             "nom" => "required|string",
@@ -56,7 +55,7 @@ class UpdateEtudiantRequest extends FormRequest
             'ip.required' => "L'identifiant (IP) est obligatoire.",
             'ip.string' => "L'identifiant (IP) doit être une chaîne de caractères.",
             'ip.min' => "L'identifiant (IP) doit contenir au moins :min caractères.",
-            'ip.unique' => "L'identifiant (IP) est déjà enregistré.",
+    
 
             'civilite.required' => "La civilité est obligatoire.",
             'civilite.string' => "La civilité doit être une chaîne de caractères.",

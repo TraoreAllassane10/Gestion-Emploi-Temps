@@ -133,21 +133,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete("etudiants/{etudiant}/delete", "delete")->name("etudiants.delete");
     });
 
-    // Route::get("/etudiants", function() {
-    //     return Inertia::render('etudiant/Index');
-    // });
-
-    //   Route::get("/etudiants/create", function() {
-    //     return Inertia::render('etudiant/Create');
-    // });
-
-    //   Route::get("/etudiants/{id}/show", function() {
-    //     return Inertia::render('etudiant/Show');
-    // });
-
-    //  Route::get("/etudiants/{id}/edit", function() {
-    //     return Inertia::render('etudiant/Edit');
-    // });
 
     // Routes Inscription
     Route::get("/inscriptions", function() {

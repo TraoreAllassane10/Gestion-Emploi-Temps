@@ -1,27 +1,25 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 
-import {
-    EtudiantForm,
-    type EtudiantFormData,
-} from '@/components/etudiant/EtudiantForm';
-import { ETUDIANTS } from './data/mock';
+import { EtudiantForm } from '@/components/etudiant/EtudiantForm';
+import useEtudiant from '@/hooks/useEtudiant';
+import { Etudiant, EtudiantFormData } from '@/types';
 
-// En production, l'étudiant viendrait des props Inertia :
-// const { etudiant } = usePage<{ etudiant: Etudiant }>().props
 const MOCK_IP = 'ETU-2024-001';
 
 export default function Edit() {
-    const etudiant = ETUDIANTS.find((e) => e.ip === MOCK_IP)!;
+    const { etudiant } = usePage<{ etudiant: Etudiant }>().props;
+
+    // const etudiant = ETUDIANTS.find((e) => e.ip === MOCK_IP)!;
+
+    const { updateEtudiant, isLoading } = useEtudiant();
 
     // On exclut created_at / updated_at pour correspondre à EtudiantFormData
     const { created_at, updated_at, ...initialData } = etudiant;
 
     const handleSubmit = (data: EtudiantFormData) => {
-        // TODO: router.put(`/etudiants/${data.ip}`, data)
-        console.log('Modifier étudiant', data);
-        router.visit(`/etudiants/${data.ip}`);
+        updateEtudiant(data.ip, data);
     };
 
     return (
@@ -50,6 +48,7 @@ export default function Edit() {
                     isEdit
                     onSubmit={handleSubmit}
                     onCancel={() => router.visit(`/etudiants/${etudiant.ip}`)}
+                    isLoading
                 />
             </div>
         </AppLayout>

@@ -10,8 +10,6 @@ export default function Create() {
 
     // Creation d'un etudiant
     const handleSubmit = (data: EtudiantFormData) => {
-        console.log('Créer étudiant', data);
-
         createEtudiant(data);
     };
 
