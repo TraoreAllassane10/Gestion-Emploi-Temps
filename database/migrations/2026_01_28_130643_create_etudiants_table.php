@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\StatutEtudiant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->date("date_naissance");
             $table->string("lieu_naissance");
             $table->string('nationnalite');
-            $table->enum('statut', ['Affecté', 'Naff', "Réaffecté", 'Transfert']);
+            $table->enum('statut', StatutEtudiant::cases());
 
             $table->string('email')->nullable();
             $table->string('pays_residence')->nullable();

@@ -19,12 +19,4 @@ class Niveau extends Model
     {
         return $this->belongsTo(Filiere::class);
     }
-
-    public function etudiants(): BelongsToMany
-    {
-        return $this
-            ->belongsToMany(Etudiant::class, "etudiant_niveau")
-            ->wherePivot("annee_scolaire_id")
-            ->withTimestamps();
-    }
 }

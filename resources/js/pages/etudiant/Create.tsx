@@ -1,39 +1,48 @@
-import AppLayout from '@/layouts/app-layout'
-import { Head, Link, router } from '@inertiajs/react'
-import { ArrowLeft } from 'lucide-react'
-
-import { EtudiantForm, type EtudiantFormData } from '@/components/etudiant/EtudiantForm'
+import { EtudiantForm } from '@/components/etudiant/EtudiantForm';
+import useEtudiant from '@/hooks/useEtudiant';
+import AppLayout from '@/layouts/app-layout';
+import { EtudiantFormData } from '@/types';
+import { Head, Link, router } from '@inertiajs/react';
+import { ArrowLeft } from 'lucide-react';
 
 export default function Create() {
-  const handleSubmit = (data: EtudiantFormData) => {
-    // TODO: router.post('/etudiants', data)
-    console.log('Créer étudiant', data)
-    router.visit('/etudiants')
-  }
+    const { createEtudiant, isLoading } = useEtudiant();
 
-  return (
-    <AppLayout>
-      <Head title="Nouvel étudiant" />
+    // Creation d'un etudiant
+    const handleSubmit = (data: EtudiantFormData) => {
+        console.log('Créer étudiant', data);
 
-      <div className="p-6">
-        <div className="mb-6">
-          <Link
-            href="/etudiants"
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-3"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" /> Retour aux étudiants
-          </Link>
-          <h1 className="text-2xl font-bold tracking-tight">Nouvel étudiant</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Remplissez les informations pour enregistrer un nouvel étudiant.
-          </p>
-        </div>
+        createEtudiant(data);
+    };
 
-        <EtudiantForm
-          onSubmit={handleSubmit}
-          onCancel={() => router.visit('/etudiants')}
-        />
-      </div>
-    </AppLayout>
-  )
+    return (
+        <AppLayout>
+            <Head title="Nouvel étudiant" />
+
+            <div className="p-6">
+                <div className="mb-6">
+                    <Link
+                        href="/etudiants"
+                        className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                        <ArrowLeft className="h-3.5 w-3.5" /> Retour aux
+                        étudiants
+                    </Link>
+                    <h1 className="text-2xl font-bold tracking-tight">
+                        Nouvel étudiant
+                    </h1>
+                    <p className="mt-0.5 text-sm text-muted-foreground">
+                        Remplissez les informations pour enregistrer un nouvel
+                        étudiant.
+                    </p>
+                </div>
+
+                <EtudiantForm
+                    onSubmit={handleSubmit}
+                    onCancel={() => router.visit('/etudiants')}
+                    isLoading
+                />
+            </div>
+        </AppLayout>
+    );
 }

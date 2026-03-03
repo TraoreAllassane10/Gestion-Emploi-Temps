@@ -1,41 +1,11 @@
 // data/mock.ts — données mockées pour la gestion des étudiants
 
+import { Etudiant } from "@/types"
+
 export type Civilite = 'M.' | 'Mme' | 'Mlle'
 export type Genre = 'Masculin' | 'Féminin'
 export type StatutEtudiant = 'Affecté' | 'Naff' | 'Réaffecté' | 'Transfert'
 export type NaturePiece = 'CNI' | 'Passeport' | 'Titre de séjour' | 'Carte consulaire'
-
-export interface Etudiant {
-  ip: string
-  civilite: Civilite
-  genre: Genre
-  nom: string
-  prenom: string
-  date_naissance: string
-  lieu_naissance: string
-  nationnalite: string
-  statut: StatutEtudiant
-
-  email: string | null
-  pays_residence: string | null
-  etablissement_origine: string | null
-  annee_obtention_bac: string | null
-  serie_bac: string | null
-  numero_table_bac: string | null
-  contacts: string | null
-  nature_piece: NaturePiece | null
-  numero_piece: string | null
-  adresse_geographique: string | null
-  matricule_secondaire: string | null
-
-  type_responsable: string | null
-  nom_responsable: string | null
-  numero_responsable: string | null
-  profession_responsable: string | null
-
-  created_at: string
-  updated_at: string
-}
 
 export const ETUDIANTS: Etudiant[] = [
   {

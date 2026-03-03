@@ -42,25 +42,41 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-// export interface Niveau {
-//     id: string;
-//     nom: string;
-//     pivot: {
-//         annee_scolaire_id: string;
-//     }
-// }
 
 export interface Etudiant {
-    ip: string;
-    nom: string;
-    prenom: string;
-    date_naissance: string;
-    lieu_naissance: string;
-    numero: string;
-    nom_parent: string;
-    numero_parent: string;
-    niveaux: Niveau[]
+  ip: string
+  civilite: Civilite
+  genre: Genre
+  nom: string
+  prenom: string
+  date_naissance: string
+  lieu_naissance: string
+  nationnalite: string
+  statut: StatutEtudiant
+
+  email: string | null
+  pays_residence: string | null
+  etablissement_origine: string | null
+  annee_obtention_bac: string | null
+  serie_bac: string | null
+  numero_table_bac: string | null
+  contacts: string | null
+  nature_piece: NaturePiece | null
+  numero_piece: string | null
+  adresse_geographique: string | null
+  matricule_secondaire: string | null
+
+  type_responsable: string | null
+  nom_responsable: string | null
+  numero_responsable: string | null
+  profession_responsable: string | null
+
+  created_at: string
+  updated_at: string
 }
+
+export type EtudiantFormData = Omit<Etudiant, 'created_at' | 'updated_at'>
+
 
 
 export interface Meta {

@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowRightLeft,
     ChevronDown,
@@ -46,13 +46,36 @@ import Avatar from '@/components/etudiant/Avatar';
 import StatutBadge from '@/components/etudiant/StatutBadge';
 import StatCard from '@/components/StatCard';
 import { ETUDIANTS, STATUTS } from './data/mock';
+import { Etudiant, Meta } from '@/types';
+
+interface Stats {
+    total :number;
+    affecte: number;
+    naff: number;
+    reaffecte: number;
+    transfert: number
+}
+
+interface EtudiantData {
+    data: Etudiant[];
+    meta: Meta;
+}
+
+interface EtudiantProps {
+    stats: Stats;
+    etudiants: EtudiantData;
+    [key: string]: unknown;
+}
+
 
 export default function Index() {
+    const {etudiants, stats} = usePage<EtudiantProps>().props;
+
     const [search, setSearch] = useState('');
     const [filtreStatut, setFiltreStatut] = useState('all');
     const [filtreGenre, setFiltreGenre] = useState('all');
 
-    const filtered = ETUDIANTS.filter((e) => {
+    const filtered = etudiants.data.filter((e) => {
         const q = search.toLowerCase();
         const matchSearch =
             !q ||
@@ -75,12 +98,12 @@ export default function Index() {
         setFiltreGenre('all');
     };
 
-    const stats = {
-        total: ETUDIANTS.length,
-        affectes: ETUDIANTS.filter((e) => e.statut === 'Affecté').length,
-        naff: ETUDIANTS.filter((e) => e.statut === 'Naff').length,
-        transferts: ETUDIANTS.filter((e) => e.statut === 'Transfert').length,
-    };
+    // const stats = {
+    //     total: ETUDIANTS.length,
+    //     affectes: ETUDIANTS.filter((e) => e.statut === 'Affecté').length,
+    //     naff: ETUDIANTS.filter((e) => e.statut === 'Naff').length,
+    //     transferts: ETUDIANTS.filter((e) => e.statut === 'Transfert').length,
+    // };
 
     return (
         <AppLayout>
@@ -116,7 +139,7 @@ export default function Index() {
                     />
                     <StatCard
                         label="Affectés"
-                        value={stats.affectes}
+                        value={stats.affecte}
                         icon={UserCheck}
                         color="text-emerald-600"
                         bg="bg-emerald-50"
@@ -130,7 +153,7 @@ export default function Index() {
                     />
                     <StatCard
                         label="Transferts"
-                        value={stats.transferts}
+                        value={stats.transfert}
                         icon={ArrowRightLeft}
                         color="text-amber-600"
                         bg="bg-amber-50"

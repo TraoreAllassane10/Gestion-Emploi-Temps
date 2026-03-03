@@ -1,5 +1,3 @@
-// components/EtudiantForm.tsx
-// Formulaire partagé par Create.tsx et Edit.tsx
 
 import { useState } from 'react'
 import {
@@ -22,12 +20,8 @@ import {
   CIVILITES, GENRES, STATUTS, SERIES_BAC,
   NATURES_PIECE, TYPES_RESPONSABLE,
   NATIONALITES, PAYS,
-  type Etudiant,
 } from '../../pages/etudiant/data/mock'
-
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-export type EtudiantFormData = Omit<Etudiant, 'created_at' | 'updated_at'>
+import { EtudiantFormData } from '@/types'
 
 export const emptyForm = (): EtudiantFormData => ({
   ip: '',
@@ -333,11 +327,12 @@ interface EtudiantFormProps {
   initialData?: EtudiantFormData
   isEdit?: boolean
   onSubmit: (data: EtudiantFormData) => void
-  onCancel: () => void
+  onCancel: () => void,
+  isLoading: boolean
 }
 
 export function EtudiantForm({
-  initialData, isEdit = false, onSubmit, onCancel,
+  initialData, isEdit = false, onSubmit, onCancel,isLoading
 }: EtudiantFormProps) {
   const [step, setStep] = useState(1)
   const [data, setData] = useState<EtudiantFormData>(initialData ?? emptyForm())
