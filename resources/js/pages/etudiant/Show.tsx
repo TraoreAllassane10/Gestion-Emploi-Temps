@@ -10,10 +10,12 @@ import {
     Globe,
     GraduationCap,
     Hash,
+    Import,
     Mail,
     MapPin,
     Pencil,
     Phone,
+    Printer,
     Shield,
     User,
     Users,
@@ -25,16 +27,16 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
-import { ETUDIANTS, statutConfig, type StatutEtudiant } from './data/mock';
+import { statutConfig, type StatutEtudiant } from './data/mock';
 
 // on réutilise les inscriptions du module inscriptions pour la démo
 // en prod, elles viendraient des props
+import { Etudiant } from '@/types';
 import {
     INSCRIPTIONS,
     fmt,
     statutConfig as insStatutConfig,
 } from '../inscription/data/mock';
-import { Etudiant } from '@/types';
 
 // ── Mock ──────────────────────────────────────────────────────────────────────
 const MOCK_IP = 'ETU-2024-001';
@@ -118,7 +120,7 @@ const TABS: {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function Show() {
-    const { etudiant } = usePage<{ etudiant: Etudiant }>().props
+    const { etudiant } = usePage<{ etudiant: Etudiant }>().props;
 
     // A Remplacer par les inscriptions reelles de l'utilisateur
     const inscriptions = INSCRIPTIONS.filter(
@@ -199,7 +201,15 @@ export default function Show() {
                             </div>
 
                             {/* Actions */}
-                            <div className="shrink-0">
+                            <div className="shrink-0 space-x-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="gap-1.5"
+                                >
+                                    <Printer className="h-3.5 w-3.5" /> Imprimer
+                                </Button>
+
                                 <Link href={`/etudiants/${etudiant.ip}/edit`}>
                                     <Button
                                         variant="outline"

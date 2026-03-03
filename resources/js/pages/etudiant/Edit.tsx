@@ -29,7 +29,7 @@ export default function Edit() {
             <div className="p-6">
                 <div className="mb-6">
                     <Link
-                        href={`/etudiants/${etudiant.ip}`}
+                        href={`/etudiants/${etudiant.ip}/show`}
                         className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                         <ArrowLeft className="h-3.5 w-3.5" /> Retour au profil
@@ -47,7 +47,7 @@ export default function Edit() {
                     initialData={initialData}
                     isEdit
                     onSubmit={handleSubmit}
-                    onCancel={() => router.visit(`/etudiants/${etudiant.ip}`)}
+                    onCancel={() => router.visit(`/etudiants/${etudiant.ip}/show`)}
                     isLoading
                 />
             </div>
