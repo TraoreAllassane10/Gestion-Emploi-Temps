@@ -10,10 +10,16 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, niveau, seance } from '@/routes';
+import { dashboard, etudiants, niveau, seance } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Building2, Calendar1, LayoutGrid, Settings2 } from 'lucide-react';
+import {
+    Building2,
+    Calendar1,
+    LayoutGrid,
+    Settings2,
+    User2,
+} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -21,6 +27,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Etudiant',
+        href: etudiants(),
+        icon: User2,
     },
     {
         title: 'Inscriptions',
@@ -37,48 +48,6 @@ const mainNavItems: NavItem[] = [
         href: niveau(),
         icon: Building2,
     },
-
-    // {
-    //     title: 'Paiement Scolarité',
-    //     href: dashboard(),
-    //     icon: LayoutGrid,
-    // },
-
-    // {
-    //     title: 'Annee Scolaire',
-    //     href: annee(),
-    //     icon: Book,
-    // },
-    // {
-    //     title: 'Etudiant',
-    //     href: etudiants(),
-    //     icon: User2,
-    // },
-    // {
-    //     title: 'Filière',
-    //     href: filiere(),
-    //     icon: GraduationCap,
-    // },
-    // {
-    //     title: 'Niveau',
-    //     href: niveau(),
-    //     icon: LucideMoveUpLeft,
-    // },
-    // {
-    //     title: 'Professeur',
-    //     href: professeur(),
-    //     icon: User,
-    // },
-    // {
-    //     title: 'Salle',
-    //     href: salle(),
-    //     icon: Building2,
-    // },
-    // {
-    //     title: 'Cours',
-    //     href: cours(),
-    //     icon: BookOpen,
-    // },
     {
         title: 'Emploi du temps',
         href: seance(),
