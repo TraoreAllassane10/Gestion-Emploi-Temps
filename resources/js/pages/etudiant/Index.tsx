@@ -45,16 +45,10 @@ import {
 import Avatar from '@/components/etudiant/Avatar';
 import StatutBadge from '@/components/etudiant/StatutBadge';
 import StatCard from '@/components/StatCard';
-import { ETUDIANTS, STATUTS } from './data/mock';
-import { Etudiant, Meta } from '@/types';
+import { STATUTS } from './data/mock';
+import { Etudiant, Meta, StatsEtudiant } from '@/types';
+import EtudiantStats from '@/components/etudiant/EtudiantStats';
 
-interface Stats {
-    total :number;
-    affecte: number;
-    naff: number;
-    reaffecte: number;
-    transfert: number
-}
 
 interface EtudiantData {
     data: Etudiant[];
@@ -62,7 +56,7 @@ interface EtudiantData {
 }
 
 interface EtudiantProps {
-    stats: Stats;
+    stats: StatsEtudiant;
     etudiants: EtudiantData;
     [key: string]: unknown;
 }
@@ -122,36 +116,7 @@ export default function Index() {
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                    <StatCard
-                        label="Total étudiants"
-                        value={stats.total}
-                        icon={Users}
-                        color="text-blue-600"
-                        bg="bg-blue-50"
-                    />
-                    <StatCard
-                        label="Affectés"
-                        value={stats.affecte}
-                        icon={UserCheck}
-                        color="text-emerald-600"
-                        bg="bg-emerald-50"
-                    />
-                    <StatCard
-                        label="Non affectés"
-                        value={stats.naff}
-                        icon={UserX}
-                        color="text-rose-600"
-                        bg="bg-rose-50"
-                    />
-                    <StatCard
-                        label="Transferts"
-                        value={stats.transfert}
-                        icon={ArrowRightLeft}
-                        color="text-amber-600"
-                        bg="bg-amber-50"
-                    />
-                </div>
+                <EtudiantStats stats={stats}/>
 
                 {/* Filtres */}
                 <Card className="shadow-sm">

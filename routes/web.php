@@ -131,6 +131,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("etudiants/{etudiant}/edit", "edit")->name("etudiants.edit");
         Route::put("etudiants/{etudiant}/update", "update")->name("etudiants.update");
         Route::delete("etudiants/{etudiant}/delete", "delete")->name("etudiants.delete");
+
+        Route::get('/etudiants/{etudiant}/fiche', "getFicheIndentification")->name('etudiants.fiche');
     });
 
 

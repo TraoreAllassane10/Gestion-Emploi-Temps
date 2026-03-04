@@ -9,6 +9,7 @@ use Exception;
 use Inertia\Inertia;
 use App\Models\Etudiant;
 use App\Http\Resources\EtudiantRessource;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EtudiantController extends Controller
 {
@@ -153,5 +154,15 @@ class EtudiantController extends Controller
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
+    }
+
+    public function getFicheIndentification(string $etudiant)
+    {
+        $etudiantData = Etudiant::where("ip", $etudiant)->first()->toArray();
+        $pdf = Pdf::loadView("pdf.fiche_etudiant", [
+            "etudiant" => $etudiantData
+        ]);
+
+        return $pdf->stream("fiche_identification.pdf");
     }
 }

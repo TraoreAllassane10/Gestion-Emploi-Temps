@@ -77,7 +77,13 @@ export interface Etudiant {
 
 export type EtudiantFormData = Omit<Etudiant, 'created_at' | 'updated_at'>
 
-
+export interface StatsEtudiant {
+    total :number;
+    affecte: number;
+    naff: number;
+    reaffecte: number;
+    transfert: number
+}
 
 export interface Meta {
     current_page: number;
