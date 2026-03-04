@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('scolarites', function (Blueprint $table) {
+        Schema::create('inscription_niveau', function (Blueprint $table) {
             $table->id();
-            
-            $table->integer('montant');
-            $table->foreignId("niveau_id")->constrained()->onDelete("cascade");
-            $table->foreignId("annee_universitaire_id")->constrained()->onDelete("cascade");
-
+            $table->foreignId('inscription_id')->constrained();
+            $table->foreignId('niveau_id')->constrained();
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('scolarites');
+        Schema::dropIfExists('inscription_niveau');
     }
 };
