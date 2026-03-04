@@ -42,26 +42,48 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-// export interface Niveau {
-//     id: string;
-//     nom: string;
-//     pivot: {
-//         annee_scolaire_id: string;
-//     }
-// }
 
 export interface Etudiant {
-    ip: string;
-    nom: string;
-    prenom: string;
-    date_naissance: string;
-    lieu_naissance: string;
-    numero: string;
-    nom_parent: string;
-    numero_parent: string;
-    niveaux: Niveau[]
+  ip: string
+  civilite: Civilite
+  genre: Genre
+  nom: string
+  prenom: string
+  date_naissance: string
+  lieu_naissance: string
+  nationnalite: string
+  statut: StatutEtudiant
+
+  email: string | null
+  pays_residence: string | null
+  etablissement_origine: string | null
+  annee_obtention_bac: string | null
+  serie_bac: string | null
+  numero_table_bac: string | null
+  contacts: string | null
+  nature_piece: NaturePiece | null
+  numero_piece: string | null
+  adresse_geographique: string | null
+  matricule_secondaire: string | null
+
+  type_responsable: string | null
+  nom_responsable: string | null
+  numero_responsable: string | null
+  profession_responsable: string | null
+
+  created_at: string
+  updated_at: string
 }
 
+export type EtudiantFormData = Omit<Etudiant, 'created_at' | 'updated_at'>
+
+export interface StatsEtudiant {
+    total :number;
+    affecte: number;
+    naff: number;
+    reaffecte: number;
+    transfert: number
+}
 
 export interface Meta {
     current_page: number;
@@ -116,4 +138,23 @@ export interface Site {
 export interface Salle {
     id: number;
     nom: string;
+}
+
+
+
+export interface Student {
+  id: number
+  first_name: string
+  last_name: string
+  matricule: string
+}
+
+export interface Inscription {
+  id: number
+  student: Student
+  annee: string
+  niveau: string
+  statut: "En cours" | "Soldé"
+  total: number
+  total_paye: number
 }

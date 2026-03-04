@@ -131,6 +131,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("etudiants/{etudiant}/edit", "edit")->name("etudiants.edit");
         Route::put("etudiants/{etudiant}/update", "update")->name("etudiants.update");
         Route::delete("etudiants/{etudiant}/delete", "delete")->name("etudiants.delete");
+
+        Route::get('/etudiants/{etudiant}/fiche', "getFicheIndentification")->name('etudiants.fiche');
+    });
+
+
+    // Routes Inscription
+    Route::get("/inscriptions", function() {
+        return Inertia::render('inscription/Index');
+    });
+
+      Route::get("/inscriptions/create", function() {
+        return Inertia::render('inscription/Create');
+    });
+
+      Route::get("/inscriptions/{id}", function() {
+        return Inertia::render('inscription/Show');
     });
 });
 

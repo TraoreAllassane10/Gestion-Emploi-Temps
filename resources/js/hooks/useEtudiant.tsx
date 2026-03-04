@@ -1,46 +1,32 @@
 import { etudiants } from '@/routes';
+import { EtudiantFormData } from '@/types';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-interface Data {
-    ip: string;
-    nom: string;
-    prenom: string;
-    date_naissance: string;
-    lieu_naissance: string;
-    numero: number ;
-    nom_parent: string;
-    numero_parent: number;
-    niveau_id: string[];
-    annee_id: string;
-}
-
-interface DataSearch {
-    recherchecours: string;
-    rechercheProfesseur: string;
-    rechercheNiveau: string;
-    rechercheSalle: string;
-}
-
 export default function useEtudiant() {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Création d'un etudiant
-    const createEtudiant = async (data: Data) => {
+    const createEtudiant = async (data: EtudiantFormData) => {
         try {
-            console.log(data)
+            setIsLoading(true);
+
             await axios
                 .post('/etudiants', data)
-                .then((res) => {
-                    if (res.data.message) {
-                        toast.error(res.data.message);
+                .then((response) => {
+                    if (response.data.message) {
+                        toast.error(response.data.message);
                         return;
                     }
 
-                    toast.success('Etudiant crée avec succès !');
+                    if (response.data.success) {
+                        toast.success('Etudiant crée avec succès !');
 
-                    // Redirection vers la page d'affichage des seances
-                    router.visit(etudiants());
+                        // Redirection vers la page d'affichage des seances
+                        router.visit(etudiants());
+                    }
                 })
                 .catch((error) => {
                     toast.error(error.response.data.message);
@@ -49,37 +35,51 @@ export default function useEtudiant() {
         } catch (error) {
             toast.error('Erreur survenue au seance du serveur');
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     // Modification d'un etudiant
-    const updateEtudiant = async (id: string, data: Data) => {
+    const updateEtudiant = async (id: string, data: EtudiantFormData) => {
         try {
+            setIsLoading(true);
+
             await axios
                 .put(`/etudiants/${id}/update`, data)
-                .then(() => {
-                    toast.success('Etudiant modifié avec succès !');
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success('Etudiant modifié avec succès !');
 
-                    // Redirection sur la page d'affiche
-                    router.visit('/etudiants');
+                        // Redirection sur la page d'affiche
+                        router.visit('/etudiants');
+                    }
                 })
                 .catch((error) => {
                     toast.error(error.response.data.message);
                     console.log(error);
-                });
+                })
+           
         } catch (error) {
-            toast.success('Erreur survenue au seance du serveur');
+            toast.error('Erreur survenue au seance du serveur');
             console.log(error);
+        }
+        finally{
+             setIsLoading(false);
         }
     };
 
     // Suppression d'un etudiant
     const deleteEtudiant = async (id: number) => {
         try {
+            setIsLoading(true);
+
             await axios
                 .delete(`/etudiants/${id}/delete`)
-                .then(() => {
-                    toast.success('Etudiant supprimé !');
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success('Etudiant supprimé !');
+                    }
                 })
                 .catch((error) => {
                     toast.success(
@@ -91,7 +91,10 @@ export default function useEtudiant() {
             toast.success('Erreur survenue au seance du serveur');
             console.log(error);
         }
+        finally {
+            setIsLoading(false);
+        }
     };
 
-    return { createEtudiant, updateEtudiant, deleteEtudiant };
+    return { createEtudiant, updateEtudiant, deleteEtudiant, isLoading };
 }
