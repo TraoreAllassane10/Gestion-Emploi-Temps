@@ -46,7 +46,7 @@ const TABS: {
 
 export default function Show() {
     const { etudiant } = usePage<{ etudiant: Etudiant }>().props;
-    const MOCK_IP = 'ETU-2024-001';
+    const MOCK_IP = 'ETU-2024-001'
 
     // A Remplacer par les inscriptions reelles de l'utilisateur
     const inscriptions = INSCRIPTIONS.filter(
