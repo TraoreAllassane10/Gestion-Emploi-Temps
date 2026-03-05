@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('frais_configurations', function (Blueprint $table) {
             $table->id();
-            $table->integer('type');
+            $table->string('type');
             $table->integer('montant');
 
             $table->foreignId('annee_universitaire_id')->constrained()->cascadeOnDelete();

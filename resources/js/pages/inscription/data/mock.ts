@@ -1,7 +1,8 @@
 // data/mock.ts  — données partagées entre les 3 pages
 
-export type Statut = 'Actif' | 'Suspendu' | 'Terminé'
-export type TypeInscription = 'Nouvelle' | 'Redoublement' | 'Transfert'
+import { Statut, TypeInscription } from "@/types"
+
+
 
 export interface Etudiant {
   id: number

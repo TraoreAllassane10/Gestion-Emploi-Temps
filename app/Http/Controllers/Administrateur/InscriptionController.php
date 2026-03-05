@@ -1,0 +1,101 @@
+<?php
+
+namespace App\Http\Controllers\Administrateur;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\inscription\CreateInscriptionRequest;
+use App\Models\AnneeUniversitaire;
+use App\Models\Etudiant;
+use App\Models\FraisConfiguration;
+use App\Models\Inscription;
+use App\Models\Niveau;
+use App\Models\Scolarite;
+use Inertia\Inertia;
+
+
+class InscriptionController extends Controller
+{
+    public function index()
+    {
+        $etudiants = Etudiant::all();
+
+        return Inertia::render('inscription/Index', [
+            "etudiants" => $etudiants,
+        ]);
+    }
+
+    public function create()
+    {
+        $etudiants = Etudiant::all();
+        $niveaux = Niveau::all();
+        $annees = AnneeUniversitaire::orderByDesc("date_fin")->get();
+
+        return Inertia::render('inscription/Create', [
+            "etudiants" => $etudiants,
+            "niveaux" => $niveaux,
+            "annees" => $annees
+        ]);
+    }
+
+    public function store(CreateInscriptionRequest $request)
+    {
+        $data = $request->validated();
+        
+        // Recuperation de la scolarite et des frais annexe
+        $frais_annexe = FraisConfiguration::where("annee_universitaire_id", $data['annee_id'])
+            ->where("type", "frais_annexe")->first();
+        $scolarite = Scolarite::whereIn("niveau_id", $data['niveaux'])->sum("montant");
+
+        // Calcule de la scolarite apres la reduction. NB: j'applique la reduction sur la scolarite et avant d'ajouter les frais annexe
+        $montantReduction = $data['taux_reduction'] > 0 ? ($scolarite * $data['taux_reduction']) / 100 : 0;
+        $scolariteApresReduction =  $scolarite - $montantReduction;
+
+        // Calucle du montant total avec les frais annexe
+        $montantTotalScolarite = $frais_annexe->montant + $scolariteApresReduction;
+
+        // Recuperation l'etudiant et l'annee universitaire dans la bd
+        $etudiant = Etudiant::where("ip", $data['etudiant_ip'])->first();
+        $anneeUniversitaire = AnneeUniversitaire::where("id", $data['annee_id'])->first();
+
+        if ($etudiant && $anneeUniversitaire) {
+
+            // Verifie si l'etudiant est déjè inscrit durant l'annee choisie
+            $estInscrit = Inscription::where("etudiant_ip", $etudiant->ip)
+                ->where("annee_universitaire_id", $anneeUniversitaire->id)->first();
+       
+            if (!empty($estInscrit)) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Cet etudiant est déjà inscrit pour l'année selectionné"
+                ]);
+            }
+
+            // Enregistrement de l'inscription
+            $inscription = Inscription::create([
+                "date" => now(),
+                "taux_reduction" => $data['taux_reduction'] > 0 ? $data['taux_reduction'] : 0,
+                "frais_annexe" => $frais_annexe->montant,
+                "montant_scolarite" => $scolariteApresReduction,
+                "montant_total" => $montantTotalScolarite,
+                "etudiant_ip" => $etudiant->ip,
+                "annee_universitaire_id" => $anneeUniversitaire->id
+            ]);
+
+            if ($inscription) {
+                $inscription->inscription_niveau()->attach($data['niveaux']);
+            }
+        }
+
+
+        return response()->json([
+            "success" => true,
+            "inscription" => $inscription
+        ]);
+    }
+
+    public function edit() {}
+
+    public function update() {}
+
+    public function delete() {}
+}

@@ -42,6 +42,9 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export type Statut = 'Actif' | 'Suspendu' | 'Terminé'
+export type TypeInscription = 'Nouvelle' | 'Redoublement' | 'Transfert'
+
 
 export interface Etudiant {
   ip: string

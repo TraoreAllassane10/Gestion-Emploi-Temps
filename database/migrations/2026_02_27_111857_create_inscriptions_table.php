@@ -17,7 +17,7 @@ return new class extends Migration
 
             $table->date('date');
             $table->string('status')->nullable();
-            $table->integer("taux_reduction");
+            $table->integer("taux_reduction")->default(0);
 
             // Garder l'historique des frais d'inscription
             $table->integer("frais_annexe");
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->foreignIdFor(Etudiant::class)->constrained();
             $table->foreignId("annee_universitaire_id")->constrained()->onDelete("cascade");
 
-            $table->index(['etudiant_ip', 'annee_universitaire_id']);
+            $table->unique(['etudiant_ip', 'annee_universitaire_id']);
 
             $table->timestamps();
         });
