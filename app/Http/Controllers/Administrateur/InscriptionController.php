@@ -17,10 +17,28 @@ class InscriptionController extends Controller
 {
     public function index()
     {
-        $etudiants = Etudiant::all();
+        // Annee universitaire active
+        $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
+
+        $niveaux = Niveau::all();
+        $annees = AnneeUniversitaire::orderByDesc("date_fin")->get();
+        $inscriptions = Inscription::with("paiements")
+            ->withSum("paiements as total_paiements", "montant")
+            ->latest()
+            ->get();
+
+        // Statistiques
+        $nombreTotalInscription = Inscription::count();
+        $nombreInscriptionAnneeActive = Inscription::where("annee_universitaire_id", $anneeActive->id)->count();
 
         return Inertia::render('inscription/Index', [
-            "etudiants" => $etudiants,
+            "niveaux" => $niveaux,
+            "annees" => $annees,
+            "inscriptions" => $inscriptions,
+            "stats" => [
+                "total_inscription" => $nombreTotalInscription,
+                "total_inscription_annee" => $nombreInscriptionAnneeActive
+            ]
         ]);
     }
 
@@ -40,7 +58,7 @@ class InscriptionController extends Controller
     public function store(CreateInscriptionRequest $request)
     {
         $data = $request->validated();
-        
+
         // Recuperation de la scolarite et des frais annexe
         $frais_annexe = FraisConfiguration::where("annee_universitaire_id", $data['annee_id'])
             ->where("type", "frais_annexe")->first();
@@ -62,7 +80,7 @@ class InscriptionController extends Controller
             // Verifie si l'etudiant est déjè inscrit durant l'annee choisie
             $estInscrit = Inscription::where("etudiant_ip", $etudiant->ip)
                 ->where("annee_universitaire_id", $anneeUniversitaire->id)->first();
-       
+
             if (!empty($estInscrit)) {
                 return response()->json([
                     "success" => false,
@@ -73,6 +91,7 @@ class InscriptionController extends Controller
             // Enregistrement de l'inscription
             $inscription = Inscription::create([
                 "date" => now(),
+                "type_inscription" => $data["type_inscription"],
                 "taux_reduction" => $data['taux_reduction'] > 0 ? $data['taux_reduction'] : 0,
                 "frais_annexe" => $frais_annexe->montant,
                 "montant_scolarite" => $scolariteApresReduction,
@@ -82,7 +101,7 @@ class InscriptionController extends Controller
             ]);
 
             if ($inscription) {
-                $inscription->inscription_niveau()->attach($data['niveaux']);
+                $inscription->niveaux()->attach($data['niveaux']);
             }
         }
 

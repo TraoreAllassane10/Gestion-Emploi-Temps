@@ -12,15 +12,25 @@ class Inscription extends Model
 
     protected $guarded = [];
 
-    public function Etudiant() {
+    protected $with = ["etudiant", "annee", "niveaux"];
+
+    public function etudiant()
+    {
         return $this->belongsTo(Etudiant::class);
     }
 
-    public function anneeAcademique() {
-        return $this->belongsTo(AnneeUniversitaire::class);
+    public function annee()
+    {
+        return $this->belongsTo(AnneeUniversitaire::class, "annee_universitaire_id");
     }
 
-    public function inscription_niveau() {
+    public function niveaux()
+    {
         return $this->belongsToMany(Niveau::class, "inscription_niveau");
+    }
+
+    public function paiements()
+    {
+        return $this->hasMany(Paiement::class);
     }
 }
