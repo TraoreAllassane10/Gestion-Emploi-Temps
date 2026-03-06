@@ -17,4 +17,8 @@ class AnneeUniversitaire extends Model
         "date_debut" => "date:d-m-Y",
         "date_fin" => "date:d-m-Y",
     ];
+
+    public function inscriptions() {
+        return $this->hasMany(Inscription::class);
+    }
 }

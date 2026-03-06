@@ -17,13 +17,17 @@ return new class extends Migration
 
             $table->date('date');
             $table->string('status')->nullable();
-            $table->integer("taux_reduction");
+            $table->integer("taux_reduction")->default(0);
+
+            // Garder l'historique des frais d'inscription
+            $table->integer("frais_annexe");
+            $table->integer("montant_scolarite");
+            $table->integer("montant_total");
 
             $table->foreignIdFor(Etudiant::class)->constrained();
-            $table->foreignId("niveau_id")->constrained()->onDelete("cascade");
             $table->foreignId("annee_universitaire_id")->constrained()->onDelete("cascade");
 
-            $table->index(['etudiant_ip', 'niveau_id', 'annee_universitaire_id']);
+            $table->unique(['etudiant_ip', 'annee_universitaire_id']);
 
             $table->timestamps();
         });

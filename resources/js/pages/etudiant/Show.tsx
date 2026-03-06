@@ -26,9 +26,8 @@ import {
 import { useState } from 'react';
 import {
     INSCRIPTIONS,
-    fmt,
-    statutConfig as insStatutConfig,
 } from '../inscription/data/mock';
+import { fmt } from '@/utils/util';
 
 type Tab = 'profil' | 'academique' | 'contact' | 'responsable' | 'inscriptions';
 
@@ -223,8 +222,7 @@ export default function Show() {
                                                   100,
                                           )
                                         : 0;
-                                const { className: sc, dotClass: sd } =
-                                    insStatutConfig[ins.statut];
+                               
                                 return (
                                     <Card key={ins.id} className="shadow-sm">
                                         <CardContent className="p-4">
@@ -241,10 +239,10 @@ export default function Show() {
                                                             {ins.niveau}
                                                         </Badge>
                                                         <span
-                                                            className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold ${sc}`}
+                                                            className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold `}
                                                         >
                                                             <span
-                                                                className={`h-1.5 w-1.5 rounded-full ${sd}`}
+                                                                className={`h-1.5 w-1.5 rounded-full`}
                                                             />
                                                             {ins.statut}
                                                         </span>

@@ -33,7 +33,7 @@ export default function useEtudiant() {
                     console.log(error);
                 });
         } catch (error) {
-            toast.error('Erreur survenue au seance du serveur');
+            toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
         } finally {
             setIsLoading(false);
@@ -61,7 +61,7 @@ export default function useEtudiant() {
                 })
            
         } catch (error) {
-            toast.error('Erreur survenue au seance du serveur');
+            toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
         }
         finally{
@@ -88,7 +88,7 @@ export default function useEtudiant() {
                     console.log(error);
                 });
         } catch (error) {
-            toast.success('Erreur survenue au seance du serveur');
+            toast.success('Erreur survenue au niveau du serveur');
             console.log(error);
         }
         finally {

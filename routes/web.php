@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Administrateur\AnneeAcademiqueController;
+use App\Http\Controllers\Administrateur\InscriptionController;
 use App\Http\Controllers\CoursController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EtudiantController;
@@ -137,15 +138,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     // Routes Inscription
-    Route::get("/inscriptions", function() {
-        return Inertia::render('inscription/Index');
+    Route::controller(InscriptionController::class)->group(function () {
+        Route::get("/inscriptions", "index")->name("inscriptions.index");
+        Route::get("/inscriptions/create",  "create")->name("inscriptions.create");
+        Route::post("/inscriptions", "store")->name("inscriptions.store");
     });
 
-      Route::get("/inscriptions/create", function() {
-        return Inertia::render('inscription/Create');
-    });
-
-      Route::get("/inscriptions/{id}", function() {
+    Route::get("/inscriptions/{id}", function () {
         return Inertia::render('inscription/Show');
     });
 });

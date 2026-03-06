@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('reference');
             $table->date('date_paiement');
             $table->string('methode_paiement');
+            $table->integer("montant");
 
             $table->foreignId("receveur_id");
             $table->foreignId("inscription_id")->constrained()->onDelete("cascade");

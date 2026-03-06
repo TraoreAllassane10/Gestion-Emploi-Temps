@@ -42,6 +42,9 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export type Statut = 'Actif' | 'Suspendu' | 'Terminé'
+export type TypeInscription = 'Nouvelle' | 'Redoublement' | 'Transfert'
+
 
 export interface Etudiant {
   ip: string
@@ -140,21 +143,29 @@ export interface Salle {
     nom: string;
 }
 
-
-
-export interface Student {
-  id: number
-  first_name: string
-  last_name: string
-  matricule: string
+// Types Inscription
+export interface Inscription {
+  id: number;
+  etudiant: Etudiant;
+  annee: Annee;
+  niveaux: DataNiveau[];
+  date: string;
+  taux_reduction: number;
+  frais_annexe: number;
+  montant_scolarite: number;
+  montant_total: number;
+  status: string | null;
+  type_inscription: TypeInscription;
+  paiments: Paiement[],
+  total_paiements: string;
 }
 
-export interface Inscription {
-  id: number
-  student: Student
-  annee: string
-  niveau: string
-  statut: "En cours" | "Soldé"
-  total: number
-  total_paye: number
+// Types Paiements
+export interface Paiement {
+    id: string;
+    reference: string;
+    date_paiement: string;
+    methode_paiement: string;
+    montant: number;
+    receveur?:User 
 }

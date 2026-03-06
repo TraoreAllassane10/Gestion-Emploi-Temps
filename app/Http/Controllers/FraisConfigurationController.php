@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class InscriptionController extends Controller
+class FraisConfigurationController extends Controller
 {
     //
 }

@@ -1,18 +1,19 @@
 // data/mock.ts  — données partagées entre les 3 pages
 
-export type Statut = 'Actif' | 'Suspendu' | 'Terminé'
-export type TypeInscription = 'Nouvelle' | 'Redoublement' | 'Transfert'
+import { Etudiant, Statut, TypeInscription } from "@/types"
 
-export interface Etudiant {
-  id: number
-  nom: string
-  prenom: string
-  matricule: string
-  filiere: string
-  email: string
-  telephone: string
-  dateNaissance: string
-}
+
+
+// export interface Etudiant {
+//   id: number
+//   nom: string
+//   prenom: string
+//   matricule: string
+//   filiere: string
+//   email: string
+//   telephone: string
+//   dateNaissance: string
+// }
 
 export interface Paiement {
   id: number
@@ -31,27 +32,6 @@ export interface ResultatUE {
   statut: 'Validé' | 'Ajourné'
 }
 
-export interface Inscription {
-  id: number
-  etudiant: Etudiant
-  annee: string
-  niveau: string
-  statut: Statut
-  typeInscription: TypeInscription
-  semestre: string
-  fraisInscription: number
-  totalScolarite: number
-  montantPaye: number
-  nombreMensualites: number
-  paiements: Paiement[]
-  resultats: {
-    moyenneS1: number | null
-    moyenneS2: number | null
-    decision: string | null
-    ues: ResultatUE[]
-  }
-  dateInscription: string
-}
 
 export const ETUDIANTS: Etudiant[] = [
   { id: 1, nom: 'Konaté',    prenom: 'Aminata',   matricule: 'ETU-2024-001', filiere: 'Informatique', email: 'aminata.konate@univ.ci',   telephone: '+225 07 12 34 56', dateNaissance: '2002-03-15' },
@@ -152,11 +132,4 @@ export const INSCRIPTIONS: Inscription[] = [
   },
 ]
 
-export const fmt = (n: number) =>
-  new Intl.NumberFormat('fr-CI', { style: 'currency', currency: 'XOF', maximumFractionDigits: 0 }).format(n)
 
-export const statutConfig: Record<Statut, { label: string; className: string; dotClass: string }> = {
-  Actif:    { label: 'Actif',    className: 'bg-emerald-50 text-emerald-700 border border-emerald-200', dotClass: 'bg-emerald-500' },
-  Suspendu: { label: 'Suspendu', className: 'bg-amber-50 text-amber-700 border border-amber-200',       dotClass: 'bg-amber-500'   },
-  Terminé:  { label: 'Terminé',  className: 'bg-slate-100 text-slate-600 border border-slate-200',      dotClass: 'bg-slate-400'   },
-}
