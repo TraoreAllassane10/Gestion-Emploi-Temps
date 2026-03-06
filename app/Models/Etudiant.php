@@ -16,4 +16,7 @@ class Etudiant extends Model
 
     protected $guarded = [];
 
+    public function inscriptions() {
+        return $this->hasMany(Inscription::class);
+    }
 }
