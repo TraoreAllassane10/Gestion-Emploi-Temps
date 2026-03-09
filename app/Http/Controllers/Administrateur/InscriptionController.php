@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrateur;
 
+use App\Enums\StatutInscription;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\inscription\CreateInscriptionRequest;
 use App\Models\AnneeUniversitaire;
@@ -22,6 +23,7 @@ class InscriptionController extends Controller
 
         $niveaux = Niveau::all();
         $annees = AnneeUniversitaire::orderByDesc("date_fin")->get();
+
         $inscriptions = Inscription::with("paiements")
             ->withSum("paiements as total_paiements", "montant")
             ->latest()
@@ -91,6 +93,7 @@ class InscriptionController extends Controller
             // Enregistrement de l'inscription
             $inscription = Inscription::create([
                 "date" => now(),
+                "status" => StatutInscription::BON,
                 "type_inscription" => $data["type_inscription"],
                 "taux_reduction" => $data['taux_reduction'] > 0 ? $data['taux_reduction'] : 0,
                 "frais_annexe" => $frais_annexe->montant,
@@ -112,9 +115,16 @@ class InscriptionController extends Controller
         ]);
     }
 
-    public function edit() {}
+    public function show(string $inscription)
+    {
+        $inscriptionData = Inscription::where("id", $inscription)
+            ->with("paiements")
+            ->withSum("paiements as total_paiements", "montant")
+            ->first();
 
-    public function update() {}
-
-    public function delete() {}
+        // dd($inscriptionData);
+        return Inertia::render('inscription/Show', [
+            "inscription" => $inscriptionData
+        ]);
+    }
 }

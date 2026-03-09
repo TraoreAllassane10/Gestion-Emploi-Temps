@@ -142,10 +142,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("/inscriptions", "index")->name("inscriptions.index");
         Route::get("/inscriptions/create",  "create")->name("inscriptions.create");
         Route::post("/inscriptions", "store")->name("inscriptions.store");
-    });
 
-    Route::get("/inscriptions/{id}", function () {
-        return Inertia::render('inscription/Show');
+        Route::get("/inscriptions/{inscription}", "show")->name("inscriptions.show");
     });
 });
 

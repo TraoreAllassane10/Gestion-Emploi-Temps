@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowLeft,
     BarChart2,
@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -47,22 +46,23 @@ import {
     TableRow,
 } from '@/components/ui/table';
 
+import Avatar from '@/components/etudiant/Avatar';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Inscription } from '@/types';
 import { fmt } from '@/utils/util';
-import { INSCRIPTIONS } from './data/mock';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 // En vrai, l'id viendrait des props Inertia : usePage().props
 const MOCK_ID = 1;
 
-function StatutBadge({ statut }: { statut: Statut }) {
-    const { className, dotClass, label } = statutConfig[statut];
+function StatutBadge({ statut }: { statut: string }) {
     return (
         <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${className}`}
+            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold`}
         >
-            <span className={`h-1.5 w-1.5 rounded-full ${dotClass}`} />
-            {label}
+            <span className={`h-1.5 w-1.5 rounded-full`} />
+            {statut}
         </span>
     );
 }
@@ -198,32 +198,32 @@ function TabGeneral({ ins }: { ins: Inscription }) {
                     <InfoField
                         icon={User}
                         label="Nom complet"
-                        value={`${ins.etudiant.prenom} ${ins.etudiant.nom}`}
+                        value={`${ins.etudiant?.prenom} ${ins.etudiant?.nom}`}
                     />
                     <InfoField
                         icon={Hash}
                         label="Matricule"
-                        value={ins.etudiant.matricule}
+                        value={ins.etudiant?.ip}
                     />
                     <InfoField
                         icon={Mail}
                         label="Email"
-                        value={ins.etudiant.email}
+                        value={ins.etudiant?.email ?? 'aucun'}
                     />
                     <InfoField
                         icon={Phone}
                         label="Téléphone"
-                        value={ins.etudiant.telephone}
+                        value={ins.etudiant?.contacts ?? ''}
                     />
                     <InfoField
                         icon={Calendar}
                         label="Date naissance"
-                        value={ins.etudiant.dateNaissance}
+                        value={ins.etudiant?.date_naissance}
                     />
                     <InfoField
                         icon={User}
                         label="Filière"
-                        value={ins.etudiant.filiere}
+                        value={ins.niveaux && ins.niveaux[0].filiere.nom}
                     />
                 </div>
             </div>
@@ -238,23 +238,24 @@ function TabGeneral({ ins }: { ins: Inscription }) {
                     <InfoField
                         icon={Calendar}
                         label="Année universitaire"
-                        value={ins.annee}
+                        value={ins.annee.libelle}
                     />
-                    <InfoField icon={Hash} label="Niveau" value={ins.niveau} />
+                    {ins.niveaux.map((niveau) => (
+                        <InfoField
+                            icon={Hash}
+                            label="Niveau"
+                            value={niveau.nom}
+                        />
+                    ))}
                     <InfoField
                         icon={User}
                         label="Type d'inscription"
-                        value={ins.typeInscription}
-                    />
-                    <InfoField
-                        icon={Clock}
-                        label="Semestre"
-                        value={ins.semestre}
+                        value={ins.type_inscription}
                     />
                     <InfoField
                         icon={Calendar}
                         label="Date d'inscription"
-                        value={ins.dateInscription}
+                        value={ins.date}
                     />
                     <div className="flex items-start gap-3 rounded-lg bg-muted/40 p-3">
                         <div className="rounded-md border bg-background p-1.5">
@@ -265,7 +266,7 @@ function TabGeneral({ ins }: { ins: Inscription }) {
                                 Statut
                             </p>
                             <div className="mt-1">
-                                <StatutBadge statut={ins.statut} />
+                                <StatutBadge statut={ins.status ?? 'Aucun'} />
                             </div>
                         </div>
                     </div>
@@ -279,11 +280,14 @@ function TabGeneral({ ins }: { ins: Inscription }) {
 
 function TabFinancier({ ins }: { ins: Inscription }) {
     const [modalOpen, setModalOpen] = useState(false);
-    const pct =
-        ins.totalScolarite > 0
-            ? Math.round((ins.montantPaye / ins.totalScolarite) * 100)
+
+    const progression =
+        ins.montant_total > 0
+            ? Math.round(
+                  (Number(ins.total_paiements) / ins.montant_total) * 100,
+              )
             : 0;
-    const reste = ins.totalScolarite - ins.montantPaye;
+    const reste = ins.montant_scolarite - Number(ins.total_paiements);
 
     return (
         <div className="space-y-6">
@@ -292,13 +296,13 @@ function TabFinancier({ ins }: { ins: Inscription }) {
                 {[
                     {
                         label: 'Total à payer',
-                        value: fmt(ins.totalScolarite),
+                        value: fmt(ins.montant_total),
                         color: 'text-blue-600',
                         bg: 'bg-blue-50',
                     },
                     {
                         label: 'Montant payé',
-                        value: fmt(ins.montantPaye),
+                        value: fmt(Number(ins.total_paiements)),
                         color: 'text-emerald-600',
                         bg: 'bg-emerald-50',
                     },
@@ -331,21 +335,12 @@ function TabFinancier({ ins }: { ins: Inscription }) {
                             Progression des paiements
                         </span>
                         <span
-                            className={`font-bold tabular-nums ${pct >= 100 ? 'text-emerald-600' : 'text-primary'}`}
+                            className={`font-bold tabular-nums ${progression >= 100 ? 'text-emerald-600' : 'text-primary'}`}
                         >
-                            {pct}%
+                            {progression}%
                         </span>
                     </div>
-                    <Progress value={pct} className="h-2.5" />
-                    <p className="text-xs text-muted-foreground">
-                        {ins.nombreMensualites} mensualités ·{' '}
-                        {fmt(
-                            Math.round(
-                                ins.totalScolarite / ins.nombreMensualites,
-                            ),
-                        )}{' '}
-                        / mois
-                    </p>
+                    <Progress value={progression} className="h-2.5" />
                 </CardContent>
             </Card>
 
@@ -374,12 +369,9 @@ function TabFinancier({ ins }: { ins: Inscription }) {
                             <TableRow className="bg-muted/30 hover:bg-muted/30">
                                 <TableHead>Référence</TableHead>
                                 <TableHead>Date</TableHead>
-                                <TableHead>Type</TableHead>
+                                <TableHead>Mode de paiement</TableHead>
                                 <TableHead className="text-right">
                                     Montant
-                                </TableHead>
-                                <TableHead className="text-right">
-                                    Reste
                                 </TableHead>
                             </TableRow>
                         </TableHeader>
@@ -390,16 +382,13 @@ function TabFinancier({ ins }: { ins: Inscription }) {
                                         {p.reference}
                                     </TableCell>
                                     <TableCell className="text-sm tabular-nums">
-                                        {p.date}
+                                        {p.date_paiement}
                                     </TableCell>
                                     <TableCell className="text-sm">
-                                        {p.type}
+                                        {p.methode_paiement}
                                     </TableCell>
                                     <TableCell className="text-right text-sm font-semibold text-emerald-600 tabular-nums">
                                         +{fmt(p.montant)}
-                                    </TableCell>
-                                    <TableCell className="text-right text-sm text-muted-foreground tabular-nums">
-                                        {fmt(p.reste)}
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -420,17 +409,23 @@ function TabFinancier({ ins }: { ins: Inscription }) {
 // ── Onglet 3 ──────────────────────────────────────────────────────────────────
 
 function TabResultats({ ins }: { ins: Inscription }) {
-    const { moyenneS1, moyenneS2, decision, ues } = ins.resultats;
+    // const { moyenneS1, moyenneS2, decision, ues } = ins.resultats;
 
-    const moyenneColor = (m: number | null) => {
-        if (m === null) return 'text-muted-foreground';
-        return m >= 10 ? 'text-emerald-600' : 'text-rose-600';
-    };
+    // const moyenneColor = (m: number | null) => {
+    //     if (m === null) return 'text-muted-foreground';
+    //     return m >= 10 ? 'text-emerald-600' : 'text-rose-600';
+    // };
 
     return (
         <div className="space-y-6">
+            <Alert>
+                <Clock className="h-4 w-4" />
+                <AlertDescription className="text-md">
+                    Fonctionnalités à venir.
+                </AlertDescription>
+            </Alert>
             {/* KPI moyennes */}
-            <div className="grid grid-cols-3 gap-3">
+            {/* <div className="grid grid-cols-3 gap-3">
                 {[
                     {
                         label: 'Moyenne S1',
@@ -464,10 +459,10 @@ function TabResultats({ ins }: { ins: Inscription }) {
                         </CardContent>
                     </Card>
                 ))}
-            </div>
+            </div> */}
 
             {/* Détail UEs */}
-            {ues.length > 0 ? (
+            {/* {ues.length > 0 ? (
                 <Card>
                     <CardHeader className="pb-3">
                         <CardTitle className="text-sm font-semibold">
@@ -535,7 +530,7 @@ function TabResultats({ ins }: { ins: Inscription }) {
                         pour cette inscription.
                     </AlertDescription>
                 </Alert>
-            )}
+            )} */}
         </div>
     );
 }
@@ -543,20 +538,23 @@ function TabResultats({ ins }: { ins: Inscription }) {
 // ── Page principale ───────────────────────────────────────────────────────────
 
 export default function Show() {
-    // En production : const { inscription } = usePage<{ inscription: Inscription }>().props
-    const ins = INSCRIPTIONS.find((i) => i.id === MOCK_ID)!;
+    const { inscription } = usePage<{ inscription: Inscription }>().props;
 
     const [activeTab, setActiveTab] = useState<Tab>('general');
 
     const pct =
-        ins.totalScolarite > 0
-            ? Math.round((ins.montantPaye / ins.totalScolarite) * 100)
+        inscription.montant_total > 0
+            ? Math.round(
+                  (Number(inscription.total_paiements) /
+                      inscription.montant_total) *
+                      100,
+              )
             : 0;
 
     return (
         <AppLayout>
             <Head
-                title={`Inscription — ${ins.etudiant.prenom} ${ins.etudiant.nom}`}
+                title={`Inscription — ${inscription.etudiant?.prenom} ${inscription.etudiant?.nom}`}
             />
 
             <div className="space-y-6 p-6">
@@ -574,29 +572,34 @@ export default function Show() {
                     <div className="h-1.5 bg-gradient-to-r from-primary to-primary/40" />
                     <CardContent className="p-5">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                            {/* Avatar */}
-                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary/10 text-lg font-bold text-primary">
-                                {ins.etudiant.prenom[0]}
-                                {ins.etudiant.nom[0]}
-                            </div>
+                            <Avatar
+                                nom={inscription.etudiant?.nom}
+                                prenom={inscription.etudiant?.prenom}
+                                genre="ee"
+                            />
 
                             {/* Infos */}
                             <div className="min-w-0 flex-1">
                                 <div className="mb-0.5 flex flex-wrap items-center gap-2">
                                     <h1 className="text-xl font-bold tracking-tight">
-                                        {ins.etudiant.prenom} {ins.etudiant.nom}
+                                        {inscription.etudiant?.prenom}{' '}
+                                        {inscription.etudiant?.nom}
                                     </h1>
-                                    <StatutBadge statut={ins.statut} />
-                                    <Badge
-                                        variant="secondary"
-                                        className="font-bold"
-                                    >
-                                        {ins.niveau}
-                                    </Badge>
+                                    <StatutBadge statut="Actif" />
+                                    {inscription.niveaux?.map((niveau) => (
+                                        <Badge
+                                            variant="secondary"
+                                            className="font-bold"
+                                        >
+                                            {niveau.nom}
+                                        </Badge>
+                                    ))}
                                 </div>
                                 <p className="text-sm text-muted-foreground">
-                                    {ins.etudiant.matricule} ·{' '}
-                                    {ins.etudiant.filiere} · {ins.annee}
+                                    {inscription.etudiant?.ip} ·{' '}
+                                    {inscription.niveaux &&
+                                        inscription.niveaux[0].filiere.nom}{' '}
+                                    · {inscription.annee?.libelle}
                                 </p>
                             </div>
 
@@ -651,9 +654,15 @@ export default function Show() {
 
                 {/* Contenu onglet */}
                 <div>
-                    {activeTab === 'general' && <TabGeneral ins={ins} />}
-                    {activeTab === 'financier' && <TabFinancier ins={ins} />}
-                    {activeTab === 'resultats' && <TabResultats ins={ins} />}
+                    {activeTab === 'general' && (
+                        <TabGeneral ins={inscription} />
+                    )}
+                    {activeTab === 'financier' && (
+                        <TabFinancier ins={inscription} />
+                    )}
+                    {activeTab === 'resultats' && (
+                        <TabResultats ins={inscription} />
+                    )}
                 </div>
             </div>
         </AppLayout>
