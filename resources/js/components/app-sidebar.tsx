@@ -16,45 +16,51 @@ import { Link } from '@inertiajs/react';
 import {
     Building2,
     Calendar1,
+    CalendarDays,
+    ClipboardList,
+    GraduationCap,
+    LayoutDashboard,
     LayoutGrid,
     Settings2,
     User2,
+    UserCog,
+    Users,
 } from 'lucide-react';
 import AppLogo from './app-logo';
+
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
-        icon: LayoutGrid,
+        icon: LayoutDashboard,
     },
     {
         title: 'Etudiant',
         href: "/etudiants",
-        icon: User2,
+        icon: Users,
     },
     {
         title: 'Inscriptions',
         href: "/inscriptions",
-        icon: LayoutGrid,
+        icon: ClipboardList,
     },
     {
         title: 'Personnel',
         href: dashboard(),
-        icon: LayoutGrid,
+        icon: UserCog,
     },
     {
         title: 'Niveau',
         href: niveau(),
-        icon: Building2,
+        icon: GraduationCap,
     },
     {
         title: 'Emploi du temps',
         href: seance(),
-        icon: Calendar1,
+        icon: CalendarDays,
     },
 ];
-
 const footerNavItems: NavItem[] = [
     {
         title: 'Configurations',
