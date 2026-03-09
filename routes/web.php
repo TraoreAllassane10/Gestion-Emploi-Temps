@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Administrateur\AnneeAcademiqueController;
 use App\Http\Controllers\Administrateur\InscriptionController;
+use App\Http\Controllers\Administrateur\PaiementController;
 use App\Http\Controllers\CoursController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EtudiantController;
@@ -144,6 +145,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post("/inscriptions", "store")->name("inscriptions.store");
 
         Route::get("/inscriptions/{inscription}", "show")->name("inscriptions.show");
+    });
+
+    // Routes Paiement
+    Route::controller(PaiementController::class)->group(function () {
+        Route::post("/inscriptions/{inscription}/paiement", "store")->name("paiements.store");
     });
 });
 

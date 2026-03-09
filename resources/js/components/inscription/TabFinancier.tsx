@@ -1,14 +1,21 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { Inscription } from "@/types";
-import { fmt } from "@/utils/util";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Progress } from "../ui/progress";
-import { Button } from "../ui/button";
-import { PlusCircle } from "lucide-react";
-import { Separator } from "../ui/separator";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import ModalPaiement from "./ModalPaiement";
+import { Inscription } from '@/types';
+import { fmt } from '@/utils/util';
+import { PlusCircle } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Progress } from '../ui/progress';
+import { Separator } from '../ui/separator';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '../ui/table';
+import ModalPaiement from './ModalPaiement';
 export default function TabFinancier({ ins }: { ins: Inscription }) {
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -18,7 +25,7 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                   (Number(ins.total_paiements) / ins.montant_total) * 100,
               )
             : 0;
-    const reste = ins.montant_scolarite - Number(ins.total_paiements);
+    const reste = ins.montant_total - Number(ins.total_paiements);
 
     return (
         <div className="space-y-6">
@@ -81,13 +88,17 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                     <CardTitle className="text-sm font-semibold">
                         Historique des paiements
                     </CardTitle>
-                    <Button
-                        size="sm"
-                        className="h-8 gap-1.5"
-                        onClick={() => setModalOpen(true)}
-                    >
-                        <PlusCircle className="h-3.5 w-3.5" /> Ajouter
-                    </Button>
+                    {reste === 0 ? (
+                        <span className='text-red-500 font-bold'>Solde</span>
+                    ) : (
+                        <Button
+                            size="sm"
+                            className="h-8 gap-1.5"
+                            onClick={() => setModalOpen(true)}
+                        >
+                            <PlusCircle className="h-3.5 w-3.5" /> Ajouter
+                        </Button>
+                    )}
                 </CardHeader>
                 <Separator />
                 {ins.paiements.length === 0 ? (
@@ -104,6 +115,9 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                                 <TableHead className="text-right">
                                     Montant
                                 </TableHead>
+                                 <TableHead className="text-right">
+                                    Receveur
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -112,14 +126,17 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                                     <TableCell className="font-mono text-xs text-muted-foreground">
                                         {p.reference}
                                     </TableCell>
-                                    <TableCell className="text-sm tabular-nums">
+                                    <TableCell className="text-md tabular-nums">
                                         {p.date_paiement}
                                     </TableCell>
-                                    <TableCell className="text-sm">
+                                    <TableCell className="text-md">
                                         {p.methode_paiement}
                                     </TableCell>
-                                    <TableCell className="text-right text-sm font-semibold text-emerald-600 tabular-nums">
+                                    <TableCell className="text-right text-md font-semibold text-emerald-600 tabular-nums">
                                         +{fmt(p.montant)}
+                                    </TableCell>
+                                     <TableCell className="text-md text-right">
+                                        {p.receveur?.name}
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -132,6 +149,7 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
                 resteAPayer={reste}
+                inscriptionId={ins.id}
             />
         </div>
     );

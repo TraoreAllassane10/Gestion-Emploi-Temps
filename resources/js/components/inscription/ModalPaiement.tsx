@@ -1,23 +1,50 @@
-import { CheckCircle2 } from "lucide-react";
-import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { useState } from "react";
-import { fmt } from "@/utils/util";
+import { fmt } from '@/utils/util';
+import { CheckCircle2 } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '../ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '../ui/dialog';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import usePaiement from '@/hooks/usePaiement';
 
 export default function ModalPaiement({
     open,
     onClose,
     resteAPayer,
+    inscriptionId
 }: {
     open: boolean;
     onClose: () => void;
     resteAPayer: number;
+    inscriptionId: number;
 }) {
     const [montant, setMontant] = useState('');
-    const [type, setType] = useState('Mensualité');
+    const [date_paiement, setDatePaiement] = useState('');
+    const [methode_paiement, setMethodePaiement] = useState('');
+    const [reference, setReference] = useState('');
+
+    const desactiveButtonSumbit =
+        !montant ||
+        Number(montant) <= 0 ||
+        !date_paiement ||
+        !methode_paiement ||
+        !reference ||
+        resteAPayer <= 0 ||
+        Number(montant) > resteAPayer;
+
+    const {createPaiement} = usePaiement();
+
+    const handlePayment = () => {
+        createPaiement(inscriptionId, {date_paiement, methode_paiement, reference, montant: Number(montant)});
+
+        onClose();
+    };
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
@@ -36,7 +63,7 @@ export default function ModalPaiement({
                         </span>
                     </div>
 
-                    <div className="space-y-2">
+                    {/* <div className="space-y-2">
                         <Label>Type de paiement</Label>
                         <Select value={type} onValueChange={setType}>
                             <SelectTrigger>
@@ -55,6 +82,35 @@ export default function ModalPaiement({
                                 ))}
                             </SelectContent>
                         </Select>
+                    </div> */}
+
+                    <div className="space-y-2">
+                        <Label>Date du paiement</Label>
+                        <Input
+                            type="date"
+                            value={date_paiement}
+                            onChange={(e) => setDatePaiement(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label>Reference du paiement</Label>
+                        <Input
+                            type="text"
+                            placeholder="Ex : REF-2254582154"
+                            value={reference}
+                            onChange={(e) => setReference(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label>Methode de paiement</Label>
+                        <Input
+                            type="text"
+                            placeholder="Ex : Wave"
+                            value={methode_paiement}
+                            onChange={(e) => setMethodePaiement(e.target.value)}
+                        />
                     </div>
 
                     <div className="space-y-2">
@@ -73,8 +129,8 @@ export default function ModalPaiement({
                         Annuler
                     </Button>
                     <Button
-                        onClick={onClose}
-                        disabled={!montant || Number(montant) <= 0}
+                        onClick={handlePayment}
+                        disabled={desactiveButtonSumbit}
                         className="gap-2"
                     >
                         <CheckCircle2 className="h-4 w-4" /> Confirmer
