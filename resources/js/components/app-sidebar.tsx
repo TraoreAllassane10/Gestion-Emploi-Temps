@@ -45,11 +45,11 @@ const mainNavItems: NavItem[] = [
         href: "/inscriptions",
         icon: ClipboardList,
     },
-    {
-        title: 'Personnel',
-        href: dashboard(),
-        icon: UserCog,
-    },
+    // {
+    //     title: 'Personnel',
+    //     href: dashboard(),
+    //     icon: UserCog,
+    // },
     {
         title: 'Niveau',
         href: niveau(),

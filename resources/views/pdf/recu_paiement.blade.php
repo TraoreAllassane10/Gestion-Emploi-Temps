@@ -82,6 +82,12 @@
         </p>
 
         <table>
+            <tr>
+                <td class="label">Reférence :</td>
+                <td class="line">
+                    {{ $paiement->reference }}
+                </td>
+            </tr>
 
             <tr>
                 <td class="label">Nom et prénoms :</td>
@@ -92,7 +98,7 @@
             </tr>
 
             <tr>
-                <td class="label">Matricule / IP :</td>
+                <td class="label">Identifiant Permanent :</td>
                 <td class="line">
                     {{ $paiement->inscription->etudiant->ip }}
                 </td>

@@ -39,21 +39,13 @@ const TABS: {
     { id: 'profil', label: 'Profil', icon: User },
     { id: 'academique', label: 'Académique', icon: BookOpen },
     { id: 'contact', label: 'Contact', icon: Phone },
-    { id: 'responsable', label: 'Responsable', icon: Users },
+    { id: 'responsable', label: 'Affiliation', icon: Users },
     { id: 'inscriptions', label: 'Inscriptions', icon: GraduationCap },
 ];
 
 export default function Show() {
     const { etudiant } = usePage<{ etudiant: Etudiant }>().props;
     const MOCK_IP = 'ETU-2024-001'
-
-    // A Remplacer par les inscriptions reelles de l'utilisateur
-    // const inscriptions = INSCRIPTIONS.filter(
-    //     (i) =>
-    //         i.etudiant.ip === MOCK_IP ||
-    //         // fallback mock: afficher la première inscription pour la démo
-    //         (MOCK_IP === 'ETU-2024-001' && i.id === 1),
-    // );
 
     const [activeTab, setActiveTab] = useState<Tab>('profil');
 
@@ -213,16 +205,7 @@ export default function Show() {
                                 </AlertDescription>
                             </Alert>
                         ) : (
-                            etudiant.inscriptions.map((ins) => {
-                                const pct =
-                                    ins.montant_total > 0
-                                        ? Math.round(
-                                              (ins.montant_total /
-                                                  ins.montant_scolarite) *
-                                                  100,
-                                          )
-                                        : 0;
-                               
+                            etudiant.inscriptions.map((ins) => {          
                                 return (
                                     <Card key={ins.id} className="shadow-sm">
                                         <CardContent className="p-4">
@@ -257,12 +240,8 @@ export default function Show() {
                                                         </span>
                                                     </div>
                                                     <p className="text-xs text-muted-foreground">
-                                                        Payé :{' '}
-                                                        {fmt(ins.montant_scolarite)} /{' '}
-                                                        {fmt(
-                                                            ins.montant_total,
-                                                        )}{' '}
-                                                        · {pct}%
+                                                        Scolarité :{' '}
+                                                        {fmt(ins.montant_total)}
                                                     </p>
                                                 </div>
                                                 <Link

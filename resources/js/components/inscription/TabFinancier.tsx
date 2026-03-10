@@ -130,7 +130,7 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                         </TableHeader>
                         <TableBody>
                             {ins.paiements.map((p) => (
-                                <TableRow key={p.id}>
+                                <TableRow key={p.id} className='group'>
                                     <TableCell className="font-mono text-xs text-muted-foreground">
                                         {p.reference}
                                     </TableCell>
@@ -153,7 +153,7 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    className="h-8 gap-1"
+                                                   className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
                                                 >
                                                     Reçu{' '}
                                                     <ChevronDown className="h-3 w-3" />
