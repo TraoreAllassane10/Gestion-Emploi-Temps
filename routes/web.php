@@ -150,6 +150,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Routes Paiement
     Route::controller(PaiementController::class)->group(function () {
         Route::post("/inscriptions/{inscription}/paiement", "store")->name("paiements.store");
+        Route::get('/paiements/{paiement}/recu', "recu")->name('paiements.recu');
     });
 });
 

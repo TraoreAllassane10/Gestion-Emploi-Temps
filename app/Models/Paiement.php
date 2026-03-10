@@ -14,6 +14,10 @@ class Paiement extends Model
 
     protected $with = ["receveur"];
 
+    public function inscription() {
+        return $this->belongsTo(Inscription::class);
+    }
+
     public function receveur() {
         return $this->belongsTo(User::class, "receveur_id");
     }

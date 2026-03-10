@@ -14,32 +14,12 @@ export default function usePaiement() {
     const createPaiement = async (inscriptionId: number, data: Data) => {
         try {
             await axios
-                .post(`/inscriptions/${inscriptionId}/paiement`, data, {
-                    responseType: 'blob',
-                })
+                .post(`/inscriptions/${inscriptionId}/paiement`, data)
                 .then((response) => {
-                    // Pouvoir ouvrir le stream du pdf dans un nouvel onglet
-                    // const file = new Blob([response.data], {
-                    //     type: 'application/pdf',
-                    // });
+                    // Lance l'onglet d'affichage du reçu
+                    window.open(response.data.recu_url);
 
-                    // const fileUrl = URL.createObjectURL(file);
-
-                    // window.open(fileUrl);
-
-                    const url = window.URL.createObjectURL(
-                        new Blob([response.data]),
-                    );
-
-                    const link = document.createElement('a');
-
-                    link.href = url;
-                    link.setAttribute('download', 'recu_paiement.pdf');
-
-                    document.body.appendChild(link);
-                    link.click();
-
-                    router.reload()
+                    router.reload();
                 })
                 .catch((error) => {
                     toast.error(

@@ -2,9 +2,16 @@ import { useState } from 'react';
 
 import { Inscription } from '@/types';
 import { fmt } from '@/utils/util';
-import { PlusCircle } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { ChevronDown, Download, PlusCircle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 import { Progress } from '../ui/progress';
 import { Separator } from '../ui/separator';
 import {
@@ -89,7 +96,7 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                         Historique des paiements
                     </CardTitle>
                     {reste === 0 ? (
-                        <span className='text-red-500 font-bold'>Solde</span>
+                        <span className="font-bold text-red-500">Solde</span>
                     ) : (
                         <Button
                             size="sm"
@@ -115,9 +122,10 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                                 <TableHead className="text-right">
                                     Montant
                                 </TableHead>
-                                 <TableHead className="text-right">
+                                <TableHead className="text-right">
                                     Receveur
                                 </TableHead>
+                                <TableHead className="w-[100px]" />
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -132,11 +140,41 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                                     <TableCell className="text-md">
                                         {p.methode_paiement}
                                     </TableCell>
-                                    <TableCell className="text-right text-md font-semibold text-emerald-600 tabular-nums">
+                                    <TableCell className="text-md text-right font-semibold text-emerald-600 tabular-nums">
                                         +{fmt(p.montant)}
                                     </TableCell>
-                                     <TableCell className="text-md text-right">
+                                    <TableCell className="text-md text-right">
                                         {p.receveur?.name}
+                                    </TableCell>
+
+                                    <TableCell>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-8 gap-1"
+                                                >
+                                                    Reçu{' '}
+                                                    <ChevronDown className="h-3 w-3" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent
+                                                align="end"
+                                                className="w-48"
+                                            >
+                                                <DropdownMenuItem asChild>
+                                                    <a
+                                                        href={`/paiements/${p.id}/recu`}
+                                                        className="flex cursor-pointer items-center gap-2"
+                                                        target='_blank'
+                                                    >
+                                                        <Download className="h-4 w-4" />{' '}
+                                                        Télécharger le reçu
+                                                    </a>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
                             ))}

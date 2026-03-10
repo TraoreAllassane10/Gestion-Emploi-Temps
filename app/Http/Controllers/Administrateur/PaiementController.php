@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Administrateur;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\paiement\CreatePaiementRequest;
 use App\Models\Inscription;
+use App\Models\Paiement;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PaiementController extends Controller
@@ -37,8 +39,9 @@ class PaiementController extends Controller
 
 
         if ($data['montant'] <= $resetPaye) {
+
             // Effectue le paiement
-            $inscription->paiements()->create([
+            $paiement = $inscription->paiements()->create([
                 "reference" => $data['reference'],
                 "date_paiement" => Carbon::parse($data['date_paiement']),
                 "methode_paiement" => Str::upper($data['methode_paiement']),
@@ -46,17 +49,41 @@ class PaiementController extends Controller
                 "receveur_id" => Auth::user()->id
             ]);
 
-            // Exporte le reçu
-            $pdf = Pdf::loadView("pdf.recu_paiement", [
-                "inscription" => $inscription,
-                "reference" => $data['reference'],
-                "date" => Carbon::parse($data['date_paiement'])->format('d-m-Y'),
-                "montant" => $data['montant'],
-                "reste" => $resetPaye - $data['montant'] 
-            ]);
-            return $pdf->stream("reçu_paiement");
+            $recu_url = route("paiements.recu", $paiement->id);
 
-            // return response()->json(["success" => true, "message" => "Paiement effectué avec succés !"]);
+            Log::info("Reçu url", [$recu_url]);
+
+            return response()->json([
+                "success" => true,
+                "message" => "Paiement effectué avec succés !",
+                "recu_url" => $recu_url
+            ]);
         }
+    }
+
+    public function recu(Paiement $paiement)
+    {
+        $paiement->load(
+            "inscription",
+            "receveur"
+        );
+
+
+        // Total jusqu'à ce paiement
+        $totalPaye = Paiement::where("inscription_id", $paiement->inscription_id)
+            ->where("id", "<=", $paiement->id)
+            ->sum("montant");
+
+        $montantTotalScolarite = $paiement->inscription->montant_total;
+
+        $restePaye = $montantTotalScolarite - $totalPaye;
+
+        // Exporte le reçu
+        $pdf = Pdf::loadView("pdf.recu_paiement", [
+            "paiement" => $paiement,
+            "reste" => $restePaye
+        ]);
+
+        return $pdf->stream("reçu_{$paiement->inscription->etudiant->nom}_{$paiement->inscription->etudiant->prenom}_{$paiement->date}.pdf");
     }
 }

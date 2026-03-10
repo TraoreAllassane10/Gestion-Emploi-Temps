@@ -3,57 +3,61 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Reçu de Paiement</title>
 
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
-            font-size: 14px;
-            color: #333;
+            font-size: 12px;
         }
 
         .container {
             width: 100%;
-            padding: 20px;
+            border: 1px solid #000;
+            padding: 15px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
         }
 
-        .header h2 {
+        .header h3 {
             margin: 0;
+            font-size: 14px;
         }
 
-        .info {
-            margin-bottom: 20px;
+        .header h4 {
+            margin: 3px 0;
+        }
+
+        .numero {
+            text-align: right;
+            color: red;
+            font-weight: bold;
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
-        table th,
-        table td {
-            border: 1px solid #ddd;
-            padding: 8px;
+        td {
+            padding: 5px;
         }
 
-        table th {
-            background-color: #f2f2f2;
-            text-align: left;
+        .label {
+            width: 35%;
+        }
+
+        .line {
+            border-bottom: 1px solid black;
         }
 
         .footer {
-            margin-top: 40px;
-            text-align: right;
+            margin-top: 25px;
         }
 
         .signature {
-            margin-top: 60px;
+            margin-top: 40px;
         }
     </style>
 
@@ -64,47 +68,102 @@
     <div class="container">
 
         <div class="header">
-            <h2>REÇU DE PAIEMENT</h2>
-            <p>Reçu N°: REC-2026-00045</p>
+
+            <h3>INSTITUT NATIONAL D’INTELLIGENCE NUMERIQUE, ECONOMIQUE ET COMMERCIALE</h3>
+
+            <h4>INEC - DALOA</h4>
+
+            <h4>REÇU DE RÈGLEMENT DES FRAIS D’ECOLE</h4>
+
         </div>
 
-        <div class="info">
-            <strong>Date :</strong> {{ $date }} <br>
-            <strong>Mode de paiement :</strong> {{ $inscription->methode_paiement }} <br>
-        </div>
+        <p class="numero">
+            N° {{ $paiement->id }}
+        </p>
 
         <table>
-            <thead>
-                <tr>
-                    <th>Référence</th>
-                    <th>IP Étudiant</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Montant</th>
-                </tr>
-            </thead>
 
-            <tbody>
-                <tr>
-                    <td>{{ $reference }}</td>
-                    <td>{{ $inscription->etudiant->ip }}</td>
-                    <td>{{ $inscription->etudiant->nom }}</td>
-                    <td>{{ $inscription->etudiant->prenom }}</td>
-                    <td>{{ $montant }}</td>
-                </tr>
-            </tbody>
+            <tr>
+                <td class="label">Nom et prénoms :</td>
+                <td class="line">
+                    {{ $paiement->inscription->etudiant->nom }}
+                    {{ $paiement->inscription->etudiant->prenom }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">Matricule / IP :</td>
+                <td class="line">
+                    {{ $paiement->inscription->etudiant->ip }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">Classe :</td>
+                <td class="line">
+                    @foreach ($paiement->inscription->niveaux as $niveau)
+                        {{ $niveau->nom ?? '' }}
+                    @endforeach
+
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">Montant réglé :</td>
+                <td class="line">
+                    {{ number_format($paiement->montant, 0, ',', ' ') }} FCFA
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">Mode de règlement :</td>
+                <td class="line">
+                    {{ $paiement->methode_paiement }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">Date :</td>
+                <td class="line">
+                    {{ $paiement->date_paiement }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">Reste à payer :</td>
+                <td class="line">
+                    {{ number_format($reste, 0, ',', ' ') }} FCFA
+                </td>
+            </tr>
+
         </table>
 
         <div class="footer">
-            <p><strong>Total payé : {{ $montant }} FCFA</strong></p>
-            <p><strong>Reste à payer : {{ $reste }} FCFA</strong></p>
-            <div class="signature">
-                <p>Signature de l'etudiant</p>
-            </div>
 
-            <div class="signature">
-                <p>Signature du receveur</p>
-            </div>
+            <table width="100%">
+
+                <tr>
+
+                    <td>
+
+                        <div class="signature">
+                            Signature de l'étudiant
+                        </div>
+
+                    </td>
+
+                    <td style="text-align:right">
+
+                        <div class="signature">
+                            Cachet et signature de l’agent
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            </table>
+
         </div>
 
     </div>
