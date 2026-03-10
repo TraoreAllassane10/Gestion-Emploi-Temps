@@ -1,189 +1,277 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <title>Fiche Identification Étudiant</title>
+    <title>Fiche identification étudiant</title>
 
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
-            font-size: 12px;
-            color: #333;
+            font-size: 11px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
 
-        .header h1 {
+        .header h2 {
             margin: 0;
-            font-size: 22px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 16px;
         }
 
-        .section-title {
-            background: #f2f2f2;
-            padding: 8px;
-            font-weight: bold;
-            text-transform: uppercase;
-            border: 1px solid #ddd;
-            margin-top: 25px;
+        .header h3 {
+            margin: 5px 0;
+            font-size: 14px;
+            text-decoration: underline;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
         }
 
         td {
             padding: 4px;
-            border: 1px solid #ddd;
+            vertical-align: top;
         }
 
-        .label {
+        .line {
+            border-bottom: 1px dotted #000;
+        }
+
+        .section {
+            margin-top: 10px;
             font-weight: bold;
-            width: 35%;
-            background: #fafafa;
+            text-decoration: underline;
         }
 
-        .value {
-            width: 65%;
-        }
-
-        .two-columns td {
-            width: 50%;
+        .checkbox {
+            display: inline-block;
+            border: 1px solid #000;
+            width: 10px;
+            height: 10px;
+            margin-right: 5px;
         }
 
         .footer {
-            margin-top: 40px;
+            margin-top: 25px;
             text-align: right;
-            font-size: 11px;
-            color: #777;
         }
     </style>
+
 </head>
 
 <body>
 
     <div class="header">
-        <h1>FICHE D'IDENTIFICATION ÉTUDIANT</h1>
+
+        <h2>INSTITUT NATIONAL D'INTELLIGENCE NUMÉRIQUE</h2>
+        <h3>FICHE IDENTIFICATION DE L'ÉTUDIANT</h3>
+
+        <table>
+            <tr>
+                <td>INEC - Daloa</td>
+                <td style="text-align:right">
+                    Année académique :
+                </td>
+            </tr>
+        </table>
+
     </div>
 
-    {{-- ================= ETAT CIVIL ================= --}}
-    <div class="section-title">État Civil</div>
+
+    <div class="section">ÉTAT CIVIL DE L'ÉTUDIANT</div>
 
     <table>
+
         <tr>
-            <td class="label">Civilité</td>
-            <td class="value">{{ $etudiant['civilite'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Nom</td>
-            <td class="value">{{ $etudiant['nom'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Prénom</td>
-            <td class="value">{{ $etudiant['prenom'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Date de naissance</td>
-            <td class="value">
-                {{ \Carbon\Carbon::parse($etudiant['date_naissance'])->format('d/m/Y') }}
-                à {{ $etudiant['lieu_naissance'] }}
+            <td>
+                Civilité :
+                ☐ Madame
+                ☐ Mademoiselle
+                ☑ Monsieur
             </td>
         </tr>
+
         <tr>
-            <td class="label">Nationalité</td>
-            <td class="value">{{ $etudiant['nationnalite'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Pièce d'identité</td>
-            <td class="value">
-                {{ $etudiant['nature_piece'] }} - N° {{ $etudiant['numero_piece'] }}
+            <td>
+                Nom :
+                <span class="line">{{ $etudiant['nom'] }}</span>
             </td>
         </tr>
+
         <tr>
-            <td class="label">Pays de résidence</td>
-            <td class="value">{{ $etudiant['pays_residence'] }}</td>
+            <td>
+                Prénoms :
+                <span class="line">{{ $etudiant['prenom'] }}</span>
+            </td>
         </tr>
+
         <tr>
-            <td class="label">Contacts</td>
-            <td class="value">{{ $etudiant['contacts'] }}</td>
+            <td>
+                Date naissance :
+                <span class="line">
+                    {{ \Carbon\Carbon::parse($etudiant['date_naissance'])->format('d/m/Y') }}
+                </span>
+            </td>
+
+            <td>
+                Lieu naissance :
+                <span class="line">{{ $etudiant['lieu_naissance'] }}</span>
+            </td>
         </tr>
+
         <tr>
-            <td class="label">Email</td>
-            <td class="value">{{ $etudiant['email'] }}</td>
+            <td>
+                Nationalité :
+                <span class="line">{{ $etudiant['nationnalite'] }}</span>
+            </td>
         </tr>
+
+        <tr>
+            <td>
+                Nature pièce :
+                <span class="line">{{ $etudiant['nature_piece'] }}</span>
+            </td>
+
+            <td>
+                Numéro :
+                <span class="line">{{ $etudiant['numero_piece'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Pays résidence :
+                <span class="line">{{ $etudiant['pays_residence'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Contact étudiant :
+                <span class="line">{{ $etudiant['contacts'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Email :
+                <span class="line">{{ $etudiant['email'] }}</span>
+            </td>
+        </tr>
+
     </table>
 
-    {{-- ================= RESPONSABLE ================= --}}
-    <div class="section-title">Responsable</div>
+
+    <div class="section">IDENTITÉ DU RESPONSABLE</div>
 
     <table>
-        <tr>
-            <td class="label">Type</td>
-            <td class="value">{{ $etudiant['type_responsable'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Nom & Prénom</td>
-            <td class="value">{{ $etudiant['nom_responsable'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Contact</td>
-            <td class="value">{{ $etudiant['numero_responsable'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Profession</td>
-            <td class="value">{{ $etudiant['profession_responsable'] }}</td>
-        </tr>
-    </table>
 
-    {{-- ================= FORMATION ================= --}}
-    <div class="section-title">Formation Académique</div>
-
-    <table>
         <tr>
-            <td class="label">Série BAC</td>
-            <td class="value">{{ $etudiant['serie_bac'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Établissement d'origine</td>
-            <td class="value">{{ $etudiant['etablissement_origine'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Adresse géographique</td>
-            <td class="value">{{ $etudiant['adresse_geographique'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Matricule secondaire</td>
-            <td class="value">{{ $etudiant['matricule_secondaire'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">N° Table BAC</td>
-            <td class="value">{{ $etudiant['numero_table_bac'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Identifiant Permanent (IP)</td>
-            <td class="value">{{ $etudiant['ip'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Année obtention BAC</td>
-            <td class="value">{{ $etudiant['annee_obtention_bac'] }}</td>
-        </tr>
-        <tr>
-            <td class="label">Statut</td>
-            <td class="value" style="font-weight: bold;">
-                {{ $etudiant['statut'] }}
+            <td>
+                Type :
+                <span class="line">{{ $etudiant['type_responsable'] }}</span>
             </td>
         </tr>
+
+        <tr>
+            <td>
+                Nom :
+                <span class="line">{{ $etudiant['nom_responsable'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Contact :
+                <span class="line">{{ $etudiant['numero_responsable'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Profession :
+                <span class="line">{{ $etudiant['profession_responsable'] }}</span>
+            </td>
+        </tr>
+
     </table>
+
+
+    <div class="section">FORMATION DU CANDIDAT</div>
+
+    <table>
+
+        <tr>
+            <td>
+                Série BAC :
+                <span class="line">{{ $etudiant['serie_bac'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Établissement d'origine :
+                <span class="line">{{ $etudiant['etablissement_origine'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Adresse établissement :
+                <span class="line">{{ $etudiant['adresse_geographique'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Année obtention BAC :
+                <span class="line">{{ $etudiant['annee_obtention_bac'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Matricule secondaire :
+                <span class="line">{{ $etudiant['matricule_secondaire'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                N° table BAC :
+                <span class="line">{{ $etudiant['numero_table_bac'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Identifiant permanent (IP) :
+                <span class="line">{{ $etudiant['ip'] }}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Statut :
+                <span class="line">{{ $etudiant['statut'] }}</span>
+            </td>
+        </tr>
+
+    </table>
+
 
     <div class="footer">
-        Date d'inscription : {{ Carbon\Carbon::parse($etudiant['created_at'])->format("d-m-Y à H:i") }}
+
+        Date d'inscription :
+        {{ \Carbon\Carbon::parse($etudiant['created_at'])->format('d/m/Y') }}
+
     </div>
 
+
 </body>
+
 </html>

@@ -42,7 +42,7 @@ class EtudiantController extends Controller
     public function show(Etudiant $etudiant)
     {
         return Inertia::render("etudiant/Show", [
-            "etudiant" => $etudiant
+            "etudiant" => $etudiant->load('inscriptions')
         ]);
     }
 

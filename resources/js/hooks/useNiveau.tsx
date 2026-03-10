@@ -16,13 +16,13 @@ export default function useNiveau() {
                 .post('/niveau', data)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.success('Niveau crée avec succès !');
+                        toast.error('Niveau crée avec succès !');
                         // Redirection vers la page d'affichage des niveau
                         router.visit(niveau());
                     }
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         "Erreur survenue lors de la creation d'un niveau",
                     );
                     console.log(error);
@@ -40,20 +40,20 @@ export default function useNiveau() {
                 .put(`/niveau/${id}/update`, data)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.success('Niveau modifié avec succès !');
+                        toast.error('Niveau modifié avec succès !');
 
                         // Redirection sur la page d'affiche
                         router.visit('/niveau');
                     }
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         "Erreur survenue lors de la modification d'un niveau",
                     );
                     console.log(error);
                 });
         } catch (error) {
-            toast.success('Erreur survenue au niveau du serveur');
+            toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
         }
     };
@@ -69,13 +69,13 @@ export default function useNiveau() {
                     }
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         'Erreur survenue lors de la suppression du niveau',
                     );
                     console.log(error);
                 });
         } catch (error) {
-            toast.success('Erreur survenue au niveau du serveur');
+            toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
         }
     };

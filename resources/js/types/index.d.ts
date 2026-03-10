@@ -49,13 +49,13 @@ export type TypeInscription = 'Nouvelle' | 'Redoublement' | 'Transfert'
 export interface Etudiant {
   ip: string
   civilite: Civilite
-  genre: Genre
-  nom: string
-  prenom: string
-  date_naissance: string
-  lieu_naissance: string
-  nationnalite: string
-  statut: StatutEtudiant
+  genre: string;
+  nom: string;
+  prenom: string;
+  date_naissance: string;
+  lieu_naissance: string;
+  nationnalite: string;
+  statut: StatutEtudiant;
 
   email: string | null
   pays_residence: string | null
@@ -72,7 +72,9 @@ export interface Etudiant {
   type_responsable: string | null
   nom_responsable: string | null
   numero_responsable: string | null
-  profession_responsable: string | null
+  profession_responsable: string | null;
+
+  inscriptions: Inscription[];
 
   created_at: string
   updated_at: string
@@ -156,7 +158,7 @@ export interface Inscription {
   montant_total: number;
   status: string | null;
   type_inscription: TypeInscription;
-  paiments: Paiement[],
+  paiements: Paiement[],
   total_paiements: string;
 }
 

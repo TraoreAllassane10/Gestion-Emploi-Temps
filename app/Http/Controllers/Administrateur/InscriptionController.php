@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrateur;
 
+use App\Enums\StatutInscription;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\inscription\CreateInscriptionRequest;
 use App\Models\AnneeUniversitaire;
@@ -9,6 +10,7 @@ use App\Models\Etudiant;
 use App\Models\FraisConfiguration;
 use App\Models\Inscription;
 use App\Models\Niveau;
+use App\Models\Paiement;
 use App\Models\Scolarite;
 use Inertia\Inertia;
 
@@ -17,11 +19,12 @@ class InscriptionController extends Controller
 {
     public function index()
     {
+        $niveaux = Niveau::all();
+        $annees = AnneeUniversitaire::orderByDesc("date_fin")->get();
+
         // Annee universitaire active
         $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
 
-        $niveaux = Niveau::all();
-        $annees = AnneeUniversitaire::orderByDesc("date_fin")->get();
         $inscriptions = Inscription::with("paiements")
             ->withSum("paiements as total_paiements", "montant")
             ->latest()
@@ -30,6 +33,10 @@ class InscriptionController extends Controller
         // Statistiques
         $nombreTotalInscription = Inscription::count();
         $nombreInscriptionAnneeActive = Inscription::where("annee_universitaire_id", $anneeActive->id)->count();
+        $recetteAnneeActive = Inscription::where("annee_universitaire_id", $anneeActive->id)->sum("montant_total");
+        $totalVerseAnneeActive = Paiement::whereHas("inscription", function ($query) use ($anneeActive) {
+            return $query->where("annee_universitaire_id", $anneeActive->id);
+        })->sum("montant");
 
         return Inertia::render('inscription/Index', [
             "niveaux" => $niveaux,
@@ -37,7 +44,9 @@ class InscriptionController extends Controller
             "inscriptions" => $inscriptions,
             "stats" => [
                 "total_inscription" => $nombreTotalInscription,
-                "total_inscription_annee" => $nombreInscriptionAnneeActive
+                "total_inscription_annee" => $nombreInscriptionAnneeActive,
+                "recette_annee_active" => $recetteAnneeActive,
+                "total_verse_annee_active" => $totalVerseAnneeActive
             ]
         ]);
     }
@@ -91,6 +100,7 @@ class InscriptionController extends Controller
             // Enregistrement de l'inscription
             $inscription = Inscription::create([
                 "date" => now(),
+                "status" => StatutInscription::BON,
                 "type_inscription" => $data["type_inscription"],
                 "taux_reduction" => $data['taux_reduction'] > 0 ? $data['taux_reduction'] : 0,
                 "frais_annexe" => $frais_annexe->montant,
@@ -112,9 +122,16 @@ class InscriptionController extends Controller
         ]);
     }
 
-    public function edit() {}
+    public function show(string $inscription)
+    {
+        $inscriptionData = Inscription::where("id", $inscription)
+            ->with("paiements")
+            ->withSum("paiements as total_paiements", "montant")
+            ->first();
 
-    public function update() {}
-
-    public function delete() {}
+        // dd($inscriptionData);
+        return Inertia::render('inscription/Show', [
+            "inscription" => $inscriptionData
+        ]);
+    }
 }

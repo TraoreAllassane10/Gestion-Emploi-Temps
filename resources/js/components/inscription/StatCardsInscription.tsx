@@ -1,23 +1,31 @@
-import { GraduationCap, Users } from 'lucide-react';
+import { Banknote, GraduationCap, LucidePiggyBank } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
+import { fmt } from '@/utils/util';
 
 export default function StatCardsInscription({ stats }: any) {
     return (
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
             {[
                 {
-                    label: 'Total inscriptions',
-                    value: stats.total_inscription,
-                    Icon: Users,
+                    label: "Nombre d'inscription de l'année",
+                    value: stats.total_inscription_annee,
+                    Icon: GraduationCap,
                     bg: 'bg-blue-50',
                     color: 'text-blue-600',
                 },
                 {
-                    label: "Inscriptions durant l'annee active",
-                    value: stats.total_inscription_annee,
-                    Icon: GraduationCap,
-                    bg: 'bg-emerald-50',
-                    color: 'text-emerald-600',
+                    label: "Montant total des inscription de l'année",
+                    value: fmt(stats.recette_annee_active),
+                    Icon: Banknote,
+                    bg: 'bg-red-50',
+                    color: 'text-red-600',
+                },
+                {
+                    label: "Montant versé de l'année",
+                    value: fmt(stats.total_verse_annee_active),
+                    Icon: LucidePiggyBank,
+                    bg: 'bg-green-50',
+                    color: 'text-green-600',
                 },
             ].map(({ label, value, Icon, bg, color }) => (
                 <Card key={label} className="border shadow-sm">

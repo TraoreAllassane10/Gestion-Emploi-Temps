@@ -48,12 +48,12 @@ export default function Show() {
     const MOCK_IP = 'ETU-2024-001'
 
     // A Remplacer par les inscriptions reelles de l'utilisateur
-    const inscriptions = INSCRIPTIONS.filter(
-        (i) =>
-            i.etudiant.ip === MOCK_IP ||
-            // fallback mock: afficher la première inscription pour la démo
-            (MOCK_IP === 'ETU-2024-001' && i.id === 1),
-    );
+    // const inscriptions = INSCRIPTIONS.filter(
+    //     (i) =>
+    //         i.etudiant.ip === MOCK_IP ||
+    //         // fallback mock: afficher la première inscription pour la démo
+    //         (MOCK_IP === 'ETU-2024-001' && i.id === 1),
+    // );
 
     const [activeTab, setActiveTab] = useState<Tab>('profil');
 
@@ -198,7 +198,7 @@ export default function Show() {
                 {/* ─── Onglet Inscriptions ────────────────────────────────────── */}
                 {activeTab === 'inscriptions' && (
                     <div className="space-y-4">
-                        {inscriptions.length === 0 ? (
+                        {etudiant.inscriptions.length === 0 ? (
                             <Alert className="border-muted bg-muted/40">
                                 <GraduationCap className="h-4 w-4" />
                                 <AlertDescription className="text-sm text-muted-foreground">
@@ -213,12 +213,12 @@ export default function Show() {
                                 </AlertDescription>
                             </Alert>
                         ) : (
-                            inscriptions.map((ins) => {
+                            etudiant.inscriptions.map((ins) => {
                                 const pct =
-                                    ins.totalScolarite > 0
+                                    ins.montant_total > 0
                                         ? Math.round(
-                                              (ins.montantPaye /
-                                                  ins.totalScolarite) *
+                                              (ins.montant_total /
+                                                  ins.montant_scolarite) *
                                                   100,
                                           )
                                         : 0;
@@ -230,33 +230,37 @@ export default function Show() {
                                                 <div className="space-y-1">
                                                     <div className="flex flex-wrap items-center gap-2">
                                                         <span className="text-sm font-semibold">
-                                                            {ins.annee}
+                                                            {ins.annee.libelle}
                                                         </span>
-                                                        <Badge
+                                                       {
+                                                         ins.niveaux.map((niveau) => (
+                                                             <Badge
                                                             variant="secondary"
                                                             className="font-bold"
                                                         >
-                                                            {ins.niveau}
+                                                            {niveau.nom}
                                                         </Badge>
+                                                         ))
+                                                       }
                                                         <span
                                                             className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold `}
                                                         >
                                                             <span
                                                                 className={`h-1.5 w-1.5 rounded-full`}
                                                             />
-                                                            {ins.statut}
+                                                            {ins.status}
                                                         </span>
                                                         <span className="text-xs text-muted-foreground">
                                                             {
-                                                                ins.typeInscription
+                                                                ins.type_inscription
                                                             }
                                                         </span>
                                                     </div>
                                                     <p className="text-xs text-muted-foreground">
                                                         Payé :{' '}
-                                                        {fmt(ins.montantPaye)} /{' '}
+                                                        {fmt(ins.montant_scolarite)} /{' '}
                                                         {fmt(
-                                                            ins.totalScolarite,
+                                                            ins.montant_total,
                                                         )}{' '}
                                                         · {pct}%
                                                     </p>
