@@ -60,12 +60,12 @@ export default function StepEtudiant({
                                 <div
                                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold ${isSelected ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'} `}
                                 >
-                                    {etudiant.prenom[0]}
                                     {etudiant.nom[0]}
+                                    {etudiant.prenom[0]}
                                 </div>
                                 <div>
                                     <p className="text-sm font-semibold">
-                                        {etudiant.prenom} {etudiant.nom}
+                                        {etudiant.nom} {etudiant.prenom}
                                     </p>
                                     <p className="text-xs text-muted-foreground">
                                         {etudiant.ip}

@@ -77,6 +77,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get("/niveau/{niveau}/emploi-du-temps", "emploiParNiveau")->name("niveau.emploi");
         Route::get("/niveau/{niveau}/liste-de-classe", "listeDeClasse")->name("niveau.liste");
+        Route::get("/niveau/{niveau}/liste-de-classe/imprimer", "downloadListeDeClase")->name("niveau.liste.download");
     });
 
     // Routes Professeur

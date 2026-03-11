@@ -16,7 +16,7 @@ class EtudiantController extends Controller
     public function index()
     {
         try {
-            $etudiants = EtudiantRessource::collection(Etudiant::latest()->paginate(10));
+            $etudiants = EtudiantRessource::collection(Etudiant::latest()->get());
 
             $total = Etudiant::count();
             $affecte = Etudiant::where("statut", StatutEtudiant::AFFECTE->value)->count();
