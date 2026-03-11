@@ -41,6 +41,7 @@ import {
     Edit,
     GraduationCap,
     Trash2,
+    Users2Icon,
 } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -235,8 +236,13 @@ const Index = () => {
                                                         </DropdownMenuItem>
 
                                                         <DropdownMenuItem className="cursor-pointer gap-2">
-                                                            <CalendarDaysIcon className="h-4 w-4" />{' '}
-                                                            Liste de classe
+                                                            <Link
+                                                                href={`/niveau/${niveau.id}/liste-de-classe`}
+                                                                className="flex cursor-pointer items-center gap-2"
+                                                            >
+                                                                <Users2Icon className="h-4 w-4" />{' '}
+                                                                Liste de classe
+                                                            </Link>
                                                         </DropdownMenuItem>
 
                                                         <DropdownMenuItem className="cursor-pointer gap-2">

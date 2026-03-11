@@ -9,7 +9,6 @@ use App\Models\Paiement;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PaiementController extends Controller
@@ -50,8 +49,6 @@ class PaiementController extends Controller
             ]);
 
             $recu_url = route("paiements.recu", $paiement->id);
-
-            Log::info("Reçu url", [$recu_url]);
 
             return response()->json([
                 "success" => true,

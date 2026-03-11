@@ -53,9 +53,15 @@ class InscriptionController extends Controller
 
     public function create()
     {
-        $etudiants = Etudiant::all();
+        $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
+
+        // Recupere les etudiants qui ne sont pas incrire durant l'annee universitaire active
+        $etudiants = Etudiant::whereDoesntHave("inscriptions", function ($query) use ($anneeActive) {
+            return $query->where("annee_universitaire_id", $anneeActive->id);
+        })->get();
+
         $niveaux = Niveau::all();
-        $annees = AnneeUniversitaire::orderByDesc("date_fin")->get();
+        $annees = $anneeActive = AnneeUniversitaire::where("estActive", 1)->get();
 
         return Inertia::render('inscription/Create', [
             "etudiants" => $etudiants,

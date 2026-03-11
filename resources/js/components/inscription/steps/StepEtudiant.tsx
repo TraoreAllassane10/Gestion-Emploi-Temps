@@ -1,16 +1,15 @@
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
-import { Etudiant } from "@/types";
-import { usePage } from "@inertiajs/react";
-import { CheckCircle2, Search } from "lucide-react";
-import { useState } from "react";
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
+import { Etudiant } from '@/types';
+import { CheckCircle2, Search } from 'lucide-react';
+import { useState } from 'react';
 
 export default function StepEtudiant({
     etudiants,
     selected,
     onSelect,
 }: {
-    etudiants: Etudiant[],
+    etudiants: Etudiant[];
     selected: Etudiant | null;
     onSelect: (e: Etudiant) => void;
 }) {
@@ -33,7 +32,7 @@ export default function StepEtudiant({
                 <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                     autoFocus
-                    placeholder="Rechercher par nom, matricule…"
+                    placeholder="Rechercher par nom, identifiant permanent"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     className="pl-9"
@@ -43,7 +42,9 @@ export default function StepEtudiant({
             <div className="divide-y overflow-hidden rounded-lg border">
                 {results.length === 0 && (
                     <div className="p-8 text-center text-sm text-muted-foreground">
-                        Aucun étudiant trouvé.
+                        Commencez à taper le nom ou l'identifiant permanent de
+                        l'etudiant. ATTENTION, vous ne verrez l'etudiant que
+                        s'il n'est pas encore incrit.
                     </div>
                 )}
                 {results.map((etudiant) => {

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Niveau extends Model
 {
@@ -18,5 +17,10 @@ class Niveau extends Model
     public function filiere()
     {
         return $this->belongsTo(Filiere::class);
+    }
+
+    public function inscriptions()
+    {
+        return $this->belongsToMany(Inscription::class, "inscription_niveau");
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Resources\ProfesseurResource;
 use App\Http\Resources\SalleResource;
 use App\Http\Resources\SeanceResource;
 use App\Models\AnneeScolaire;
+use App\Models\AnneeUniversitaire;
 use App\Models\Cours;
 use App\Models\Niveau;
 use App\Models\Professeur;
@@ -67,7 +68,7 @@ class SeanceController extends Controller
             $data = $request->validated();
 
             // Recupere la derniere année enregistrée et l'envoyer dans les données à stocker
-            $data["annee_scolaire_id"] = AnneeScolaire::latest("created_at")->first()->id;
+            $data["annee_scolaire_id"] = AnneeUniversitaire::latest("created_at")->first()->id;
 
             $date = $data['date'];
             $salle = $data["salle_id"];

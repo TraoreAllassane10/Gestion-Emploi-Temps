@@ -11,7 +11,9 @@ use App\Http\Resources\NiveauResource;
 use App\Http\Resources\ProfesseurResource;
 use App\Http\Resources\SalleResource;
 use App\Http\Resources\SeanceResource;
+use App\Models\AnneeUniversitaire;
 use App\Models\Cours;
+use App\Models\Etudiant;
 use App\Models\Filiere;
 use App\Models\Niveau;
 use App\Models\Professeur;
@@ -31,40 +33,6 @@ class NiveauController extends Controller
             return Inertia::render("niveau/Index", [
                 "niveaux" => $niveaux,
                 "filieres" => FiliereResource::collection(Filiere::latest()->get())
-            ]);
-            
-        } catch (Exception $e) {
-            return response()->json(["message" => $e->getMessage()]);
-        }
-    }
-
-    public function emploiParNiveau(Request $request, string $niveauId)
-    {
-        try {
-            $salle = $request->query("salle");
-            $professeur = $request->query("professeur");
-            $date = $request->query("date");
-
-            // Filtrage dynamique des séances
-            $seances = Seance::where("niveau_id", $niveauId)
-                ->when($salle, function ($query) use ($salle) {
-                    $query->where("salle_id", $salle);
-                })
-                ->when($professeur, function ($query) use ($professeur) {
-                    $query->where("professeur_id", $professeur);
-                })
-                ->when($date, function ($query) use ($date) {
-                    $query->where("date", $date);
-                })
-                ->orderByDesc('date')
-                ->paginate(10);
-
-            return Inertia::render("niveau/EmploiDuTemps", [
-                "seances" => SeanceResource::collection($seances),
-                "professeurs" => ProfesseurResource::collection(Professeur::latest()->get()),
-                "cours" => CoursResource::collection(Cours::latest()->get()),
-                "salles" => SalleResource::collection(Salle::latest()->get()),
-                "niveaux" => NiveauResource::collection(Niveau::latest()->get()),
             ]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
@@ -116,5 +84,57 @@ class NiveauController extends Controller
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
+    }
+
+    public function emploiParNiveau(Request $request, string $niveauId)
+    {
+        try {
+            $salle = $request->query("salle");
+            $professeur = $request->query("professeur");
+            $date = $request->query("date");
+
+            // Filtrage dynamique des séances
+            $seances = Seance::where("niveau_id", $niveauId)
+                ->when($salle, function ($query) use ($salle) {
+                    $query->where("salle_id", $salle);
+                })
+                ->when($professeur, function ($query) use ($professeur) {
+                    $query->where("professeur_id", $professeur);
+                })
+                ->when($date, function ($query) use ($date) {
+                    $query->where("date", $date);
+                })
+                ->orderByDesc('date')
+                ->paginate(10);
+
+            return Inertia::render("niveau/EmploiDuTemps", [
+                "seances" => SeanceResource::collection($seances),
+                "professeurs" => ProfesseurResource::collection(Professeur::latest()->get()),
+                "cours" => CoursResource::collection(Cours::latest()->get()),
+                "salles" => SalleResource::collection(Salle::latest()->get()),
+                "niveaux" => NiveauResource::collection(Niveau::latest()->get()),
+            ]);
+        } catch (Exception $e) {
+            return response()->json(["message" => $e->getMessage()]);
+        }
+    }
+
+    public function listeDeClasse(string $niveauId)
+    {
+        // Annee universitaire active
+        $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
+
+        $niveau = Niveau::find($niveauId);
+
+        $listeDesEtudiants = Etudiant::whereHas("inscriptions", function ($query) use ($niveauId, $anneeActive) {
+            return $query->where("annee_universitaire_id", $anneeActive->id)->whereHas("niveaux", function ($query) use ($niveauId) {
+                return $query->whereIn("niveau_id", [$niveauId]);
+            });
+        })->get();
+
+        return Inertia::render('niveau/ListeDeClasse', [
+            "liste" => $listeDesEtudiants,
+            "niveau" => $niveau
+        ]);
     }
 }
