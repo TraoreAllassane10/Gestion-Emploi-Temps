@@ -21,4 +21,8 @@ class AnneeUniversitaire extends Model
     public function inscriptions() {
         return $this->hasMany(Inscription::class);
     }
+
+    public function scolarites() {
+        return $this->hasMany(Scolarite::class);
+    }
 }

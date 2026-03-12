@@ -17,13 +17,13 @@ export default function useSalle() {
                     toast.success("Salle créée avec succès !");
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         "Erreur survenue lors de la creation de la salle",
                     );
                     console.log(error)
                 });
         } catch (error) {
-            toast.success('Erreur survenue au niveau du serveur');
+            toast.error('Erreur survenue au niveau du serveur');
             console.log(error)
         }
     };
@@ -40,13 +40,13 @@ export default function useSalle() {
                     router.visit('/salle');
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         "Erreur survenue lors de la modification de la salle",
                     );
                     console.log(error)
                 });
         } catch (error) {
-            toast.success('Erreur survenue au niveau du serveur');
+            toast.error('Erreur survenue au niveau du serveur');
             console.log(error)
         }
     };
@@ -60,13 +60,13 @@ export default function useSalle() {
                     toast.success('Salle supprimée !');
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         "Erreur survenue lors de la suppression de la salle",
                     );
                     console.log(error)
                 });
         } catch (error) {
-            toast.success('Erreur survenue au niveau du serveur');
+            toast.error('Erreur survenue au niveau du serveur');
             console.log(error)
         }
     };

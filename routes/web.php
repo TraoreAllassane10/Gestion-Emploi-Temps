@@ -4,6 +4,7 @@
 use App\Http\Controllers\Administrateur\AnneeAcademiqueController;
 use App\Http\Controllers\Administrateur\InscriptionController;
 use App\Http\Controllers\Administrateur\PaiementController;
+use App\Http\Controllers\Administrateur\ScolariteController;
 use App\Http\Controllers\CoursController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EtudiantController;
@@ -25,22 +26,7 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/admin', function () {
-        echo "Administareur";
-    });
-
-    Route::get('/pedagogie', function () {
-        echo "pedagogie";
-    })->middleware('pedagodique');
-
-    Route::get('/enseignant', function () {
-        echo "enseignant";
-    })->middleware('enseignant');
-
-    Route::get('/scolarite', function () {
-        echo "scolarite";
-    })->middleware('service_scolarite');
-
+  
     // Configurations
     Route::get('/configurations', [AnneeAcademiqueController::class, "editAnneeActive"])->name('edit.anneeActive');
 
@@ -155,6 +141,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post("/inscriptions/{inscription}/paiement", "store")->name("paiements.store");
         Route::get('/paiements/{paiement}/recu', "recu")->name('paiements.recu');
     });
+
+    // Routes Scolarite
+      Route::controller(ScolariteController::class)->group(function () {
+        Route::get("scolarite", "index")->name("scolarite");
+        Route::post("scolarite", "store")->name("scolarite.store");
+        Route::get("scolarite/{scolarite}/edit", "edit")->name("scolarite.edit");
+        Route::put("scolarite/{scolarite}/update", "update")->name("scolarite.update");
+        Route::delete("scolarite/{scolarite}/delete", "delete")->name("scolarite.delete");
+    });
+
 });
 
 require __DIR__ . '/settings.php';

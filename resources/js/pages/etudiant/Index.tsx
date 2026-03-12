@@ -42,9 +42,7 @@ import {
 import Avatar from '@/components/etudiant/Avatar';
 import EtudiantStats from '@/components/etudiant/EtudiantStats';
 import StatutBadge from '@/components/etudiant/StatutBadge';
-import PaginationLinks from '@/components/Pagination';
 import { Etudiant, Meta, StatsEtudiant } from '@/types';
-import { STATUTS } from './data/mock';
 
 interface EtudiantData {
     data: Etudiant[];
@@ -137,11 +135,6 @@ export default function Index() {
                                 <SelectItem value="all">
                                     Tous statuts
                                 </SelectItem>
-                                {STATUTS.map((s) => (
-                                    <SelectItem key={s} value={s}>
-                                        {s}
-                                    </SelectItem>
-                                ))}
                             </SelectContent>
                         </Select>
 
@@ -315,7 +308,6 @@ export default function Index() {
                                 ))
                             )}
                         </TableBody>
-
                     </Table>
                 </Card>
             </div>

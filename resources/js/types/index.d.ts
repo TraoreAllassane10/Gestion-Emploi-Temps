@@ -145,6 +145,19 @@ export interface Salle {
     nom: string;
 }
 
+// Types Scolarite
+export type TypeScolarite = 'Affecté' | 'Naff' | 'Licence';
+
+export interface Scolarite {
+    id: number;
+    type: TypeScolarite;
+    montant: number;
+    annee: Annee;
+    niveau: DataNiveau;
+    annee_universitaire_id: number;
+    niveau_id: number;
+}
+
 // Types Inscription
 export interface Inscription {
   id: number;

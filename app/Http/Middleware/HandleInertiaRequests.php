@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\AnneeUniversitaire;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -45,6 +46,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'anneeActive' => AnneeUniversitaire::where("estActive", 1)->first(),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

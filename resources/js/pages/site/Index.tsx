@@ -21,7 +21,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import useSalle from '@/hooks/useSalle';
 import useSite from '@/hooks/useSite';
 import AppLayout from '@/layouts/app-layout';
 import ConfigurationLayout from '@/layouts/configurations/ConfigurationLayout';
@@ -42,7 +41,6 @@ interface Data {
     id: number;
     nom: string;
 }
-
 
 interface Salle {
     data: Data[];
@@ -90,7 +88,7 @@ const Index = () => {
                     <div>
                         {/* Entete et le bouton d'ajout */}
                         <div className="my-2 flex place-items-center justify-between">
-                            <h1 className="text-2xl font-bold">Site</h1>
+                            <h1 className="text-2xl font-bold">Gestion des sites</h1>
 
                             <Sheet>
                                 <SheetTrigger asChild>

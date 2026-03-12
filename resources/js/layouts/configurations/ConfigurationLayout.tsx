@@ -2,7 +2,7 @@ import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
-import { annee, cours, filiere, niveau, salle, site } from '@/routes';
+import { annee, cours, filiere, salle, site } from '@/routes';
 import { NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';
@@ -10,7 +10,7 @@ import { PropsWithChildren } from 'react';
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Annne Universitaire Active',
-        href: "/configurations",
+        href: '/configurations',
         icon: null,
     },
     {
@@ -23,7 +23,12 @@ const sidebarNavItems: NavItem[] = [
         href: '#',
         icon: null,
     },
-     {
+    {
+        title: 'Scolarites',
+        href: '/scolarite',
+        icon: null,
+    },
+    {
         title: 'Sites',
         href: site(),
         icon: null,
@@ -43,7 +48,6 @@ const sidebarNavItems: NavItem[] = [
         href: filiere(),
         icon: null,
     },
-
 ];
 
 const ConfigurationLayout = ({ children }: PropsWithChildren) => {

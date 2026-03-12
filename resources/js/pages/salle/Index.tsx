@@ -95,7 +95,7 @@ const Index = () => {
                     <div>
                         {/* Entete et le bouton d'ajout */}
                         <div className="my-2 flex place-items-center justify-between">
-                            <h1 className="text-2xl font-bold">Salle</h1>
+                            <h1 className="text-2xl font-bold">Gestion des salles</h1>
 
                             <Sheet>
                                 <SheetTrigger asChild>

@@ -16,7 +16,7 @@ export default function useNiveau() {
                 .post('/niveau', data)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.error('Niveau crée avec succès !');
+                        toast.success('Niveau crée avec succès !');
                         // Redirection vers la page d'affichage des niveau
                         router.visit(niveau());
                     }
@@ -40,7 +40,7 @@ export default function useNiveau() {
                 .put(`/niveau/${id}/update`, data)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.error('Niveau modifié avec succès !');
+                        toast.success('Niveau modifié avec succès !');
 
                         // Redirection sur la page d'affiche
                         router.visit('/niveau');
