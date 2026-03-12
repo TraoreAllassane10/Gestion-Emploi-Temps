@@ -80,7 +80,7 @@ export interface Etudiant {
   updated_at: string
 }
 
-export type EtudiantFormData = Omit<Etudiant, 'created_at' | 'updated_at'>
+export type EtudiantFormData = Omit<Etudiant, 'created_at' | 'updated_at' | inscriptions>
 
 export interface StatsEtudiant {
     total :number;

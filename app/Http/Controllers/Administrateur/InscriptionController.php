@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Administrateur;
 
+use App\Enums\ScolariteType;
+use App\Enums\StatutEtudiant;
 use App\Enums\StatutInscription;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\inscription\CreateInscriptionRequest;
@@ -74,18 +76,6 @@ class InscriptionController extends Controller
     {
         $data = $request->validated();
 
-        // Recuperation de la scolarite et des frais annexe
-        $frais_annexe = FraisConfiguration::where("annee_universitaire_id", $data['annee_id'])
-            ->where("type", "frais_annexe")->first();
-        $scolarite = Scolarite::whereIn("niveau_id", $data['niveaux'])->sum("montant");
-
-        // Calcule de la scolarite apres la reduction. NB: j'applique la reduction sur la scolarite et avant d'ajouter les frais annexe
-        $montantReduction = $data['taux_reduction'] > 0 ? ($scolarite * $data['taux_reduction']) / 100 : 0;
-        $scolariteApresReduction =  $scolarite - $montantReduction;
-
-        // Calucle du montant total avec les frais annexe
-        $montantTotalScolarite = $frais_annexe->montant + $scolariteApresReduction;
-
         // Recuperation l'etudiant et l'annee universitaire dans la bd
         $etudiant = Etudiant::where("ip", $data['etudiant_ip'])->first();
         $anneeUniversitaire = AnneeUniversitaire::where("id", $data['annee_id'])->first();
@@ -102,6 +92,42 @@ class InscriptionController extends Controller
                     "message" => "Cet etudiant est déjà inscrit pour l'année selectionné"
                 ]);
             }
+
+            // Recuperation de la scolarite et des frais annexe
+            $frais_annexe = FraisConfiguration::where("type", "frais_annexe")->first();
+
+             if ($frais_annexe) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Aucun frais annexe trouve."
+                ]);
+            }
+
+            // Type de scolarite selon le statut de l'etudiant
+            $typeScolarite = $etudiant->statut == StatutEtudiant::NAFF->value ? ScolariteType::NAFF->value : ScolariteType::AFFECTE->value;
+           
+            // Liste des scolarite en foction des niveaux choisit
+            $scolarites = Scolarite::whereIn("niveau_id", $data['niveaux'])
+                ->where("type", $typeScolarite)
+                ->get();
+
+
+            if ($scolarites->count() !== count($data['niveaux'])) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Certains niveaux sélectionnés n'ont pas encore de scolarité définie dans la configuration."
+                ]);
+            }
+
+            // Scolarite total sans frais annexe
+            $scolarite = $scolarites->sum("montant");
+
+            // Calcule de la scolarite apres la reduction. NB: j'applique la reduction sur la scolarite et avant d'ajouter les frais annexe
+            $montantReduction = $data['taux_reduction'] > 0 ? ($scolarite * $data['taux_reduction']) / 100 : 0;
+            $scolariteApresReduction =  $scolarite - $montantReduction;
+
+            // Calucle du montant total avec les frais annexe
+            $montantTotalScolarite = $frais_annexe->montant + $scolariteApresReduction;
 
             // Enregistrement de l'inscription
             $inscription = Inscription::create([
