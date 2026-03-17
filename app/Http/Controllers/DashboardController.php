@@ -2,31 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use App\Models\Cours;
-use App\Models\Salle;
+use App\Models\AnneeUniversitaire;
+use App\Models\Etudiant;
 use App\Models\Filiere;
-use App\Models\Seance;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-
-use function Symfony\Component\Clock\now;
+use App\Models\Inscription;
+use App\Models\Niveau;
+use App\Models\Paiement;
+use App\Models\Professeur;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Heure actuelle
-        $heureActuelle = date("H:i");
+        $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
 
-        $sallesNonOccupees = Salle::sallesNonOccupeeActuellement($heureActuelle);
+        // Statitstiques globals
+        $totalEtudiants = Etudiant::count();
+        $totalInscriptions = Inscription::count();
+        $totalEnseignants = Professeur::count();
+        $totalFilieres = Filiere::count();
 
-        return Inertia::render("dashboard", [
-            "seances" => Seance::latest()->limit(5)->get(),
-            "nombreCours" => Cours::count(),
-            "nombreFiliere" => Filiere::count(),
-            "nombreSalle" => Salle::count(),
-            "sallesNonOccupees" => $sallesNonOccupees
-        ]);
+        // Statistiques financiers
+        $totalAttendu = Inscription::where("annee_universitaire_id", $anneeActive->id)->sum("montant_total");
+        $totalPaye = Paiement::whereHas("inscription", function ($query) use ($anneeActive) {
+            return $query->where("annee_universitaire_id", $anneeActive->id);
+        })->sum("montant");
+        $resteAPayer = $totalAttendu - $totalPaye;
+        $tauxRecouvrement = $totalAttendu > 0 ? ceil(($totalPaye / $totalAttendu) * 100) : 0;
+
+        return Inertia::render(
+            "dashboard",
+            [
+                "stats_globales" => [
+                    "totalEtudiants" => $totalEtudiants,
+                    "totalInscriptions" => $totalInscriptions,
+                    "totalEnseignants" => $totalEnseignants,
+                    "totalFilieres" => $totalFilieres
+                ],
+                "stats_financiere" => [
+                    "totalAttendu" => $totalAttendu,
+                    "totalPaye" => $totalPaye,
+                    "resteAPayer" => $resteAPayer,
+                    "tauxRecouvrement" => $tauxRecouvrement
+                ]
+            ]
+        );
     }
 }

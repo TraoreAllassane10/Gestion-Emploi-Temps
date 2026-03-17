@@ -1,4 +1,25 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import { Head, Link, usePage } from '@inertiajs/react';
+import {
+    ArrowRight,
+    BadgeDollarSign,
+    BookOpen,
+    Clock,
+    GraduationCap,
+    ReceiptText,
+    TrendingUp,
+    Users,
+} from 'lucide-react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import {
     Table,
     TableBody,
@@ -7,247 +28,378 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import AppLayout from '@/layouts/app-layout';
-import { dashboard, seance } from '@/routes';
-import { type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+
+import StatCard from '@/components/dashboard/StatCardDashboard';
+import { Annee, StatFinanciere, StatGlobales } from '@/types';
+import { fmtCompact } from '@/utils/util';
 import {
-    ArrowRight,
-    BookOpen,
-    Building2,
-    Clock,
-    GraduationCap,
-} from 'lucide-react';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard().url,
-    },
-];
-
-interface Professeur {
-    id: number;
-    nom: string;
-    prenom: string;
-}
-
-interface Cours {
-    id: number;
-    nom: string;
-}
-
-interface Salle {
-    id: number;
-    nom: string;
-}
-
-interface Niveau {
-    id: number;
-    nom: string;
-}
-
-interface Seance {
-    id: number;
-    jours: string;
-    date: string;
-    heure_debut: string;
-    heure_fin: string;
-    professeur: Professeur;
-    cours: Cours;
-    salle: Salle;
-    niveau: Niveau;
-}
+    DERNIERES_INSCRIPTIONS,
+    DERNIERS_PAIEMENTS,
+    REPARTITION_NIVEAUX,
+    STATS_GLOBALES,
+} from './dashboard-mock';
 
 interface DashboardProps {
-    seances: Seance[];
-    nombreCours: number;
-    nombreFiliere: number;
-    nombreSalle: number;
-    sallesNonOccupees: Salle[];
+    anneeActive: Annee;
+    stats_globales: StatGlobales;
+    stats_financiere: StatFinanciere;
     [key: string]: unknown;
 }
 
 export default function Dashboard() {
-    const { seances, nombreCours, nombreFiliere, nombreSalle,sallesNonOccupees } =
+    const { anneeActive, stats_globales, stats_financiere } =
         usePage<DashboardProps>().props;
+        
+    const taux = stats_financiere.tauxRecouvrement;
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+        <AppLayout>
+            <Head title="Tableau de bord" />
 
-            <div className="p-4">
-                {/* Statistiques */}
-                <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    <Card className="shadow-sm transition hover:shadow-md">
-                        <CardContent className="flex flex-col items-center py-6">
-                            <GraduationCap
-                                className="mb-2 text-primary"
-                                size={32}
-                            />
-                            <h3 className="text-lg font-semibold">
-                                Nombre de filières
-                            </h3>
-                            <span className="text-2xl font-bold text-primary">
-                                {nombreFiliere}
+            <div className="space-y-6 p-6">
+                {/* ── Header ──────────────────────────────────────────────────── */}
+                <div className="flex items-start justify-between">
+                    <div>
+                        <h1 className="text-2xl font-bold tracking-tight">
+                            Tableau de bord
+                        </h1>
+                        <p className="mt-0.5 text-sm text-muted-foreground">
+                            Année universitaire{' '}
+                            <span className="font-semibold text-foreground">
+                                {anneeActive.libelle}
                             </span>
+                        </p>
+                    </div>
+                    <div className="hidden items-center gap-2 rounded-lg border bg-muted/60 px-3 py-1.5 text-xs text-muted-foreground sm:flex">
+                        <Clock className="h-3.5 w-3.5" />
+                        Données en temps réel
+                    </div>
+                </div>
+
+                {/* ── Stats globales ───────────────────────────────────────────── */}
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                    <StatCard
+                        label="Étudiants"
+                        value={stats_globales.totalEtudiants}
+                        sub="Fichier général"
+                        icon={Users}
+                        color="text-blue-600"
+                        bg="bg-blue-50"
+                        trend={{ label: '+12 ce mois', up: true }}
+                    />
+                    <StatCard
+                        label="Inscriptions"
+                        value={stats_globales.totalInscriptions}
+                        sub={anneeActive.libelle}
+                        icon={GraduationCap}
+                        color="text-violet-600"
+                        bg="bg-violet-50"
+                        trend={{ label: '+5 ce mois', up: true }}
+                    />
+                    <StatCard
+                        label="Enseignants"
+                        value={stats_globales.totalEnseignants}
+                        icon={BookOpen}
+                        color="text-cyan-600"
+                        bg="bg-cyan-50"
+                    />
+                    <StatCard
+                        label="Filières actives"
+                        value={stats_globales.totalFilieres}
+                        icon={ReceiptText}
+                        color="text-slate-600"
+                        bg="bg-slate-100"
+                    />
+                </div>
+
+                {/* ── Situation financière et niveaux ─────────────────────────────────────── */}
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    {/* Recouvrement */}
+                    <Card className="shadow-sm">
+                        <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center gap-2 text-sm font-semibold">
+                                <TrendingUp className="h-4 w-4 text-primary" />
+                                Recouvrement global
+                            </CardTitle>
+                            <CardDescription className="text-xs">
+                                {anneeActive.libelle}
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-5">
+                            {/* Jauge circulaire SVG */}
+                            <div className="flex justify-center">
+                                <div className="relative h-32 w-32">
+                                    <svg
+                                        viewBox="0 0 100 100"
+                                        className="h-full w-full -rotate-90"
+                                    >
+                                        <circle
+                                            cx="50"
+                                            cy="50"
+                                            r="38"
+                                            fill="none"
+                                            stroke="hsl(var(--muted))"
+                                            strokeWidth="10"
+                                        />
+                                        <circle
+                                            cx="50"
+                                            cy="50"
+                                            r="38"
+                                            fill="none"
+                                            stroke={
+                                                taux >= 80
+                                                    ? '#10b981'
+                                                    : taux >= 50
+                                                      ? '#3b82f6'
+                                                      : '#f59e0b'
+                                            }
+                                            strokeWidth="10"
+                                            strokeDasharray={`${taux * 2.388} 238.8`}
+                                            strokeLinecap="round"
+                                        />
+                                    </svg>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                        <span className="text-2xl font-bold">
+                                            {taux}%
+                                        </span>
+                                        <span className="text-[10px] text-muted-foreground">
+                                            recouvré
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-0 divide-y">
+                                {[
+                                    {
+                                        label: 'Total attendu',
+                                        value:
+                                            fmtCompact(
+                                                stats_financiere.totalAttendu,
+                                            ) + ' FCFA',
+                                        color: 'text-foreground',
+                                    },
+                                    {
+                                        label: 'Montant payé',
+                                        value:
+                                            fmtCompact(
+                                                stats_financiere.totalPaye,
+                                            ) + ' FCFA',
+                                        color: 'text-emerald-600',
+                                    },
+                                    {
+                                        label: 'Reste à payer',
+                                        value:
+                                            fmtCompact(
+                                                stats_financiere.resteAPayer,
+                                            ) + ' FcFA',
+                                        color: 'text-rose-600',
+                                    },
+                                ].map(({ label, value, color }) => (
+                                    <div
+                                        key={label}
+                                        className="flex items-center justify-between py-2.5 text-sm"
+                                    >
+                                        <span className="text-muted-foreground">
+                                            {label}
+                                        </span>
+                                        <span
+                                            className={`font-bold tabular-nums ${color}`}
+                                        >
+                                            {value}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
                         </CardContent>
                     </Card>
 
-                    <Card className="shadow-sm transition hover:shadow-md">
-                        <CardContent className="flex flex-col items-center py-6">
-                            <Building2
-                                className="mb-2 text-blue-500"
-                                size={32}
-                            />
-                            <h3 className="text-lg font-semibold">
-                                Nombre de salles
-                            </h3>
-                            <span className="text-2xl font-bold text-blue-500">
-                                {nombreSalle}
-                            </span>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="shadow-sm transition hover:shadow-md">
-                        <CardContent className="flex flex-col items-center py-6">
-                            <BookOpen
-                                className="mb-2 text-green-600"
-                                size={32}
-                            />
-                            <h3 className="text-lg font-semibold">
-                                Nombre de cours
-                            </h3>
-                            <span className="text-2xl font-bold text-green-600">
-                                {nombreCours}
-                            </span>
+                    {/* Graphique mensuel */}
+                    <Card className="shadow-sm">
+                        <CardHeader className="pb-3">
+                            <CardTitle className="text-sm font-semibold">
+                                Inscriptions par niveau
+                            </CardTitle>
+                            <CardDescription className="text-xs">
+                                {STATS_GLOBALES.anneeEnCours}
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            {(() => {
+                                const max = Math.max(
+                                    ...REPARTITION_NIVEAUX.map(
+                                        (r) => r.inscrits,
+                                    ),
+                                );
+                                return REPARTITION_NIVEAUX.map(
+                                    ({ niveau, inscrits, couleur }) => (
+                                        <div key={niveau} className="space-y-1">
+                                            <div className="flex justify-between text-sm">
+                                                <span className="font-medium">
+                                                    {niveau}
+                                                </span>
+                                                <span className="text-xs text-muted-foreground tabular-nums">
+                                                    {inscrits} étudiants
+                                                </span>
+                                            </div>
+                                            <div className="h-2 overflow-hidden rounded-full bg-muted">
+                                                <div
+                                                    className="h-full rounded-full transition-all duration-700"
+                                                    style={{
+                                                        width: `${Math.round((inscrits / max) * 100)}%`,
+                                                        background: couleur,
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    ),
+                                );
+                            })()}
                         </CardContent>
                     </Card>
                 </div>
 
-                <div className="flex gap-2">
-                    {/* Salles disponible */}
-                    <Card className="shadow-sm w-[33%]">
-                        <CardHeader>
+                {/* ── Derniers paiements + Dernières inscriptions ──────────────── */}
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    {/* Derniers paiements */}
+                    <Card className="overflow-hidden shadow-sm">
+                        <CardHeader className="pb-2">
                             <div className="flex items-center justify-between">
-                                <h2 className="flex items-center gap-2 text-md font-medium text-primary">
-                                    <Building2 size={20} /> Salles Libre actuellement
-                                </h2>
-
-                               
-                            </div>
-                        </CardHeader>
-
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="bg-muted/60">
-                                        <TableHead className="font-semibold">
-                                            Nom des salles
-                                        </TableHead>
-                                    </TableRow>
-                                </TableHeader>
-
-                                <TableBody>
-                                    {sallesNonOccupees?.map((seance) => (
-                                        <TableRow
-                                            className="border-b"
-                                            key={seance.id}
-                                        >
-                                            <TableCell className="font-medium">
-                                                {seance.nom}
-                                            </TableCell>
-                                           
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
-
-                    {/* 5 Dernieres seances enregistrés */}
-                    <Card className="shadow-sm w-[67%]">
-                        <CardHeader>
-                            <div className="flex items-center justify-between">
-                                <h2 className="flex items-center gap-2 text-md font-medium text-primary">
-                                    <Clock size={20} /> 5 dernières séances
-                                    enregistrées
-                                </h2>
-
-                                <Link
-                                    href={seance()}
-                                    className="flex items-center gap-1 rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground hover:bg-primary/90"
-                                >
-                                    Voir plus <ArrowRight size={18} />
+                                <CardTitle className="flex items-center gap-2 text-sm font-semibold">
+                                    <BadgeDollarSign className="h-4 w-4 text-emerald-600" />
+                                    Derniers paiements
+                                </CardTitle>
+                                <Link href="/paiements">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-7 gap-1 text-xs text-muted-foreground"
+                                    >
+                                        Tout voir{' '}
+                                        <ArrowRight className="h-3 w-3" />
+                                    </Button>
                                 </Link>
                             </div>
                         </CardHeader>
-
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="bg-muted/60">
-                                        <TableHead className="font-semibold">
-                                            Jour
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Date
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Début
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Fin
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Cours
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Professeur
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Salle
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Niveau
-                                        </TableHead>
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-muted/30 hover:bg-muted/30">
+                                    <TableHead className="py-2 text-xs">
+                                        Étudiant
+                                    </TableHead>
+                                    <TableHead className="py-2 text-xs">
+                                        Montant
+                                    </TableHead>
+                                    <TableHead className="py-2 text-xs">
+                                        Date
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {DERNIERS_PAIEMENTS.map((p) => (
+                                    <TableRow key={p.id}>
+                                        <TableCell className="py-2.5">
+                                            <p className="text-sm leading-none font-medium">
+                                                {p.etudiant}
+                                            </p>
+                                            <p className="mt-0.5 text-xs text-muted-foreground">
+                                                <code className="font-mono text-[11px]">
+                                                    {p.ip}
+                                                </code>
+                                                {' · '}
+                                                {p.niveau}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell className="py-2.5">
+                                            <span className="text-sm font-bold text-emerald-600 tabular-nums">
+                                                +{fmtCompact(p.montant)} XOF
+                                            </span>
+                                            <p className="text-xs text-muted-foreground">
+                                                {p.type}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell className="py-2.5 text-xs text-muted-foreground tabular-nums">
+                                            {new Date(
+                                                p.date,
+                                            ).toLocaleDateString('fr-FR', {
+                                                day: '2-digit',
+                                                month: 'short',
+                                            })}
+                                        </TableCell>
                                     </TableRow>
-                                </TableHeader>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Card>
 
-                                <TableBody>
-                                    {seances?.map((seance) => (
-                                        <TableRow
-                                            className="border-b"
-                                            key={seance.id}
-                                        >
-                                            <TableCell className="font-medium">
-                                                {seance.jours}
-                                            </TableCell>
-                                            <TableCell>{seance.date}</TableCell>
-                                            <TableCell>
-                                                {seance.heure_debut}
-                                            </TableCell>
-                                            <TableCell>
-                                                {seance.heure_fin}
-                                            </TableCell>
-                                            <TableCell>
-                                                {seance.cours?.nom}
-                                            </TableCell>
-                                            <TableCell>
-                                                {seance.professeur?.nom}{' '}
-                                                {seance.professeur?.prenom}
-                                            </TableCell>
-                                            <TableCell>
-                                                {seance.salle?.nom}
-                                            </TableCell>
-                                            <TableCell>
-                                                {seance.niveau.nom}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
+                    {/* Dernières inscriptions */}
+                    <Card className="overflow-hidden shadow-sm">
+                        <CardHeader className="pb-2">
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="flex items-center gap-2 text-sm font-semibold">
+                                    <GraduationCap className="h-4 w-4 text-violet-600" />
+                                    Dernières inscriptions
+                                </CardTitle>
+                                <Link href="/inscriptions">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-7 gap-1 text-xs text-muted-foreground"
+                                    >
+                                        Tout voir{' '}
+                                        <ArrowRight className="h-3 w-3" />
+                                    </Button>
+                                </Link>
+                            </div>
+                        </CardHeader>
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-muted/30 hover:bg-muted/30">
+                                    <TableHead className="py-2 text-xs">
+                                        Étudiant
+                                    </TableHead>
+                                    <TableHead className="py-2 text-xs">
+                                        Niveau
+                                    </TableHead>
+                                    <TableHead className="py-2 text-xs">
+                                        Date
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {DERNIERES_INSCRIPTIONS.map((ins) => (
+                                    <TableRow key={ins.id}>
+                                        <TableCell className="py-2.5">
+                                            <p className="text-sm leading-none font-medium">
+                                                {ins.etudiant}
+                                            </p>
+                                            <p className="mt-0.5 text-xs text-muted-foreground">
+                                                {ins.filiere}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell className="py-2.5">
+                                            <Badge
+                                                variant="secondary"
+                                                className="text-xs font-bold"
+                                            >
+                                                {ins.niveau}
+                                            </Badge>
+                                            <p className="mt-0.5 text-xs text-muted-foreground">
+                                                {ins.annee}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell className="py-2.5 text-xs text-muted-foreground tabular-nums">
+                                            {new Date(
+                                                ins.date,
+                                            ).toLocaleDateString('fr-FR', {
+                                                day: '2-digit',
+                                                month: 'short',
+                                            })}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
                     </Card>
                 </div>
             </div>
