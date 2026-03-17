@@ -96,7 +96,7 @@ class InscriptionController extends Controller
             // Recuperation de la scolarite et des frais annexe
             $frais_annexe = FraisConfiguration::where("type", "frais_annexe")->first();
 
-             if ($frais_annexe) {
+             if (!$frais_annexe) {
                 return response()->json([
                     "success" => false,
                     "message" => "Aucun frais annexe trouve."

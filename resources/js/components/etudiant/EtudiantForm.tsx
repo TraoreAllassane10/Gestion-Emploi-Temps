@@ -1,7 +1,7 @@
 
 import { useState } from 'react'
 import {
-  User, BookOpen, Phone, Shield,
+  User, BookOpen, Phone,
   ChevronRight, ChevronLeft, CheckCircle2,
   Users,
 } from 'lucide-react'
@@ -45,9 +45,6 @@ export const emptyForm = (): EtudiantFormData => ({
   profession_responsable: null,
 })
 
-
-
-import { Etudiant } from "@/types"
 
 export type Civilite = 'M.' | 'Mme' | 'Mlle'
 export type Genre = 'Masculin' | 'Féminin'
