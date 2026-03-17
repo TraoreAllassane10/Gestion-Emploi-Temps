@@ -42,52 +42,54 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-export type Statut = 'Actif' | 'Suspendu' | 'Terminé'
-export type TypeInscription = 'Nouvelle' | 'Redoublement' | 'Transfert'
-
+export type Statut = 'Actif' | 'Suspendu' | 'Terminé';
+export type TypeInscription = 'Nouvelle' | 'Redoublement' | 'Transfert';
 
 export interface Etudiant {
-  ip: string
-  civilite: Civilite
-  genre: string;
-  nom: string;
-  prenom: string;
-  date_naissance: string;
-  lieu_naissance: string;
-  nationnalite: string;
-  statut: StatutEtudiant;
+    ip: string;
+    civilite: Civilite;
+    genre: string;
+    nom: string;
+    prenom: string;
+    date_naissance: string;
+    lieu_naissance: string;
+    nationnalite: string;
+    statut: StatutEtudiant;
 
-  email: string | null
-  pays_residence: string | null
-  etablissement_origine: string | null
-  annee_obtention_bac: string | null
-  serie_bac: string | null
-  numero_table_bac: string | null
-  contacts: string | null
-  nature_piece: NaturePiece | null
-  numero_piece: string | null
-  adresse_geographique: string | null
-  matricule_secondaire: string | null
+    email: string | null;
+    pays_residence: string | null;
+    etablissement_origine: string | null;
+    annee_obtention_bac: string | null;
+    serie_bac: string | null;
+    numero_table_bac: string | null;
+    contacts: string | null;
+    nature_piece: NaturePiece | null;
+    numero_piece: string | null;
+    adresse_geographique: string | null;
+    matricule_secondaire: string | null;
 
-  type_responsable: string | null
-  nom_responsable: string | null
-  numero_responsable: string | null
-  profession_responsable: string | null;
+    type_responsable: string | null;
+    nom_responsable: string | null;
+    numero_responsable: string | null;
+    profession_responsable: string | null;
 
-  inscriptions: Inscription[];
+    inscriptions: Inscription[];
 
-  created_at: string
-  updated_at: string
+    created_at: string;
+    updated_at: string;
 }
 
-export type EtudiantFormData = Omit<Etudiant, 'created_at' | 'updated_at' | inscriptions>
+export type EtudiantFormData = Omit<
+    Etudiant,
+    'created_at' | 'updated_at' | inscriptions
+>;
 
 export interface StatsEtudiant {
-    total :number;
+    total: number;
     affecte: number;
     naff: number;
     reaffecte: number;
-    transfert: number
+    transfert: number;
 }
 
 export interface Meta {
@@ -102,7 +104,6 @@ export interface Meta {
     }[];
 }
 
-
 // Types Annee
 export interface Annee {
     id: number;
@@ -116,12 +117,11 @@ export interface Annees {
     meta: Meta;
 }
 
-
 // Types Niveau
 export interface DataNiveau {
     id: number;
     nom: string;
-    filiere: {nom: string}
+    filiere: { nom: string };
 }
 
 export interface Niveau {
@@ -145,6 +145,22 @@ export interface Salle {
     nom: string;
 }
 
+// Type Semaine
+export interface Semaine {
+    id: number;
+    libelle: string;
+    date_debut: string;
+    date_fin: string;
+}
+
+// Type Horaire
+export interface Horaire {
+    id: number;
+    heure_debut: string;
+    heure_fin: string;
+    index_order: number;
+}
+
 // Types Scolarite
 export type TypeScolarite = 'Affecté' | 'Naff' | 'Licence';
 
@@ -160,19 +176,22 @@ export interface Scolarite {
 
 // Types Inscription
 export interface Inscription {
-  id: number;
-  etudiant: Etudiant;
-  annee: Annee;
-  niveaux: DataNiveau[];
-  date: string;
-  taux_reduction: number;
-  frais_annexe: number;
-  montant_scolarite: number;
-  montant_total: number;
-  status: string | null;
-  type_inscription: TypeInscription;
-  paiements: Paiement[],
-  total_paiements: string;
+    id: number;
+    etudiant: Etudiant;
+    annee: Annee;
+    niveaux: DataNiveau[];
+    date: string;
+    taux_reduction: number;
+    frais_annexe: number;
+    montant_scolarite: number;
+    montant_total: number;
+    status: string | null;
+    type_inscription: TypeInscription;
+    paiements: Paiement[];
+    total_paiements: string;
+
+    etudiant?: Etudiant;
+    niveaux?: DataNiveau[];
 }
 
 // Types Paiements
@@ -182,5 +201,22 @@ export interface Paiement {
     date_paiement: string;
     methode_paiement: string;
     montant: number;
-    receveur?:User 
+    receveur?: User;
+    inscription?: Inscription;
+}
+
+// Types Dashboard
+export interface StatFinanciere {
+    totalAttendu: number;
+    totalPaye: number;
+    resteAPayer: number;
+    tauxRecouvrement: number;
+}
+
+export interface StatGlobales {
+    totalEtudiants: 247;
+    totalInscriptions: 231;
+    totalEnseignants: 34;
+    totalFilieres: 8;
+    anneeEnCours: '2024-2025';
 }

@@ -9,9 +9,11 @@ use App\Http\Controllers\CoursController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\Pedagogie\FiliereController;
+use App\Http\Controllers\Pedagogie\HoraireController;
 use App\Http\Controllers\Pedagogie\NiveauController;
 use App\Http\Controllers\Pedagogie\SalleController;
 use App\Http\Controllers\Pedagogie\SeanceController;
+use App\Http\Controllers\Pedagogie\SemaineController;
 use App\Http\Controllers\Pedagogie\SiteController;
 use App\Http\Controllers\ProfesseurController;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +28,7 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-  
+
     // Configurations
     Route::get('/configurations', [AnneeAcademiqueController::class, "editAnneeActive"])->name('edit.anneeActive');
 
@@ -126,6 +128,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/etudiants/{etudiant}/fiche', "getFicheIndentification")->name('etudiants.fiche');
     });
 
+    //Routes Horaires
+    Route::controller(HoraireController::class)->group(function () {
+        Route::get("horaire", "index")->name("horaire");
+        Route::post("horaire", "store")->name("horaire.store");
+        Route::get("horaire/{horaire}/edit", "edit")->name("horaire.edit");
+        Route::put("horaire/{horaire}/update", "update")->name("horaire.update");
+        Route::delete("horaire/{horaire}/delete", "delete")->name("horaire.delete");
+    });
+
+    //Routes Semaine
+    Route::controller(SemaineController::class)->group(function () {
+        Route::get("semaine", "index")->name("semaine");
+        Route::post("semaine", "store")->name("semaine.store");
+        Route::get("semaine/{semaine}/edit", "edit")->name("semaine.edit");
+        Route::put("semaine/{semaine}/update", "update")->name("semaine.update");
+        Route::delete("semaine/{semaine}/delete", "delete")->name("semaine.delete");
+    });
 
     // Routes Inscription
     Route::controller(InscriptionController::class)->group(function () {
@@ -143,14 +162,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Routes Scolarite
-      Route::controller(ScolariteController::class)->group(function () {
+    Route::controller(ScolariteController::class)->group(function () {
         Route::get("scolarite", "index")->name("scolarite");
         Route::post("scolarite", "store")->name("scolarite.store");
         Route::get("scolarite/{scolarite}/edit", "edit")->name("scolarite.edit");
         Route::put("scolarite/{scolarite}/update", "update")->name("scolarite.update");
         Route::delete("scolarite/{scolarite}/delete", "delete")->name("scolarite.delete");
     });
-
 });
 
 require __DIR__ . '/settings.php';
