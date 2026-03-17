@@ -9,6 +9,7 @@ use App\Http\Controllers\CoursController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\Pedagogie\FiliereController;
+use App\Http\Controllers\Pedagogie\HoraireController;
 use App\Http\Controllers\Pedagogie\NiveauController;
 use App\Http\Controllers\Pedagogie\SalleController;
 use App\Http\Controllers\Pedagogie\SeanceController;
@@ -125,6 +126,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/etudiants/{etudiant}/fiche', "getFicheIndentification")->name('etudiants.fiche');
     });
+
+     //Routes Horaires
+    Route::controller(HoraireController::class)->group(function () {
+        Route::get("horaire", "index")->name("horaire");
+        Route::post("horaire", "store")->name("horaire.store");
+        Route::get("horaire/{horaire}/edit", "edit")->name("horaire.edit");
+        Route::put("horaire/{horaire}/update", "update")->name("horaire.update");
+        Route::delete("horaire/{horaire}/delete", "delete")->name("horaire.delete");
+    });
+
 
 
     // Routes Inscription

@@ -9,4 +9,10 @@ class Horaire extends Model
 {
     /** @use HasFactory<\Database\Factories\HoraireFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        "heure_debut",
+        "heure_fin",
+        "index_order"
+    ];
 }

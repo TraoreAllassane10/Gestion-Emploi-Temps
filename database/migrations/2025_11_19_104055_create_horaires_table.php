@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('horaires', function (Blueprint $table) {
             $table->id();
-            $table->string('libelle');
             $table->time("heure_debut");
             $table->time("heure_fin");
             $table->integer('index_order');

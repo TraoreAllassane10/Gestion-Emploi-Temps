@@ -145,6 +145,22 @@ export interface Salle {
     nom: string;
 }
 
+// Type Semaine
+export interface Semaine {
+    id: number;
+    libelle: string;
+    date_debut: string;
+    date_fin: string;
+}
+
+// Type Horaire
+export interface Horaire {
+    id: number;
+    heure_debut: string;
+    heure_fin: string;
+    index_order: number;
+}
+
 // Types Scolarite
 export type TypeScolarite = 'Affecté' | 'Naff' | 'Licence';
 
