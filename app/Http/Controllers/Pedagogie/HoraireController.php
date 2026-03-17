@@ -66,7 +66,11 @@ class HoraireController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            $horaire->update($data);
+            $horaire->update([
+                "heure_debut" => Carbon::parse($data['heure_debut'])->format('H:i'),
+                "heure_fin" => Carbon::parse($data['heure_fin'])->format('H:i'),
+                "index_order" => $data['index_order'],
+            ]);
 
             return response()->json(["success" => "true"]);
         } catch (Exception $e) {

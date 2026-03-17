@@ -243,8 +243,6 @@ const Index = () => {
                             </Table>
                         </CardContent>
 
-                        {/* Systeme de pagination */}
-                        <PaginationLinks links={professeurs.meta.links} />
                     </Card>
                 </div>
             </AppLayout>

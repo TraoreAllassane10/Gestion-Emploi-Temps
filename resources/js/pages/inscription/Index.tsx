@@ -110,7 +110,7 @@ export default function Index() {
                 {/* Header */}
                 <div className="flex items-start justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">
+                        <h1 className="text-xl font-bold tracking-tight">
                             Inscriptions
                         </h1>
                         <p className="mt-0.5 text-sm text-muted-foreground">

@@ -13,6 +13,7 @@ class Semaine extends Model
     protected $fillable = [
         "libelle",
         "date_debut",
-        "date_fin"
+        "date_fin",
+        "annee_universitaire_id"
     ];
 }
