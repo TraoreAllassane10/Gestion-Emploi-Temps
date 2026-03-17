@@ -19,6 +19,7 @@ use App\Models\Niveau;
 use App\Models\Professeur;
 use App\Models\Salle;
 use App\Models\Seance;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -119,6 +120,21 @@ class NiveauController extends Controller
         }
     }
 
+    // Fonction recuperant la liste d'une classe selon l'annee academique
+    public function getListeEtudiant($anneeId, $niveauId)
+    {
+        $listeDesEtudiants = Etudiant::whereHas("inscriptions", function ($query) use ($niveauId, $anneeId) {
+            return $query->where("annee_universitaire_id", $anneeId)->whereHas("niveaux", function ($query) use ($niveauId) {
+                return $query->whereIn("niveau_id", [$niveauId]);
+            });
+        })
+            ->orderBy("nom")
+            ->orderBy("prenom")
+            ->get();
+
+        return $listeDesEtudiants;
+    }
+
     public function listeDeClasse(string $niveauId)
     {
         // Annee universitaire active
@@ -126,15 +142,29 @@ class NiveauController extends Controller
 
         $niveau = Niveau::find($niveauId);
 
-        $listeDesEtudiants = Etudiant::whereHas("inscriptions", function ($query) use ($niveauId, $anneeActive) {
-            return $query->where("annee_universitaire_id", $anneeActive->id)->whereHas("niveaux", function ($query) use ($niveauId) {
-                return $query->whereIn("niveau_id", [$niveauId]);
-            });
-        })->get();
+        $listeDesEtudiants = $this->getListeEtudiant($anneeActive->id, $niveauId);
 
         return Inertia::render('niveau/ListeDeClasse', [
             "liste" => $listeDesEtudiants,
             "niveau" => $niveau
         ]);
+    }
+
+    public function downloadListeDeClase(string $niveauId)
+    {
+        // Annee universitaire active
+        $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
+
+        $niveau = Niveau::find($niveauId);
+
+        $listeDesEtudiants = $this->getListeEtudiant($anneeActive->id, $niveauId);
+
+        $pdf = Pdf::loadView('pdf.liste_classe', [
+            "liste" => $listeDesEtudiants,
+            "annee_academique" => $anneeActive->libelle,
+            "filiere" => $niveau->nom
+        ]);
+
+        return $pdf->stream("liste_de_classe_{$niveau->nom}.pdf");
     }
 }

@@ -12,7 +12,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DataNiveau, Etudiant } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Eye, GraduationCap } from 'lucide-react';
+import { Download, Eye, GraduationCap, Printer } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -40,8 +40,18 @@ const ListeDeClasse = () => {
                     {/* Entete et le bouton d'ajout */}
                     <div className="my-2 flex place-items-center justify-between">
                         <h1 className="text-2xl font-bold">
-                            Liste de classe de {niveau.nom}
+                            Liste de classe de {niveau.nom}{' '}
+                            <span className="text-sm font-normal">
+                                ({liste.length} etudiants)
+                            </span>
                         </h1>
+
+                        <a href={`/niveau/${niveau.id}/liste-de-classe/imprimer`} target='_blank'>
+                            <Button variant="outline" size="sm">
+                                <Printer />
+                                Telécharger la liste
+                            </Button>
+                        </a>
                     </div>
 
                     <Card className="overflow-hidden shadow-sm">
@@ -107,11 +117,17 @@ const ListeDeClasse = () => {
                                             </TableCell>
 
                                             <TableCell>
-                                              <Link href={`/etudiants/${etudiant.ip}/show`}>
-                                                <Button variant="outline" size="sm">
-                                                    <Eye />
-                                                    Voir le profil 
-                                                </Button></Link>
+                                                <Link
+                                                    href={`/etudiants/${etudiant.ip}/show`}
+                                                >
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                    >
+                                                        <Eye />
+                                                        Voir le profil
+                                                    </Button>
+                                                </Link>
                                             </TableCell>
                                         </TableRow>
                                     ))

@@ -4,10 +4,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-    NativeSelect,
-    NativeSelectOption,
-} from '@/components/ui/native-select';
-import {
     Sheet,
     SheetClose,
     SheetContent,
@@ -63,8 +59,6 @@ interface Cours {
     meta: Meta;
 }
 
-
-
 interface CoursProps {
     cours: Cours;
 
@@ -81,7 +75,7 @@ const Index = () => {
     // Enregistrement d'un cours
     const handleSubmit = () => {
         // Verification des données
-        if (nom == '' ) {
+        if (nom == '') {
             toast.error('Veuillez remplir tous les champs!');
             return;
         }
@@ -91,7 +85,6 @@ const Index = () => {
 
         // Nettoyage de l'etat
         setNom('');
-       
     };
 
     // Suppression d'un cours
@@ -106,9 +99,7 @@ const Index = () => {
                     <div>
                         {/* Entete et le bouton d'ajout */}
                         <div className="my-2 flex place-items-center justify-between">
-                            <h1 className="text-2xl font-bold">
-                                Matieres
-                            </h1>
+                            <h1 className="text-2xl font-bold">Gestion des matieres</h1>
 
                             <Sheet>
                                 <SheetTrigger asChild>
@@ -138,7 +129,6 @@ const Index = () => {
                                                 }
                                             />
                                         </div>
-
                                     </div>
                                     <SheetFooter>
                                         <Button onClick={handleSubmit}>

@@ -51,7 +51,7 @@ const mainNavItems: NavItem[] = [
     //     icon: UserCog,
     // },
     {
-        title: 'Niveau',
+        title: 'Classes',
         href: niveau(),
         icon: GraduationCap,
     },

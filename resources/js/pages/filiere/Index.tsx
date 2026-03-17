@@ -102,7 +102,7 @@ const Index = () => {
                     <div>
                         {/* Entete et le bouton d'ajout */}
                         <div className="my-2 flex place-items-center justify-between">
-                            <h1 className="text-2xl font-bold">Filière</h1>
+                            <h1 className="text-2xl font-bold">Gestion des filières</h1>
 
                             <Sheet>
                                 <SheetTrigger asChild>

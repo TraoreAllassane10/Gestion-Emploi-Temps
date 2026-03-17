@@ -1,7 +1,7 @@
 
 import { useState } from 'react'
 import {
-  User, BookOpen, Phone, Shield,
+  User, BookOpen, Phone,
   ChevronRight, ChevronLeft, CheckCircle2,
   Users,
 } from 'lucide-react'
@@ -16,11 +16,6 @@ import { Select, SelectContent, SelectItem,
          SelectTrigger, SelectValue }         from '@/components/ui/select'
 import { Alert, AlertDescription }           from '@/components/ui/alert'
 
-import {
-  CIVILITES, GENRES, STATUTS, SERIES_BAC,
-  NATURES_PIECE, TYPES_RESPONSABLE,
-  NATIONALITES, PAYS,
-} from '../../pages/etudiant/data/mock'
 import { EtudiantFormData } from '@/types'
 
 export const emptyForm = (): EtudiantFormData => ({
@@ -49,6 +44,31 @@ export const emptyForm = (): EtudiantFormData => ({
   numero_responsable: null,
   profession_responsable: null,
 })
+
+
+export type Civilite = 'M.' | 'Mme' | 'Mlle'
+export type Genre = 'Masculin' | 'Féminin'
+export type StatutEtudiant = 'Affecté' | 'Naff' | 'Réaffecté' | 'Transfert'
+export type NaturePiece = 'CNI' | 'Passeport' | 'Titre de séjour' | 'Carte consulaire'
+
+
+// ── Config affichage statuts ──────────────────────────────────────────────────
+
+export const statutConfig: Record<StatutEtudiant, { className: string; dotClass: string }> = {
+  Affecté:   { className: 'bg-emerald-50 text-emerald-700 border border-emerald-200', dotClass: 'bg-emerald-500' },
+  Naff:      { className: 'bg-rose-50 text-rose-700 border border-rose-200',          dotClass: 'bg-rose-500'    },
+  Réaffecté: { className: 'bg-blue-50 text-blue-700 border border-blue-200',          dotClass: 'bg-blue-500'    },
+  Transfert: { className: 'bg-amber-50 text-amber-700 border border-amber-200',       dotClass: 'bg-amber-500'   },
+}
+
+export const CIVILITES: Civilite[]           = ['M.', 'Mme', 'Mlle']
+export const GENRES: Genre[]                 = ['Masculin', 'Féminin']
+export const STATUTS: StatutEtudiant[]       = ['Affecté', 'Naff', 'Réaffecté', 'Transfert']
+export const SERIES_BAC                      = ['A1', 'A2', 'B', 'C', 'D', 'E', 'G1', 'G2', 'G3', 'T1', 'T2']
+export const NATURES_PIECE: NaturePiece[]    = ['CNI', 'Passeport', 'Titre de séjour', 'Carte consulaire']
+export const TYPES_RESPONSABLE               = ['Père', 'Mère', 'Tuteur', 'Autre']
+export const NATIONALITES                    = ["Ivoirienne", "Burkinabè", "Malienne", "Guinéenne", "Sénégalaise", "Togolaise", "Béninoise", "Nigériane", "Ghanéenne", "Autre"]
+export const PAYS                            = ["Côte d'Ivoire", "Burkina Faso", "Mali", "Guinée", "Sénégal", "Togo", "Bénin", "Nigeria", "Ghana", "France", "Autre"]
 
 // ── Stepper ───────────────────────────────────────────────────────────────────
 

@@ -80,7 +80,7 @@ export interface Etudiant {
   updated_at: string
 }
 
-export type EtudiantFormData = Omit<Etudiant, 'created_at' | 'updated_at'>
+export type EtudiantFormData = Omit<Etudiant, 'created_at' | 'updated_at' | inscriptions>
 
 export interface StatsEtudiant {
     total :number;
@@ -143,6 +143,19 @@ export interface Site {
 export interface Salle {
     id: number;
     nom: string;
+}
+
+// Types Scolarite
+export type TypeScolarite = 'Affecté' | 'Naff' | 'Licence';
+
+export interface Scolarite {
+    id: number;
+    type: TypeScolarite;
+    montant: number;
+    annee: Annee;
+    niveau: DataNiveau;
+    annee_universitaire_id: number;
+    niveau_id: number;
 }
 
 // Types Inscription

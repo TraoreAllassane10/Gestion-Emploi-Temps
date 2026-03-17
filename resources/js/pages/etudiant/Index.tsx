@@ -1,7 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
-    ArrowRightLeft,
     ChevronDown,
     Eye,
     Pencil,
@@ -9,9 +8,7 @@ import {
     Search,
     SlidersHorizontal,
     Trash2,
-    UserCheck,
     Users,
-    UserX,
     X,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -43,12 +40,9 @@ import {
 } from '@/components/ui/table';
 
 import Avatar from '@/components/etudiant/Avatar';
-import StatutBadge from '@/components/etudiant/StatutBadge';
-import StatCard from '@/components/StatCard';
-import { STATUTS } from './data/mock';
-import { Etudiant, Meta, StatsEtudiant } from '@/types';
 import EtudiantStats from '@/components/etudiant/EtudiantStats';
-
+import StatutBadge from '@/components/etudiant/StatutBadge';
+import { Etudiant, Meta, StatsEtudiant } from '@/types';
 
 interface EtudiantData {
     data: Etudiant[];
@@ -61,9 +55,8 @@ interface EtudiantProps {
     [key: string]: unknown;
 }
 
-
 export default function Index() {
-    const {etudiants, stats} = usePage<EtudiantProps>().props;
+    const { etudiants, stats } = usePage<EtudiantProps>().props;
 
     const [search, setSearch] = useState('');
     const [filtreStatut, setFiltreStatut] = useState('all');
@@ -116,7 +109,7 @@ export default function Index() {
                 </div>
 
                 {/* Stats */}
-                <EtudiantStats stats={stats}/>
+                <EtudiantStats stats={stats} />
 
                 {/* Filtres */}
                 <Card className="shadow-sm">
@@ -142,11 +135,6 @@ export default function Index() {
                                 <SelectItem value="all">
                                     Tous statuts
                                 </SelectItem>
-                                {STATUTS.map((s) => (
-                                    <SelectItem key={s} value={s}>
-                                        {s}
-                                    </SelectItem>
-                                ))}
                             </SelectContent>
                         </Select>
 

@@ -1,8 +1,11 @@
-import PaginationLinks from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    NativeSelect,
+    NativeSelectOption,
+} from '@/components/ui/native-select';
 import {
     Sheet,
     SheetClose,
@@ -21,11 +24,16 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import useAnnee from '@/hooks/useAnnee';
+import useScolarite from '@/hooks/useScolarite';
 import AppLayout from '@/layouts/app-layout';
 import ConfigurationLayout from '@/layouts/configurations/ConfigurationLayout';
-import { annee } from '@/routes';
-import { Annee, BreadcrumbItem } from '@/types';
+import {
+    Annee,
+    BreadcrumbItem,
+    DataNiveau,
+    Scolarite,
+    TypeScolarite,
+} from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
@@ -33,69 +41,80 @@ import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Années',
-        href: '/annee',
+        title: 'Scolarite',
+        href: '/scolarite',
     },
 ];
 
-interface Meta {
-    current_page: number;
-    from: number;
-    last_page: number;
-    links: {
-        active: boolean;
-        label: string;
-        page: number;
-        url: string;
-    }[];
-}
-
-interface Annees {
-    data: Annee[];
-    meta: Meta;
-}
-
-interface AnneeProps {
-    annees: Annees;
+interface ScolariteProps {
+    scolarites: Scolarite[];
+    niveaux: DataNiveau[];
+    annee: Annee;
+    types: string[];
     [key: string]: unknown;
 }
 
+const typeConfig: Record<TypeScolarite, string> = {
+    Affecté: 'bg-blue-50 text-blue-700 border border-blue-200',
+    Naff: 'bg-rose-50 text-rose-700 border border-rose-200',
+    Licence: 'bg-green-50 text-green-700 border border-green-200',
+};
+
+function typeBadge( type: TypeScolarite) {
+    const className = typeConfig[type];
+    console.log(className);
+    return (
+        <span
+            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${className}`}
+        >
+            {type}
+        </span>
+    );
+}
+
 const Index = () => {
-    const { annees } = usePage<AnneeProps>().props;
+    const { scolarites, niveaux, annee, types } =
+        usePage<ScolariteProps>().props;
 
-    const [libelle, setLibelle] = useState('');
-    const [date_debut, setDateDebut] = useState('');
-    const [date_fin, setDateFin] = useState('');
+    const [niveau_id, SetNiveauId] = useState('');
+    const [type, setType] = useState('');
+    const [montant, setMontant] = useState('');
 
-    const { createAnnee, deleteAnnee } = useAnnee();
+    const { createScolarite, deleteScolarite } = useScolarite();
 
-    // Enregistrement d'une annee
+    // Enregistrement d'une scolarite
     const handleSubmit = () => {
         // Verification des données
-        if (libelle == '' || date_debut == undefined || date_fin == undefined) {
+        if (
+            type == '' ||
+            montant == '' ||
+            Number(montant) <= 0 ||
+            niveau_id == ''
+        ) {
             toast.error('Veuillez remplir tous les champs svp !');
             return;
         }
 
-        // Creation d'une nouvelle année
-        createAnnee({
-            libelle,
-            date_debut: new Date(date_debut),
-            date_fin: new Date(date_fin),
+        // Creation d'une nouvelle scolarite
+        createScolarite({
+            annee_id: annee.id,
+            montant: Number(montant),
+            type,
+            niveau_id: Number(niveau_id),
         });
 
         // Nettoye de l'etat du composant
-        setLibelle('');
-        setDateDebut('');
-        setDateFin('');
+        setMontant('');
+        setType('');
+        SetNiveauId('');
 
         //Redirection sur la page d'affiche
-        router.visit(annee());
+        router.visit('/scolarite');
     };
 
-    // Suppression d'une année
+    // Suppression d'une scolarite
     const handleDelete = (id: number) => {
-        if (id) deleteAnnee(id);
+        if (id) deleteScolarite(id);
     };
 
     return (
@@ -106,7 +125,7 @@ const Index = () => {
                         {/* Entete et le bouton d'ajout */}
                         <div className="my-2 flex place-items-center justify-between">
                             <h1 className="text-2xl font-bold">
-                                Gestion des Annee Académique
+                                Gestion des scolarites
                             </h1>
 
                             <Sheet>
@@ -115,51 +134,93 @@ const Index = () => {
                                         variant="outline"
                                         className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground"
                                     >
-                                        Nouvelle Année
+                                        Nouvelle scolarite
                                     </Button>
                                 </SheetTrigger>
                                 <SheetContent>
                                     <SheetHeader>
                                         <SheetTitle>
-                                            Nouvelle Annnée Académique
+                                            Nouvelle Scolarite
                                         </SheetTitle>
                                         <SheetDescription>
-                                            Ajouter une année académique
+                                            Ajouter une scolarite
                                         </SheetDescription>
                                     </SheetHeader>
                                     <div className="grid flex-1 auto-rows-min gap-6 px-4">
                                         <div className="grid gap-3">
                                             <Label htmlFor="sheet-demo-name">
-                                                Libellé
+                                                Annee Academique
                                             </Label>
                                             <Input
-                                                value={libelle}
-                                                onChange={(e) =>
-                                                    setLibelle(e.target.value)
-                                                }
+                                                value={annee.libelle}
+                                                disabled
                                             />
                                         </div>
                                         <div className="grid gap-3">
                                             <Label htmlFor="sheet-demo-username">
-                                                Date de debut
+                                                Type de scolarite
                                             </Label>
-                                            <Input
-                                                type="date"
-                                                value={date_debut}
+                                            <NativeSelect
+                                                className="w-full"
+                                                value={type}
                                                 onChange={(e) =>
-                                                    setDateDebut(e.target.value)
+                                                    setType(e.target.value)
                                                 }
-                                            />
+                                            >
+                                                <NativeSelectOption
+                                                    value=""
+                                                    disabled
+                                                >
+                                                    Selectionner le type de
+                                                    scolarite
+                                                </NativeSelectOption>
+
+                                                {types.map((type, index) => (
+                                                    <NativeSelectOption
+                                                        key={index}
+                                                        value={type}
+                                                    >
+                                                        {type}
+                                                    </NativeSelectOption>
+                                                ))}
+                                            </NativeSelect>
                                         </div>
                                         <div className="grid gap-3">
                                             <Label htmlFor="sheet-demo-username">
-                                                Date de fin
+                                                Niveau
+                                            </Label>
+                                            <NativeSelect
+                                                className="w-full"
+                                                value={niveau_id}
+                                                onChange={(e) =>
+                                                    SetNiveauId(e.target.value)
+                                                }
+                                            >
+                                                <NativeSelectOption
+                                                    value=""
+                                                    disabled
+                                                >
+                                                    Selectionner un niveau
+                                                </NativeSelectOption>
+
+                                                {niveaux.map((niveau) => (
+                                                    <NativeSelectOption
+                                                        value={niveau.id}
+                                                    >
+                                                        {niveau.nom}
+                                                    </NativeSelectOption>
+                                                ))}
+                                            </NativeSelect>
+                                        </div>
+                                        <div className="grid gap-3">
+                                            <Label htmlFor="sheet-demo-username">
+                                                Montant
                                             </Label>
                                             <Input
-                                                type="date"
-                                                value={date_fin}
+                                                type="number"
+                                                value={montant}
                                                 onChange={(e) =>
-                                                    setDateFin(e.target.value)
+                                                    setMontant(e.target.value)
                                                 }
                                             />
                                         </div>
@@ -183,27 +244,32 @@ const Index = () => {
                                 <Table>
                                     <TableHeader>
                                         <TableRow className="bg-muted">
-                                            <TableHead>Libellé</TableHead>
-                                            <TableHead>Date de Début</TableHead>
-                                            <TableHead>Date de Fin</TableHead>
+                                            <TableHead>Annee</TableHead>
+                                            <TableHead>classe</TableHead>
+                                            <TableHead>Montant</TableHead>
+                                            <TableHead>Type</TableHead>
                                             <TableHead>Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {annees?.data.map((annee) => (
-                                            <TableRow key={annee.id}>
+                                        {
+                                            scolarites.length == 0 ? (<span>Aucune scolarité enregistrée</span>) : (scolarites.map((scolarite) => (
+                                            <TableRow key={scolarite.id}>
                                                 <TableCell>
-                                                    {annee.libelle}
+                                                    {scolarite.annee.libelle}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {annee.date_debut}
+                                                    {scolarite.niveau.nom}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {annee.date_fin}
+                                                    {scolarite.montant}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {typeBadge(scolarite.type)}
                                                 </TableCell>
                                                 <TableCell className="flex gap-2">
                                                     <Link
-                                                        href={`annee/${annee.id}/edit`}
+                                                        href={`scolarite/${scolarite.id}/edit`}
                                                     >
                                                         <Edit
                                                             size={20}
@@ -214,7 +280,7 @@ const Index = () => {
                                                     <Link
                                                         onClick={() =>
                                                             handleDelete(
-                                                                annee.id,
+                                                                scolarite.id,
                                                             )
                                                         }
                                                     >
@@ -225,12 +291,11 @@ const Index = () => {
                                                     </Link>
                                                 </TableCell>
                                             </TableRow>
-                                        ))}
+                                        )))
+                                        }
+                                        {}
                                     </TableBody>
                                 </Table>
-
-                                {/* Systeme de pagination */}
-                                <PaginationLinks links={annees.meta.links} />
                             </CardContent>
                         </Card>
                     </div>
