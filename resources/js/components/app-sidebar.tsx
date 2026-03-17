@@ -10,7 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, etudiants, niveau, seance } from '@/routes';
+import { dashboard, etudiants, niveau, professeur, seance } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
@@ -45,15 +45,16 @@ const mainNavItems: NavItem[] = [
         href: "/inscriptions",
         icon: ClipboardList,
     },
-    // {
-    //     title: 'Personnel',
-    //     href: dashboard(),
-    //     icon: UserCog,
-    // },
+
     {
         title: 'Classes',
         href: niveau(),
         icon: GraduationCap,
+    },
+        {
+        title: 'Professeurs',
+        href: professeur(),
+        icon: UserCog,
     },
     {
         title: 'Emploi du temps',
