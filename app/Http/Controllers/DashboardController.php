@@ -6,7 +6,6 @@ use App\Models\AnneeUniversitaire;
 use App\Models\Etudiant;
 use App\Models\Filiere;
 use App\Models\Inscription;
-use App\Models\Niveau;
 use App\Models\Paiement;
 use App\Models\Professeur;
 use Inertia\Inertia;
@@ -31,6 +30,18 @@ class DashboardController extends Controller
         $resteAPayer = $totalAttendu - $totalPaye;
         $tauxRecouvrement = $totalAttendu > 0 ? ceil(($totalPaye / $totalAttendu) * 100) : 0;
 
+        // derniers paiements et inscriptions
+        $derniers_paiements = Paiement::with([
+            "inscription",
+            "inscription.etudiant",
+            "inscription.niveaux"
+        ])->latest()->limit(5)->get();
+
+        $dernieres_inscriptions = Inscription::with([
+            "etudiant",
+            "niveaux"
+        ])->latest()->limit(5)->get();
+
         return Inertia::render(
             "dashboard",
             [
@@ -45,7 +56,9 @@ class DashboardController extends Controller
                     "totalPaye" => $totalPaye,
                     "resteAPayer" => $resteAPayer,
                     "tauxRecouvrement" => $tauxRecouvrement
-                ]
+                ],
+                "derniers_paiements" => $derniers_paiements,
+                "dernieres_inscriptions" => $dernieres_inscriptions,
             ]
         );
     }

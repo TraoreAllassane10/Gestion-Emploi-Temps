@@ -189,6 +189,9 @@ export interface Inscription {
     type_inscription: TypeInscription;
     paiements: Paiement[];
     total_paiements: string;
+
+    etudiant?: Etudiant;
+    niveaux?: DataNiveau[];
 }
 
 // Types Paiements
@@ -199,6 +202,7 @@ export interface Paiement {
     methode_paiement: string;
     montant: number;
     receveur?: User;
+    inscription?: Inscription;
 }
 
 // Types Dashboard

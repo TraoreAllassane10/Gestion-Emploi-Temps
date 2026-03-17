@@ -4,7 +4,6 @@ import {
     ArrowRight,
     BadgeDollarSign,
     BookOpen,
-    Clock,
     GraduationCap,
     ReceiptText,
     TrendingUp,
@@ -30,26 +29,34 @@ import {
 } from '@/components/ui/table';
 
 import StatCard from '@/components/dashboard/StatCardDashboard';
-import { Annee, StatFinanciere, StatGlobales } from '@/types';
-import { fmtCompact } from '@/utils/util';
 import {
-    DERNIERES_INSCRIPTIONS,
-    DERNIERS_PAIEMENTS,
-    REPARTITION_NIVEAUX,
-    STATS_GLOBALES,
-} from './dashboard-mock';
+    Annee,
+    Inscription,
+    Paiement,
+    StatFinanciere,
+    StatGlobales,
+} from '@/types';
+import { fmtCompact } from '@/utils/util';
+import { REPARTITION_NIVEAUX } from './dashboard-mock';
 
 interface DashboardProps {
     anneeActive: Annee;
     stats_globales: StatGlobales;
     stats_financiere: StatFinanciere;
+    derniers_paiements: Paiement[];
+    dernieres_inscriptions: Inscription[];
     [key: string]: unknown;
 }
 
 export default function Dashboard() {
-    const { anneeActive, stats_globales, stats_financiere } =
-        usePage<DashboardProps>().props;
-        
+    const {
+        anneeActive,
+        stats_globales,
+        stats_financiere,
+        derniers_paiements,
+        dernieres_inscriptions,
+    } = usePage<DashboardProps>().props;
+
     const taux = stats_financiere.tauxRecouvrement;
 
     return (
@@ -70,10 +77,10 @@ export default function Dashboard() {
                             </span>
                         </p>
                     </div>
-                    <div className="hidden items-center gap-2 rounded-lg border bg-muted/60 px-3 py-1.5 text-xs text-muted-foreground sm:flex">
+                    {/* <div className="hidden items-center gap-2 rounded-lg border bg-muted/60 px-3 py-1.5 text-xs text-muted-foreground sm:flex">
                         <Clock className="h-3.5 w-3.5" />
                         Données en temps réel
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* ── Stats globales ───────────────────────────────────────────── */}
@@ -221,7 +228,7 @@ export default function Dashboard() {
                                 Inscriptions par niveau
                             </CardTitle>
                             <CardDescription className="text-xs">
-                                {STATS_GLOBALES.anneeEnCours}
+                                {anneeActive.libelle}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-3">
@@ -269,16 +276,6 @@ export default function Dashboard() {
                                     <BadgeDollarSign className="h-4 w-4 text-emerald-600" />
                                     Derniers paiements
                                 </CardTitle>
-                                <Link href="/paiements">
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-7 gap-1 text-xs text-muted-foreground"
-                                    >
-                                        Tout voir{' '}
-                                        <ArrowRight className="h-3 w-3" />
-                                    </Button>
-                                </Link>
                             </div>
                         </CardHeader>
                         <Table>
@@ -296,31 +293,38 @@ export default function Dashboard() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {DERNIERS_PAIEMENTS.map((p) => (
+                                {derniers_paiements.map((p) => (
                                     <TableRow key={p.id}>
                                         <TableCell className="py-2.5">
                                             <p className="text-sm leading-none font-medium">
-                                                {p.etudiant}
+                                                {p.inscription?.etudiant.nom}{' '}
+                                                {p.inscription?.etudiant.prenom}
                                             </p>
                                             <p className="mt-0.5 text-xs text-muted-foreground">
                                                 <code className="font-mono text-[11px]">
-                                                    {p.ip}
+                                                    {p.inscription?.etudiant.ip}
                                                 </code>
                                                 {' · '}
-                                                {p.niveau}
+                                                {p.inscription?.niveaux.map(
+                                                    (niveau) => (
+                                                        <span>
+                                                            {niveau.nom}
+                                                        </span>
+                                                    ),
+                                                )}
                                             </p>
                                         </TableCell>
                                         <TableCell className="py-2.5">
                                             <span className="text-sm font-bold text-emerald-600 tabular-nums">
-                                                +{fmtCompact(p.montant)} XOF
+                                                +{p.montant} FCFA
                                             </span>
                                             <p className="text-xs text-muted-foreground">
-                                                {p.type}
+                                                {p.methode_paiement}
                                             </p>
                                         </TableCell>
                                         <TableCell className="py-2.5 text-xs text-muted-foreground tabular-nums">
                                             {new Date(
-                                                p.date,
+                                                p.date_paiement,
                                             ).toLocaleDateString('fr-FR', {
                                                 day: '2-digit',
                                                 month: 'short',
@@ -367,14 +371,15 @@ export default function Dashboard() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {DERNIERES_INSCRIPTIONS.map((ins) => (
+                                {dernieres_inscriptions.map((ins) => (
                                     <TableRow key={ins.id}>
                                         <TableCell className="py-2.5">
                                             <p className="text-sm leading-none font-medium">
-                                                {ins.etudiant}
+                                                {ins.etudiant.nom}{' '}
+                                                {ins.etudiant.prenom}
                                             </p>
                                             <p className="mt-0.5 text-xs text-muted-foreground">
-                                                {ins.filiere}
+                                                {ins.niveaux[0].filiere.nom}
                                             </p>
                                         </TableCell>
                                         <TableCell className="py-2.5">
@@ -382,10 +387,12 @@ export default function Dashboard() {
                                                 variant="secondary"
                                                 className="text-xs font-bold"
                                             >
-                                                {ins.niveau}
+                                                {ins.niveaux.map((niveau) => (
+                                                    <span>{niveau.nom}</span>
+                                                ))}
                                             </Badge>
                                             <p className="mt-0.5 text-xs text-muted-foreground">
-                                                {ins.annee}
+                                                {ins.annee.libelle}
                                             </p>
                                         </TableCell>
                                         <TableCell className="py-2.5 text-xs text-muted-foreground tabular-nums">
