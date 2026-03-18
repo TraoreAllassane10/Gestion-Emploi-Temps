@@ -10,10 +10,15 @@ class Seance extends Model
   /** @use HasFactory<\Database\Factories\SeanceFactory> */
   use HasFactory;
 
-  protected $fillable = ["jours", "date", "heure_debut", "heure_fin", "cours_id", "professeur_id", "salle_id", "niveau_id", "annee_scolaire_id"];
+  protected $fillable = ["jour", "date", "semaine_id", "horaire_id", "cours_id", "professeur_id", "salle_id", "niveau_id", "annee_universitaire_id"];
 
 
-  protected $with = ["cours", "professeur", "salle", "niveau"];
+  protected $with = ["cours", "professeur", "salle", "niveau", "horaire"];
+
+  public function horaire()
+  {
+    return $this->belongsTo(Horaire::class);
+  }
 
   public function cours()
   {
@@ -36,22 +41,20 @@ class Seance extends Model
   }
 
   //Permet de savoir si une salle est occupée durant une plage horaire selon une date
-  public static function salleOccupee($salle_id, $date, $debut, $fin)
+  public static function salleOccupee($salle_id, $date, $horaire_id)
   {
     return self::where("salle_id", $salle_id)
       ->where("date", $date)
-      ->where(function ($query) use ($debut, $fin) {
-        return $query->where('heure_debut', '<', $fin)->where('heure_fin', '>', $debut);
-      })->exists();
+      ->where("horaire_id", $horaire_id)
+      ->exists();
   }
 
-   //Permet de savoir si un un professeur est occupée durant une plage horaire selon une date
-   public static function professeurOccupe($professeur_id, $date, $debut, $fin)
-   {
+  //Permet de savoir si un un professeur est occupée durant une plage horaire selon une date
+  public static function professeurOccupe($professeur_id, $date, $horaire_id)
+  {
     return self::where("professeur_id", $professeur_id)
       ->where("date", $date)
-      ->where(function($query) use ($debut, $fin) {
-        return $query->where('heure_debut', '<', $fin)->where('heure_fin', '>', $debut);
-      })->exists();
-   }
+      ->where("horaire_id", $horaire_id)
+      ->exists();
+  }
 }

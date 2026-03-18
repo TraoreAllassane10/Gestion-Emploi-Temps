@@ -4,14 +4,14 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 interface Data {
-    jours: string;
+    jour: string;
     date: string;
-    heure_debut: string;
-    heure_fin: string;
     professeur_id: string;
     cours_id: string;
     salle_id: string;
     niveau_id: string;
+    semaine_id: string;
+    horaire_id: string;
 }
 
 interface DataSearch {
@@ -30,7 +30,7 @@ export default function useSeance() {
             );
         } catch (error) {
             toast.error('Erreur survenue au seance du serveur');
-            console.log(error)
+            console.log(error);
         }
     };
 
@@ -40,23 +40,26 @@ export default function useSeance() {
             await axios
                 .post('/seance', data)
                 .then((res) => {
-                    if (res.data.message) {
-                        toast.error(res.data.message);
-                        return;
+                    if (res.data.success) {
+                        toast.success('seance crée avec succès !');
+                        // Redirection vers la page d'affichage des seances
+                        router.visit(seance());
                     }
 
-                    toast.success('seance crée avec succès !');
-
-                    // Redirection vers la page d'affichage des seances
-                    router.visit(seance());
+                    if (res.data.success == false) {
+                        console.log(res.data.message);
+                        toast.error(res.data.message);
+                    }
                 })
                 .catch((error) => {
-                    toast.error(error.response.data.message);
-                    console.log(error)
+                    toast.error(
+                        "Erreur survenue lors de la creation d'une seance",
+                    );
+                    console.log(error);
                 });
         } catch (error) {
             toast.error('Erreur survenue au seance du serveur');
-            console.log(error)
+            console.log(error);
         }
     };
 
@@ -72,12 +75,14 @@ export default function useSeance() {
                     router.visit('/seance');
                 })
                 .catch((error) => {
-                    toast.error(error.response.data.message);
-                    console.log(error)
+                      toast.error(
+                        "Erreur survenue lors de la modification d'une séance",
+                    );
+                    console.log(error);
                 });
         } catch (error) {
             toast.success('Erreur survenue au seance du serveur');
-            console.log(error)
+            console.log(error);
         }
     };
 
@@ -90,14 +95,14 @@ export default function useSeance() {
                     toast.success('seance supprimé !');
                 })
                 .catch((error) => {
-                    toast.success(
+                    toast.error(
                         'Erreur survenue lors de la suppression du seance',
                     );
-                    console.log(error)
+                    console.log(error);
                 });
         } catch (error) {
-            toast.success('Erreur survenue au seance du serveur');
-            console.log(error)
+            toast.error('Erreur survenue au seance du serveur');
+            console.log(error);
         }
     };
 

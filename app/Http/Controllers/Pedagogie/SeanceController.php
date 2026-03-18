@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers\Pedagogie;
 
+use App\Enums\JourDeLaSemaine;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\seance\CreateSeanceRequest;
 use App\Http\Requests\seance\UpdateSeanceRequest;
 use App\Http\Resources\CoursResource;
+use App\Http\Resources\HoraireResource;
 use App\Http\Resources\NiveauResource;
 use App\Http\Resources\ProfesseurResource;
 use App\Http\Resources\SalleResource;
 use App\Http\Resources\SeanceResource;
-use App\Models\AnneeScolaire;
+use App\Http\Resources\SemaineResource;
 use App\Models\AnneeUniversitaire;
 use App\Models\Cours;
+use App\Models\Horaire;
 use App\Models\Niveau;
 use App\Models\Professeur;
 use App\Models\Salle;
 use App\Models\Seance;
+use App\Models\Semaine;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
@@ -55,41 +59,64 @@ class SeanceController extends Controller
                 "cours" => CoursResource::collection(Cours::latest()->get()),
                 "salles" => SalleResource::collection(Salle::latest()->get()),
                 "niveaux" => NiveauResource::collection(Niveau::latest()->get()),
+                "semaines" => SemaineResource::collection(Semaine::latest()->get()),
+                "horaires" => HoraireResource::collection(Horaire::latest()->get())
             ]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
     }
 
+    public function create()
+    {
+        $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
+
+        return Inertia::render("seance/Create", [
+            "professeurs" => ProfesseurResource::collection(Professeur::latest()->get()),
+            "cours" => CoursResource::collection(Cours::latest()->get()),
+            "salles" => SalleResource::collection(Salle::latest()->get()),
+            "niveaux" => NiveauResource::collection(Niveau::latest()->get()),
+            "semaines" => SemaineResource::collection(Semaine::where("annee_universitaire_id", $anneeActive->id)->latest()->get()),
+            "horaires" => HoraireResource::collection(Horaire::latest()->get()),
+            "joursDeLaSemaine" => JourDeLaSemaine::cases()
+        ]);
+    }
     public function store(CreateSeanceRequest $request)
     {
         try {
             // Validation des entrées
             $data = $request->validated();
 
-            // Recupere la derniere année enregistrée et l'envoyer dans les données à stocker
-            $data["annee_scolaire_id"] = AnneeUniversitaire::latest("created_at")->first()->id;
+            // Recupere l'annee active
+            $data["annee_universitaire_id"] = AnneeUniversitaire::where("estActive", 1)->first()->id;
+
+            $horaire = Horaire::where("id", $data['horaire_id'])->first();
 
             $date = $data['date'];
             $salle = $data["salle_id"];
-            $heure_debut = $data["heure_debut"];
-            $heure_fin = $data['heure_fin'];
+            $horaire = $data['horaire_id'];
             $professeur = $data['professeur_id'];
 
             // Nous verifions si la salle est occupée sur la plage horaire qu'on souhaite ajouté selon la date
-            if (Seance::salleOccupee($salle, $date, $heure_debut, $heure_fin)) {
-                throw new Exception("Cette salle est occupée sur cette plage horaire");
+            if (Seance::salleOccupee($salle, $date, $horaire)) { 
+                return response()->json([
+                    "success" => false,
+                    "message" => "Cette salle est occupée sur cette plage horaire"
+                ]);
             }
 
             // Nous verifions si le professeur est occupé sur la plage horaire qu'on souhaite ajouté selon la date
-            if (Seance::professeurOccupe($professeur, $date, $heure_debut, $heure_fin)) {
-                throw new Exception("Cet professeur est occupé sur cette plage horaire");
+            if (Seance::professeurOccupe($professeur, $date, $horaire)) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Ce professeur est occupé sur cette plage horaire"
+                ]);
             }
 
             //Creation d'une séance
             Seance::create($data);
 
-            return response()->json(["success" => "true"]);
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }

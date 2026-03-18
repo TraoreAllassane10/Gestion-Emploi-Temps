@@ -133,6 +133,20 @@ export interface FiliereData {
     nom: string;
 }
 
+// Type Professeur
+export interface Professeur {
+     id: number;
+    nom: string;
+    prenom: string;
+    email: string;
+    telephone: string;
+}
+
+export interface Cours {
+    id: number;
+    nom: string;
+} 
+
 // Types Sites
 export interface Site {
     id: number;
