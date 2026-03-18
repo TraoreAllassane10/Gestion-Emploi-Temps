@@ -22,6 +22,7 @@ use App\Models\Salle;
 use App\Models\Seance;
 use App\Models\Semaine;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -33,24 +34,25 @@ class SeanceController extends Controller
         $salle = $request->query("salle");
         $niveau = $request->query("niveau");
         $professeur = $request->query("professeur");
-        $date = $request->query("date");
+        // $date = $request->query("date");
 
         try {
             // Filtrage dynamique des séances
-            $seances = Seance::when($salle, function ($query) use ($salle) {
-                $query->where("salle_id", $salle);
-            })
+            $seances = Seance::where("created_at", ">=", Carbon::now()->startOfWeek())
+                ->when($salle, function ($query) use ($salle) {
+                    $query->where("salle_id", $salle);
+                })
                 ->when($niveau, function ($query) use ($niveau) {
                     $query->where("niveau_id", $niveau);
                 })
                 ->when($professeur, function ($query) use ($professeur) {
                     $query->where("professeur_id", $professeur);
                 })
-                ->when($date, function ($query) use ($date) {
-                    $query->where("date", $date);
-                })
+                // ->when($date, function ($query) use ($date) {
+                //     $query->where("date", $date);
+                // })
                 ->orderByDesc('date')
-                ->paginate(10);
+                ->get();
 
 
             return Inertia::render("seance/Index", [
@@ -98,7 +100,7 @@ class SeanceController extends Controller
             $professeur = $data['professeur_id'];
 
             // Nous verifions si la salle est occupée sur la plage horaire qu'on souhaite ajouté selon la date
-            if (Seance::salleOccupee($salle, $date, $horaire)) { 
+            if (Seance::salleOccupee($salle, $date, $horaire)) {
                 return response()->json([
                     "success" => false,
                     "message" => "Cette salle est occupée sur cette plage horaire"

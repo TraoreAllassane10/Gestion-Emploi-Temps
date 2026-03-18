@@ -180,26 +180,17 @@ export default function Dashboard() {
                                 {[
                                     {
                                         label: 'Total attendu',
-                                        value:
-                                            fmtCompact(
-                                                stats_financiere.totalAttendu,
-                                            ) + ' FCFA',
+                                        value:stats_financiere.totalAttendu + ' FCFA',
                                         color: 'text-foreground',
                                     },
                                     {
                                         label: 'Montant payé',
-                                        value:
-                                            fmtCompact(
-                                                stats_financiere.totalPaye,
-                                            ) + ' FCFA',
+                                        value: stats_financiere.totalPaye + ' FCFA',
                                         color: 'text-emerald-600',
                                     },
                                     {
                                         label: 'Reste à payer',
-                                        value:
-                                            fmtCompact(
-                                                stats_financiere.resteAPayer,
-                                            ) + ' FcFA',
+                                        value: stats_financiere.resteAPayer + ' FCFA',
                                         color: 'text-rose-600',
                                     },
                                 ].map(({ label, value, color }) => (

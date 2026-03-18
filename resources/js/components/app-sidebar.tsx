@@ -57,7 +57,7 @@ const mainNavItems: NavItem[] = [
         icon: UserCog,
     },
     {
-        title: 'Emploi du temps',
+        title: 'Programmes',
         href: seance(),
         icon: CalendarDays,
     },

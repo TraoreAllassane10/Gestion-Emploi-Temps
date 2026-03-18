@@ -35,8 +35,7 @@
             <tr>
                 <th>Jours</th>
                 <th>Date</th>
-                <th>Heure Debut</th>
-                <th>Heure Fin</th>
+                <th>Horaire</th>
                 <th>Cours</th>
                 <th>Professeur</th>
                 <th>Salle</th>
@@ -46,10 +45,9 @@
         <tbody>
             @forelse ($seances as $s)
                 <tr>
-                    <td>{{ $s->jours }}</td>
+                    <td>{{ $s->jour }}</td>
                     <td>{{ \Carbon\Carbon::parse($s->date)->format('d-m-Y') }}</td>
-                    <td>{{ $s->heure_debut }}</td>
-                    <td>{{ $s->heure_fin }}</td>
+                    <td>{{ $s->horaire?->heure_debut }} - {{ $s->horaire?->heure_fin }}</td>
                     <td>{{ $s->cours->nom }}</td>
                     <td>{{ $s->professeur->nom }} {{ $s->professeur->prenom }}</td>
                     <td>{{ $s->salle->nom }}</td>

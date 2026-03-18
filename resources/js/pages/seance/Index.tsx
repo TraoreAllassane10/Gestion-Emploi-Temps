@@ -89,7 +89,7 @@ const Index = () => {
     const [rechercheProfesseur, setRechercheProfesseur] = useState('');
     const [rechercheNiveau, setRechercheNiveau] = useState('');
     const [rechercheSalle, setRechercheSalle] = useState('');
-    const [rechercheDate, setRechercheDate] = useState('');
+    // const [rechercheDate, setRechercheDate] = useState('');
 
     const { deleteSeance } = useSeance();
 
@@ -104,7 +104,7 @@ const Index = () => {
             niveau: rechercheNiveau,
             professeur: rechercheProfesseur,
             salle: rechercheSalle,
-            date: rechercheDate,
+            // date: rechercheDate,
         });
     };
 
@@ -114,8 +114,8 @@ const Index = () => {
             `/seance/export?` +
             `niveau=${rechercheNiveau}&` +
             `professeur=${rechercheProfesseur}&` +
-            `salle=${rechercheSalle}&` +
-            `date=${rechercheDate}`;
+            `salle=${rechercheSalle}&` 
+            // `date=${rechercheDate}`;
 
         window.open(url);
     };
@@ -126,7 +126,7 @@ const Index = () => {
                 <div className="p-4">
                     {/* Entete et le bouton d'ajout */}
                     <div className="my-2 flex place-items-center justify-between">
-                        <h1 className="text-2xl font-bold">Emploi du temps</h1>
+                        <h1 className="text-2xl font-bold">Programmes</h1>
 
                         <Link href="/seance/create">
                             <Button className="gap-2">
@@ -218,7 +218,7 @@ const Index = () => {
                                     </NativeSelect>
                                 </div>
 
-                                <div>
+                                {/* <div>
                                     <Label>Date</Label>
                                     <Input
                                         type="date"
@@ -227,7 +227,7 @@ const Index = () => {
                                             setRechercheDate(e.target.value)
                                         }
                                     />
-                                </div>
+                                </div> */}
 
                                 <button
                                     onClick={handleSearch}
@@ -334,7 +334,7 @@ const Index = () => {
                             </Table>
                         </CardContent>
 
-                        <PaginationLinks links={seances.meta.links} />
+                
                     </Card>
                 </div>
             </AppLayout>
