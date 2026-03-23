@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Http\Resources\AnneeScolaireResource;
 use App\Models\AnneeUniversitaire;
 use App\Repositories\AnneeAcademiqueRepository;
-use Illuminate\Support\Facades\DB;
 
 class AnneeAcademiqueService
 {
@@ -51,15 +50,17 @@ class AnneeAcademiqueService
 
     public function changeAnneeActive(string $id)
     {
-        DB::transaction(function () use ($id) {
-            // Desactive l'annee actuelle active
-            $anneeActuellementActive = AnneeUniversitaire::where("estActive", 1)->first();
+
+        // Desactive l'annee actuelle active
+        $anneeActuellementActive = AnneeUniversitaire::where("estActive", 1)->first();
+
+        if ($anneeActuellementActive) {
             $anneeActuellementActive->estActive = 0;
             $anneeActuellementActive->save();
+        }
 
-            $annee = AnneeUniversitaire::find($id);
-            $annee->estActive = 1;
-            $annee->save();
-        });
+        $annee = AnneeUniversitaire::find($id);
+        $annee->estActive = 1;
+        $annee->save();
     }
 }
