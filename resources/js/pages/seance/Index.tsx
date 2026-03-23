@@ -8,15 +8,6 @@ import {
     NativeSelectOption,
 } from '@/components/ui/native-select';
 import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from '@/components/ui/sheet';
-import {
     Table,
     TableBody,
     TableCell,
@@ -26,11 +17,10 @@ import {
 } from '@/components/ui/table';
 import useSeance from '@/hooks/useSeance';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, Horaire, Meta, Professeur } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
-import { Edit, Printer, Search, Trash } from 'lucide-react';
+import { Edit, PlusCircle, Printer, Search, Trash } from 'lucide-react';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -41,7 +31,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 interface Data {
     id: number;
-    jours: string;
+    jour: string;
     date: string;
     heure_debut: string;
     heure_fin: string;
@@ -49,18 +39,7 @@ interface Data {
     cours: Cours;
     salle: Salle;
     niveau: Niveau;
-}
-
-interface Meta {
-    current_page: number;
-    from: number;
-    last_page: number;
-    links: {
-        active: boolean;
-        label: string;
-        page: number;
-        url: string;
-    }[];
+    horaire: Horaire;
 }
 
 interface Seance {
@@ -69,11 +48,6 @@ interface Seance {
 }
 
 // Type des données du professeur
-interface Professeur {
-    id: number;
-    nom: string;
-    prenom: string;
-}
 
 interface Cours {
     id: number;
@@ -108,65 +82,16 @@ interface SeanceProps {
 }
 
 const Index = () => {
-    const { seances, professeurs, cours, salles, niveaux } =
+    const { seances, professeurs, salles, niveaux } =
         usePage<SeanceProps>().props;
-
-    const [jours, setJours] = useState('');
-    const [date, setDate] = useState('');
-    const [heure_debut, setHeureDebut] = useState('');
-    const [heure_fin, setHeureFin] = useState('');
-    const [cours_id, setCoursId] = useState('');
-    const [professeur_id, setProfesseurId] = useState('');
-    const [salle_id, setSalleId] = useState('');
-    const [niveau_id, setNiveauId] = useState('');
 
     //Les states pour la recherche et le filtrage
     const [rechercheProfesseur, setRechercheProfesseur] = useState('');
     const [rechercheNiveau, setRechercheNiveau] = useState('');
     const [rechercheSalle, setRechercheSalle] = useState('');
-    const [rechercheDate, setRechercheDate] = useState('');
+    // const [rechercheDate, setRechercheDate] = useState('');
 
-    const { createSeance, deleteSeance } = useSeance();
-
-    // Enregistrement d'un cours
-    const handleSubmit = () => {
-        // Verification des données
-        if (
-            jours == '' ||
-            date == '' ||
-            heure_debut == '' ||
-            heure_fin == '' ||
-            professeur_id == '' ||
-            cours_id == '' ||
-            salle_id == '' ||
-            niveau_id == ''
-        ) {
-            toast.error('Veuillez remplir tous les champs!');
-            return;
-        }
-
-        // Création d'une seance
-        createSeance({
-            jours,
-            date,
-            heure_debut,
-            heure_fin,
-            professeur_id,
-            cours_id,
-            niveau_id,
-            salle_id,
-        });
-
-        // Nettoyage de l'etat
-        setJours('');
-        setDate('');
-        setHeureDebut('');
-        setHeureFin('');
-        setProfesseurId('');
-        setCoursId('');
-        setSalleId('');
-        setNiveauId('');
-    };
+    const { deleteSeance } = useSeance();
 
     // Suppression d'une
     const handleDelete = (id: number) => {
@@ -179,7 +104,7 @@ const Index = () => {
             niveau: rechercheNiveau,
             professeur: rechercheProfesseur,
             salle: rechercheSalle,
-            date: rechercheDate,
+            // date: rechercheDate,
         });
     };
 
@@ -189,8 +114,8 @@ const Index = () => {
             `/seance/export?` +
             `niveau=${rechercheNiveau}&` +
             `professeur=${rechercheProfesseur}&` +
-            `salle=${rechercheSalle}&` +
-            `date=${rechercheDate}`;
+            `salle=${rechercheSalle}&` 
+            // `date=${rechercheDate}`;
 
         window.open(url);
     };
@@ -201,227 +126,14 @@ const Index = () => {
                 <div className="p-4">
                     {/* Entete et le bouton d'ajout */}
                     <div className="my-2 flex place-items-center justify-between">
-                        <h1 className="text-2xl font-bold">Emploi du temps</h1>
+                        <h1 className="text-2xl font-bold">Programmes</h1>
 
-                        <Sheet>
-                            <SheetTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground"
-                                >
-                                    Ajouter une séance
-                                </Button>
-                            </SheetTrigger>
-                            <SheetContent>
-                                <SheetHeader>
-                                    <SheetTitle>Nouvelle séance</SheetTitle>
-                                </SheetHeader>
-                                <div className="grid flex-1 auto-rows-min gap-6 px-4">
-                                    <div className="grid grid-cols-2">
-                                        <div>
-                                            <Label htmlFor="sheet-demo-name">
-                                                Niveau
-                                            </Label>
-                                            <NativeSelect
-                                                className="w-full"
-                                                value={niveau_id}
-                                                onChange={(e) =>
-                                                    setNiveauId(e.target.value)
-                                                }
-                                            >
-                                                <NativeSelectOption value="">
-                                                    {' '}
-                                                </NativeSelectOption>
-
-                                                {niveaux.data.map((niveau) => (
-                                                    <NativeSelectOption
-                                                        value={niveau.id}
-                                                    >
-                                                        {niveau.nom}
-                                                    </NativeSelectOption>
-                                                ))}
-                                            </NativeSelect>
-                                        </div>
-
-                                        <div>
-                                            <Label htmlFor="sheet-demo-name">
-                                                Salle
-                                            </Label>
-                                            <NativeSelect
-                                                className="w-full"
-                                                value={salle_id}
-                                                onChange={(e) =>
-                                                    setSalleId(e.target.value)
-                                                }
-                                            >
-                                                <NativeSelectOption value="">
-                                                    {' '}
-                                                </NativeSelectOption>
-
-                                                {salles.data.map((salle) => (
-                                                    <NativeSelectOption
-                                                        value={salle.id}
-                                                    >
-                                                        {salle.nom}
-                                                    </NativeSelectOption>
-                                                ))}
-                                            </NativeSelect>
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-2">
-                                        <div>
-                                            <Label htmlFor="sheet-demo-name">
-                                                Cours
-                                            </Label>
-                                            <NativeSelect
-                                                className="w-full"
-                                                value={cours_id}
-                                                onChange={(e) =>
-                                                    setCoursId(e.target.value)
-                                                }
-                                            >
-                                                <NativeSelectOption value="">
-                                                    {' '}
-                                                </NativeSelectOption>
-
-                                                {cours.data.map((cours) => (
-                                                    <NativeSelectOption
-                                                        value={cours.id}
-                                                    >
-                                                        {cours.nom}
-                                                    </NativeSelectOption>
-                                                ))}
-                                            </NativeSelect>
-                                        </div>
-
-                                        <div>
-                                            <Label htmlFor="sheet-demo-name">
-                                                Professeur
-                                            </Label>
-                                            <NativeSelect
-                                                className="w-full"
-                                                value={professeur_id}
-                                                onChange={(e) =>
-                                                    setProfesseurId(
-                                                        e.target.value,
-                                                    )
-                                                }
-                                            >
-                                                <NativeSelectOption value="">
-                                                    {' '}
-                                                </NativeSelectOption>
-
-                                                {professeurs.data.map(
-                                                    (professeur) => (
-                                                        <NativeSelectOption
-                                                            value={
-                                                                professeur.id
-                                                            }
-                                                        >
-                                                            {professeur.nom}{' '}
-                                                            {professeur.prenom}
-                                                        </NativeSelectOption>
-                                                    ),
-                                                )}
-                                            </NativeSelect>
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div>
-                                            <Label htmlFor="sheet-demo-name">
-                                                Jour
-                                            </Label>
-                                            <NativeSelect
-                                                className="w-full"
-                                                value={jours}
-                                                onChange={(e) =>
-                                                    setJours(e.target.value)
-                                                }
-                                            >
-                                                <NativeSelectOption value=""></NativeSelectOption>
-                                                <NativeSelectOption value="Lundi">
-                                                    Lundi
-                                                </NativeSelectOption>
-                                                <NativeSelectOption value="Mardi">
-                                                    Mardi
-                                                </NativeSelectOption>
-                                                <NativeSelectOption value="Mercredi">
-                                                    Mercredi
-                                                </NativeSelectOption>
-                                                <NativeSelectOption value="Jeudi">
-                                                    Jeudi
-                                                </NativeSelectOption>
-                                                <NativeSelectOption value="Vendredi">
-                                                    Vendredi
-                                                </NativeSelectOption>
-                                                <NativeSelectOption value="Samedi">
-                                                    Samedi
-                                                </NativeSelectOption>
-                                                <NativeSelectOption value="Dimanche">
-                                                    Dimanche
-                                                </NativeSelectOption>
-                                            </NativeSelect>
-                                        </div>
-
-                                        <div>
-                                            <Label>Date du programme</Label>
-                                            <Input
-                                                type="date"
-                                                value={date}
-                                                onChange={(e) =>
-                                                    setDate(e.target.value)
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div>
-                                            <Label htmlFor="sheet-demo-name">
-                                                Heure Début
-                                            </Label>
-                                            <Input
-                                                type="time"
-                                                value={heure_debut}
-                                                onChange={(e) =>
-                                                    setHeureDebut(
-                                                        e.target.value,
-                                                    )
-                                                }
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label htmlFor="sheet-demo-name">
-                                                Heure Fin
-                                            </Label>
-                                            <Input
-                                                type="time"
-                                                value={heure_fin}
-                                                onChange={(e) =>
-                                                    setHeureFin(e.target.value)
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <SheetFooter>
-                                    <Button
-                                        onClick={handleSubmit}
-                                        className="cursor-pointer"
-                                    >
-                                        Enregistrer
-                                    </Button>
-                                    <SheetClose asChild>
-                                        <Button variant="outline">
-                                            Fermer
-                                        </Button>
-                                    </SheetClose>
-                                </SheetFooter>
-                            </SheetContent>
-                        </Sheet>
+                        <Link href="/seance/create">
+                            <Button className="gap-2">
+                                <PlusCircle className="h-4 w-4" />
+                                Nouvelle séance
+                            </Button>
+                        </Link>
                     </div>
 
                     {/* Recherche et Filtrage */}
@@ -506,7 +218,7 @@ const Index = () => {
                                     </NativeSelect>
                                 </div>
 
-                                <div>
+                                {/* <div>
                                     <Label>Date</Label>
                                     <Input
                                         type="date"
@@ -515,7 +227,7 @@ const Index = () => {
                                             setRechercheDate(e.target.value)
                                         }
                                     />
-                                </div>
+                                </div> */}
 
                                 <button
                                     onClick={handleSearch}
@@ -549,10 +261,7 @@ const Index = () => {
                                             Date
                                         </TableHead>
                                         <TableHead className="font-semibold">
-                                            Début
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Fin
+                                            Horaire
                                         </TableHead>
                                         <TableHead className="font-semibold">
                                             Cours
@@ -574,21 +283,18 @@ const Index = () => {
                                 <TableBody>
                                     {seances?.data.map((seance) => (
                                         <TableRow key={seance.id}>
-                                            <TableCell >
-                                                {seance.jours}
+                                            <TableCell>
+                                                {seance.jour}
                                             </TableCell>
-                                            <TableCell >
+                                            <TableCell>
                                                 {new Date(
                                                     seance.date,
                                                 ).toLocaleDateString('fr-FR')}
                                             </TableCell>
-                                            <TableCell >
-                                                {seance.heure_debut}
+                                            <TableCell>
+                                                {seance.horaire?.heure_debut} - {seance.horaire?.heure_fin}
                                             </TableCell>
-                                            <TableCell >
-                                                {seance.heure_fin}
-                                            </TableCell>
-                                            <TableCell >
+                                            <TableCell>
                                                 {seance.cours?.nom}
                                             </TableCell>
                                             <TableCell>
@@ -598,7 +304,7 @@ const Index = () => {
                                             <TableCell>
                                                 {seance.salle?.nom}
                                             </TableCell>
-                                            <TableCell >
+                                            <TableCell>
                                                 {seance.niveau?.nom}
                                             </TableCell>
                                             <TableCell className="flex gap-2">
@@ -628,7 +334,7 @@ const Index = () => {
                             </Table>
                         </CardContent>
 
-                        <PaginationLinks links={seances.meta.links} />
+                
                     </Card>
                 </div>
             </AppLayout>

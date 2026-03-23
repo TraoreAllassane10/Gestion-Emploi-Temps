@@ -24,7 +24,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { Progress } from '@/components/ui/progress';
 import {
     Select,
     SelectContent,
@@ -42,11 +41,9 @@ import {
 } from '@/components/ui/table';
 
 import Avatar from '@/components/etudiant/Avatar';
-import StatCardsInscription from '@/components/inscription/StatCardsInscription';
-import { Annee, DataNiveau, Inscription } from '@/types';
-import { fmt } from '@/utils/util';
 import ProgressFinanciere from '@/components/inscription/ProgressFinancier';
-
+import StatCardsInscription from '@/components/inscription/StatCardsInscription';
+import { Annee, Auth, DataNiveau, Inscription, User } from '@/types';
 
 interface InscriptionProps {
     annees: Annee[];
@@ -56,13 +53,15 @@ interface InscriptionProps {
         total_inscription: number;
         total_inscription_annee: number;
     };
-
+    auth: Auth;
     [key: string]: unknown;
 }
 
 export default function Index() {
-    const { annees, niveaux, inscriptions, stats } =
+    const { annees, niveaux, inscriptions, stats, auth } =
         usePage<InscriptionProps>().props;
+
+    const isAdmin = auth.user?.roles?.some((role) => role.name == 'Administrateur');
 
     const [search, setSearch] = useState('');
     const [filtreAnnee, setFiltreAnnee] = useState('all');
@@ -125,7 +124,7 @@ export default function Index() {
                     </Link>
                 </div>
 
-                <StatCardsInscription stats={stats} />
+                <StatCardsInscription stats={stats} isAdmin={isAdmin} />
 
                 {/* Filtres */}
                 <Card className="shadow-sm">
@@ -226,7 +225,9 @@ export default function Index() {
                                 <TableHead>Niveau</TableHead>
                                 <TableHead>Type</TableHead>
                                 <TableHead>Statut</TableHead>
-                                <TableHead>Situation financière</TableHead>
+                                {isAdmin && (
+                                    <TableHead>Situation financière</TableHead>
+                                )}
                                 <TableHead className="w-[100px]" />
                             </TableRow>
                         </TableHeader>
@@ -312,12 +313,16 @@ export default function Index() {
                                             </span>
                                         </TableCell>
 
-                                        <TableCell>
-                                            <ProgressFinanciere
-                                                paye={Number(ins.total_paiements)}
-                                                total={ins.montant_total}
-                                            />
-                                        </TableCell>
+                                        {isAdmin && (
+                                            <TableCell>
+                                                <ProgressFinanciere
+                                                    paye={Number(
+                                                        ins.total_paiements,
+                                                    )}
+                                                    total={ins.montant_total}
+                                                />
+                                            </TableCell>
+                                        )}
 
                                         <TableCell>
                                             <DropdownMenu>

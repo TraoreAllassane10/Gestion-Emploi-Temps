@@ -108,6 +108,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //Routes seance
     Route::controller(SeanceController::class)->group(function () {
         Route::get("seance", "index")->name("seance");
+        Route::get("seance/create", "create")->name("seance.create");
         Route::post("seance", "store")->name("seance.store");
         Route::get("seance/{seance}/edit", "edit")->name("seance.edit");
         Route::put("seance/{seance}/update", "update")->name("seance.update");
@@ -156,7 +157,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Routes Paiement
-    Route::controller(PaiementController::class)->group(function () {
+    Route::middleware("administrateur")->controller(PaiementController::class)->group(function () {
         Route::post("/inscriptions/{inscription}/paiement", "store")->name("paiements.store");
         Route::get('/paiements/{paiement}/recu', "recu")->name('paiements.recu');
     });
