@@ -10,24 +10,19 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, etudiants, niveau, professeur, seance } from '@/routes';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { dashboard, niveau, professeur, seance } from '@/routes';
+import { Auth, User, type NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
 import {
-    Building2,
-    Calendar1,
     CalendarDays,
     ClipboardList,
     GraduationCap,
     LayoutDashboard,
-    LayoutGrid,
     Settings2,
-    User2,
     UserCog,
     Users,
 } from 'lucide-react';
 import AppLogo from './app-logo';
-
 
 const mainNavItems: NavItem[] = [
     {
@@ -37,12 +32,12 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Etudiant',
-        href: "/etudiants",
+        href: '/etudiants',
         icon: Users,
     },
     {
         title: 'Inscriptions',
-        href: "/inscriptions",
+        href: '/inscriptions',
         icon: ClipboardList,
     },
 
@@ -51,7 +46,7 @@ const mainNavItems: NavItem[] = [
         href: niveau(),
         icon: GraduationCap,
     },
-        {
+    {
         title: 'Professeurs',
         href: professeur(),
         icon: UserCog,
@@ -71,6 +66,12 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage<{ auth: Auth }>().props;
+
+    const isAuthorize = auth.user?.roles?.some(
+        (role) => role.name == 'Administrateur',
+    );
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -90,7 +91,10 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+                {isAuthorize && (
+                    <NavFooter items={footerNavItems} className="mt-auto" />
+                )}
+
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

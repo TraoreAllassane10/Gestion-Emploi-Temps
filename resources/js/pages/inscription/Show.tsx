@@ -1,6 +1,13 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { ArrowLeft, BarChart2, Download, User, Wallet } from 'lucide-react';
+import {
+    ArrowLeft,
+    BarChart2,
+    Download,
+    Lock,
+    User,
+    Wallet,
+} from 'lucide-react';
 import { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -13,7 +20,8 @@ import StatutInscriptionBadge from '@/components/inscription/StatutInscriptionBa
 import TabFinancier from '@/components/inscription/TabFinancier';
 import TabGeneral from '@/components/inscription/TabGeneral';
 import TabResultats from '@/components/inscription/TabResultats';
-import { Inscription } from '@/types';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Auth, Inscription } from '@/types';
 
 type Tab = 'general' | 'financier' | 'resultats';
 
@@ -28,10 +36,16 @@ const TABS: {
 ];
 
 export default function Show() {
-    const { inscription } = usePage<{ inscription: Inscription }>().props;
+    const { inscription, auth } = usePage<{
+        inscription: Inscription;
+        auth: Auth;
+    }>().props;
 
     const [activeTab, setActiveTab] = useState<Tab>('general');
 
+    const isAdmin = auth.user?.roles?.some((role) => role.name == 'Administrateur');
+
+    // Calcule Progression
     const progression =
         inscription.montant_total > 0
             ? Math.round(
@@ -94,20 +108,22 @@ export default function Show() {
                             </div>
 
                             {/* Mini progression */}
-                            <div className="shrink-0 sm:text-right">
-                                <p className="mb-1 text-xs text-muted-foreground">
-                                    Recouvrement
-                                </p>
-                                <p
-                                    className={`text-lg font-bold tabular-nums ${progression >= 100 ? 'text-emerald-600' : 'text-primary'}`}
-                                >
-                                    {progression}%
-                                </p>
-                                <Progress
-                                    value={progression}
-                                    className="mt-1 h-1.5 w-24"
-                                />
-                            </div>
+                            {isAdmin && (
+                                <div className="shrink-0 sm:text-right">
+                                    <p className="mb-1 text-xs text-muted-foreground">
+                                        Recouvrement
+                                    </p>
+                                    <p
+                                        className={`text-lg font-bold tabular-nums ${progression >= 100 ? 'text-emerald-600' : 'text-primary'}`}
+                                    >
+                                        {progression}%
+                                    </p>
+                                    <Progress
+                                        value={progression}
+                                        className="mt-1 h-1.5 w-24"
+                                    />
+                                </div>
+                            )}
 
                             {/* Actions */}
                             <div className="flex shrink-0 gap-2">
@@ -147,9 +163,18 @@ export default function Show() {
                     {activeTab === 'general' && (
                         <TabGeneral ins={inscription} />
                     )}
-                    {activeTab === 'financier' && (
-                        <TabFinancier ins={inscription} />
-                    )}
+                    {activeTab === 'financier' &&
+                        (isAdmin ? (
+                            <TabFinancier ins={inscription} />
+                        ) : (
+                            <Alert>
+                                <Lock className="h-8 w-8" />
+                                <AlertDescription className="text-md">
+                                    Desolé ! Vous n'êtes pas authoriser à
+                                    acceder à cette fonctionnalité
+                                </AlertDescription>
+                            </Alert>
+                        ))}
                     {activeTab === 'resultats' && (
                         <TabResultats ins={inscription} />
                     )}

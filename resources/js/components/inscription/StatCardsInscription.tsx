@@ -1,8 +1,8 @@
+import { fmt } from '@/utils/util';
 import { Banknote, GraduationCap, LucidePiggyBank } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
-import { fmt } from '@/utils/util';
 
-export default function StatCardsInscription({ stats }: any) {
+export default function StatCardsInscription({ stats, isAdmin }: any) {
     return (
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
             {[
