@@ -7,9 +7,15 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import useSeance from '@/hooks/useSeance';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
+import {
+    BreadcrumbItem,
+    DataNiveau,
+    Horaire,
+    Meta,
+    Professeur,
+    Salle,
+} from '@/types';
 import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -33,19 +39,8 @@ interface Data {
     professeur: Professeur;
     cours: Cours;
     salle: Salle;
-    niveau: Niveau;
-}
-
-interface Meta {
-    current_page: number;
-    from: number;
-    last_page: number;
-    links: {
-        active: boolean;
-        label: string;
-        page: number;
-        url: string;
-    }[];
+    niveau: DataNiveau;
+    horaire: Horaire;
 }
 
 interface Seance {
@@ -53,24 +48,7 @@ interface Seance {
     meta: Meta;
 }
 
-// Type des données du professeur
-interface Professeur {
-    id: number;
-    nom: string;
-    prenom: string;
-}
-
 interface Cours {
-    id: number;
-    nom: string;
-}
-
-interface Salle {
-    id: number;
-    nom: string;
-}
-
-interface Niveau {
     id: number;
     nom: string;
 }
@@ -87,65 +65,19 @@ interface SeanceProps {
         data: Salle[];
     };
     niveaux: {
-        data: Niveau[];
+        data: DataNiveau[];
     };
     [key: string]: unknown;
 }
 
 const EmploiDuTemps = () => {
-    const { seances, professeurs, salles } = usePage<SeanceProps>().props;
+    const { seances } = usePage<SeanceProps>().props;
 
     //Les states pour la recherche et le filtrage
     const [rechercheProfesseur, setRechercheProfesseur] = useState('');
 
     const [rechercheSalle, setRechercheSalle] = useState('');
     const [rechercheDate, setRechercheDate] = useState('');
-
-    const { deleteSeance } = useSeance();
-
-    // const handleSubmit = () => {
-    // Verification des données
-    // if (
-    //     jours == '' ||
-    //     date == '' ||
-    //     heure_debut == '' ||
-    //     heure_fin == '' ||
-    //     professeur_id == '' ||
-    //     cours_id == '' ||
-    //     salle_id == '' ||
-    //     niveau_id == ''
-    // ) {
-    //     toast.error('Veuillez remplir tous les champs!');
-    //     return;
-    // }
-
-    // // Création d'une seance
-    // createSeance({
-    //     jours,
-    //     date,
-    //     heure_debut,
-    //     heure_fin,
-    //     professeur_id,
-    //     cours_id,
-    //     niveau_id,
-    //     salle_id,
-    // });
-
-    // Nettoyage de l'etat
-    // setJours('');
-    // setDate('');
-    // setHeureDebut('');
-    // setHeureFin('');
-    // setProfesseurId('');
-    // setCoursId('');
-    // setSalleId('');
-    // setNiveauId('');
-    // };
-
-    // Suppression d'une
-    const handleDelete = (id: number) => {
-        if (id) deleteSeance(id);
-    };
 
     // Recherche et filtrage
     const handleSearch = () => {
@@ -177,266 +109,191 @@ const EmploiDuTemps = () => {
         window.open(url);
     };
 
+    // const seancesTriee = seances.data.sort((a, b) => a.horaire.index_order - a.horaire.index_order);
+
     return (
         <div>
             <AppLayout breadcrumbs={breadcrumbs}>
                 <div className="p-4">
-                    {/* Entete et le bouton d'ajout */}
-                    {/* <div className="my-2 flex place-items-center justify-between">
-                        <h1 className="text-2xl font-bold">
-                            Emploi du temps : {seances.data[0]?.niveau.nom}
-                        </h1>
-                    </div> */}
-
-                    {/* Recherche et Filtrage */}
-                    {/* <Card className="mb-4">
-                        <div className="flex place-items-center justify-between px-4">
-                            <div className="flex place-items-center gap-4">
-                                <div>
-                                    <Label className="text-gray-500">
-                                        Salle
-                                    </Label>
-                                    <NativeSelect
-                                        className="w-full"
-                                        value={rechercheSalle}
-                                        onChange={(e) =>
-                                            setRechercheSalle(e.target.value)
-                                        }
-                                    >
-                                        <NativeSelectOption value="">
-                                            {' '}
-                                        </NativeSelectOption>
-
-                                        {salles.data.map((salle) => (
-                                            <NativeSelectOption
-                                                value={salle.id}
-                                                key={salle.id}
-                                            >
-                                                {salle.nom}
-                                            </NativeSelectOption>
-                                        ))}
-                                    </NativeSelect>
-                                </div>
-
-                                <div>
-                                    <Label className="text-gray-500">
-                                        Professeur
-                                    </Label>
-                                    <NativeSelect
-                                        className="w-full"
-                                        value={rechercheProfesseur}
-                                        onChange={(e) =>
-                                            setRechercheProfesseur(
-                                                e.target.value,
-                                            )
-                                        }
-                                    >
-                                        <NativeSelectOption value="">
-                                            {' '}
-                                        </NativeSelectOption>
-
-                                        {professeurs.data.map((professeur) => (
-                                            <NativeSelectOption
-                                                value={professeur.id}
-                                                key={professeur.id}
-                                            >
-                                                {professeur.nom}{' '}
-                                                {professeur.prenom}
-                                            </NativeSelectOption>
-                                        ))}
-                                    </NativeSelect>
-                                </div>
-
-                                <div>
-                                    <Label>Date</Label>
-                                    <Input
-                                        type="date"
-                                        value={rechercheDate}
-                                        onChange={(e) =>
-                                            setRechercheDate(e.target.value)
-                                        }
-                                    />
-                                </div>
-
-                                <button
-                                    onClick={handleSearch}
-                                    className="mt-6 cursor-pointer rounded-md bg-blue-500 p-2 text-white hover:bg-blue-500/80"
-                                >
-                                    <Search size={16} />
-                                </button>
-                            </div>
-
-                            <div>
-                                <button
-                                    onClick={exportPDF}
-                                    className="flex cursor-pointer items-center gap-2 rounded bg-green-500 p-2 text-sm text-white hover:bg-green-500/90"
-                                >
-                                    <Printer size={16} /> Imprimer
-                                </button>
-                            </div>
-                        </div>
-                    </Card> */}
-
-                    {/* Affichage des données */}
-                    {/* <Card>
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="bg-muted/60">
-                                        <TableHead className="font-semibold">
-                                            Jour
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Date
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Début
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Fin
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Cours
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Professeur
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Salle
-                                        </TableHead>
-                                        <TableHead className="font-semibold">
-                                            Niveau
-                                        </TableHead>
-                                        <TableHead className="text-center font-semibold">
-                                            Actions
-                                        </TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {seances?.data.map((seance) => (
-                                        <TableRow key={seance.id}>
-                                            <TableCell>
-                                                {seance.jours}
-                                            </TableCell>
-                                            <TableCell>
-                                                {new Date(
-                                                    seance.date,
-                                                ).toLocaleDateString('fr-FR')}
-                                            </TableCell>
-                                            <TableCell>
-                                                {seance.heure_debut}
-                                            </TableCell>
-                                            <TableCell>
-                                                {seance.heure_fin}
-                                            </TableCell>
-                                            <TableCell>
-                                                {seance.cours?.nom}
-                                            </TableCell>
-                                            <TableCell>
-                                                {seance.professeur?.nom}{' '}
-                                                {seance.professeur?.prenom}
-                                            </TableCell>
-                                            <TableCell>
-                                                {seance.salle?.nom}
-                                            </TableCell>
-                                            <TableCell>
-                                                {seance.niveau?.nom}
-                                            </TableCell>
-                                            <TableCell className="flex gap-2">
-                                                <Link
-                                                    href={`/seance/${seance.id}/edit`}
-                                                >
-                                                    <Edit
-                                                        size={20}
-                                                        className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                                    />
-                                                </Link>
-
-                                                <Link
-                                                    onClick={() =>
-                                                        handleDelete(seance.id)
-                                                    }
-                                                >
-                                                    <Trash
-                                                        size={20}
-                                                        className="cursor-pointer text-red-600 hover:text-red-800"
-                                                    />
-                                                </Link>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-
-                        <PaginationLinks links={seances?.meta.links} />
-                    </Card> */}
-
                     <Card>
                         <CardContent>
                             <Table>
                                 <TableHeader>
                                     <TableRow className="bg-muted/60">
-                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
                                             Horaires
                                         </TableHead>
-                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
                                             Lundi
                                         </TableHead>
-                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
                                             Mardi
                                         </TableHead>
-                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
                                             Mercredi
                                         </TableHead>
-                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
                                             Jeudi
                                         </TableHead>
-                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
                                             Vendredi
                                         </TableHead>
-                                        <TableHead className="font-semibold border-2 border-gray-500">
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
                                             Samedi
                                         </TableHead>
-                                  
-                                        <TableHead className="text-center font-semibold border-2 border-gray-500">
+
+                                        <TableHead className="border-2 border-gray-500 text-center font-semibold">
                                             Dimanche
                                         </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     <TableRow>
-                                        <TableCell className='border-2 border-gray-500'>7h30-9h30</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Merise</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Architecture</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Langage Php</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Anglais</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Maths</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>UML</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Negociation informatique</TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            7h30-9h30
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Merise
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Architecture
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Langage Php
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Anglais
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Maths
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            UML
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Negociation informatique
+                                        </TableCell>
                                     </TableRow>
 
-                                      <TableRow>
-                                        <TableCell className='border-2 border-gray-500'>9h45-11h45</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Merise</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Architecture</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Langage Php</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Anglais</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Maths</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>UML</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Negociation informatique</TableCell>
+                                    <TableRow>
+                                        <TableCell className="border-2 border-gray-500">
+                                            9h45-11h45
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Merise
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Architecture
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Langage Php
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Anglais
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Maths
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            UML
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Negociation informatique
+                                        </TableCell>
                                     </TableRow>
 
-                                      <TableRow>
-                                        <TableCell className='border-2 border-gray-500'>11h45-13h30</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Merise</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Architecture</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Langage Php</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Anglais</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Maths</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>UML</TableCell>
-                                        <TableCell className='border-2 border-gray-500'>Negociation informatique</TableCell>
+                                    <TableRow>
+                                        <TableCell className="border-2 border-gray-500">
+                                            11h45-13h30
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Merise
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Architecture
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Langage Php
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Anglais
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Maths
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            UML
+                                        </TableCell>
+                                        <TableCell className="border-2 border-gray-500">
+                                            Negociation informatique
+                                        </TableCell>
                                     </TableRow>
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className="bg-muted/60">
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
+                                            Horaires
+                                        </TableHead>
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
+                                            Lundi
+                                        </TableHead>
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
+                                            Mardi
+                                        </TableHead>
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
+                                            Mercredi
+                                        </TableHead>
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
+                                            Jeudi
+                                        </TableHead>
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
+                                            Vendredi
+                                        </TableHead>
+                                        <TableHead className="border-2 border-gray-500 font-semibold">
+                                            Samedi
+                                        </TableHead>
+
+                                        <TableHead className="border-2 border-gray-500 text-center font-semibold">
+                                            Dimanche
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {seances.data.map((seance) => (
+                                        <TableRow key={seance.id}>
+                                            <TableCell className="border-2 border-gray-500">
+                                                {seance.horaire.heure_debut} - {seance.horaire.heure_fin}
+                                            </TableCell>
+                                            <TableCell className="border-2 border-gray-500">
+                                                {seance.cours.nom}
+                                            </TableCell>
+                                            <TableCell className="border-2 border-gray-500">
+                                                Architecture
+                                            </TableCell>
+                                            <TableCell className="border-2 border-gray-500">
+                                                Langage Php
+                                            </TableCell>
+                                            <TableCell className="border-2 border-gray-500">
+                                                Anglais
+                                            </TableCell>
+                                            <TableCell className="border-2 border-gray-500">
+                                                Maths
+                                            </TableCell>
+                                            <TableCell className="border-2 border-gray-500">
+                                                UML
+                                            </TableCell>
+                                            <TableCell className="border-2 border-gray-500">
+                                                Negociation informatique
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
                                 </TableBody>
                             </Table>
                         </CardContent>

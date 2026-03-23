@@ -5,19 +5,21 @@ namespace App\Http\Controllers\Administrateur;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Annee\CreateAnneeScolaireRequest;
 use App\Http\Requests\Annee\UpdateAnneeScolaireRequest;
-use App\Http\Resources\AnneeScolaireResource;
 use App\Models\AnneeUniversitaire;
+use App\Services\AnneeAcademiqueService;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class AnneeAcademiqueController extends Controller
 {
+    public function __construct(
+        protected AnneeAcademiqueService $anneeAcademiqueService
+    ) {}
     public function index()
     {
         try {
-            $annees = AnneeScolaireResource::collection(AnneeUniversitaire::orderByDesc("date_fin")->paginate(10));
+            $annees = $this->anneeAcademiqueService->all();
 
             return Inertia::render("annee/Index", [
                 "annees" => $annees
@@ -34,11 +36,7 @@ class AnneeAcademiqueController extends Controller
             $data = $request->validated();
 
             //Creation d'une année scolaire
-            AnneeUniversitaire::create([
-                "libelle" => $data["libelle"],
-                "date_debut" => Carbon::parse($data["date_debut"])->format('Y-m-d'),
-                "date_fin" => Carbon::parse($data["date_fin"])->format('Y-m-d'),
-            ]);
+            $this->anneeAcademiqueService->create($data);
 
             return response()->json(["success" => "true"]);
         } catch (Exception $e) {
@@ -65,11 +63,7 @@ class AnneeAcademiqueController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            $annee->update([
-                "libelle" => $data["libelle"],
-                "date_debut" => Carbon::parse($data["date_debut"])->format('Y-m-d'),
-                "date_fin" => Carbon::parse($data["date_fin"])->format('Y-m-d'),
-            ]);
+            $this->anneeAcademiqueService->update($annee, $data);
 
             return response()->json(["success" => "true"]);
         } catch (Exception $e) {
@@ -81,7 +75,7 @@ class AnneeAcademiqueController extends Controller
     {
         try {
             //Suppression d'une année scolaire
-            $annee->delete();
+            $this->anneeAcademiqueService->delete($annee);
 
             return response()->json(["success" => "true"]);
         } catch (Exception $e) {
@@ -92,12 +86,12 @@ class AnneeAcademiqueController extends Controller
     public function editAnneeActive(AnneeUniversitaire $annee)
     {
         try {
-            $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
-            $touteLesAnnees = AnneeUniversitaire::orderByDesc("date_fin")->get();
+
+            $data = $this->anneeAcademiqueService->editAnneeActive();
 
             return Inertia::render("annee/AnneeAcademiqueActive", [
-                "anneeActive" => $anneeActive,
-                "annees" => $touteLesAnnees
+                "anneeActive" => $data[0],
+                "annees" => $data[1]
             ]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
@@ -107,16 +101,7 @@ class AnneeAcademiqueController extends Controller
     public function changeAnneeActive(string $id)
     {
         try {
-            DB::transaction(function () use ($id) {
-                // Desactive l'annee actuelle active
-                $anneeActuellementActive = AnneeUniversitaire::where("estActive", 1)->first();
-                $anneeActuellementActive->estActive = 0;
-                $anneeActuellementActive->save();
-
-                $annee = AnneeUniversitaire::find($id);
-                $annee->estActive = 1;
-                $annee->save();
-            });
+            $this->anneeAcademiqueService->changeAnneeActive($id);
 
             return response()->json([
                 "success" => true,

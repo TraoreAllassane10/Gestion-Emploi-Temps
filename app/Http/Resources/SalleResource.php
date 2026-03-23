@@ -17,7 +17,7 @@ class SalleResource extends JsonResource
         return [
             "id" => $this->id,
             "nom" => $this->nom,
-            "site" => $this->whenExistsLoaded("site")
+            "site" => $this->whenLoaded('site')
         ];
     }
 }
