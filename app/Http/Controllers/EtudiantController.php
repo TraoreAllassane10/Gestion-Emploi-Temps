@@ -8,21 +8,24 @@ use App\Http\Requests\etudiant\UpdateEtudiantRequest;
 use Exception;
 use Inertia\Inertia;
 use App\Models\Etudiant;
-use App\Http\Resources\EtudiantRessource;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\EtudiantService;
 
 class EtudiantController extends Controller
 {
+    public function __construct(
+        protected EtudiantService $etudiantService
+    ) {}
+
     public function index()
     {
         try {
-            $etudiants = EtudiantRessource::collection(Etudiant::latest()->get());
+            $etudiants = $this->etudiantService->all();
 
             $total = Etudiant::count();
-            $affecte = Etudiant::where("statut", StatutEtudiant::AFFECTE->value)->count();
-            $naff = Etudiant::where("statut", StatutEtudiant::NAFF->value)->count();
-            $reaffecte = Etudiant::where("statut", StatutEtudiant::REAFFECTE->value)->count();
-            $transfert = Etudiant::where("statut", StatutEtudiant::TRANSFERT->value)->count();
+            $affecte = $this->etudiantService->totalEtudiantParStatut(StatutEtudiant::AFFECTE->value);
+            $naff = $this->etudiantService->totalEtudiantParStatut(StatutEtudiant::NAFF->value);
+            $reaffecte = $this->etudiantService->totalEtudiantParStatut(StatutEtudiant::REAFFECTE->value);
+            $transfert = $this->etudiantService->totalEtudiantParStatut(StatutEtudiant::TRANSFERT->value);
 
             return Inertia::render("etudiant/Index", [
                 "etudiants" => $etudiants,
@@ -58,35 +61,7 @@ class EtudiantController extends Controller
             $data = $request->validated();
 
             //Creation d'un etudiant
-            $etudiants = Etudiant::create([
-                "ip" => $data['ip'],
-                "civilite" => $data['civilite'],
-                "genre" => $data['genre'],
-                "nom" => $data['nom'],
-                "prenom" => $data['prenom'],
-                "date_naissance" => $data['date_naissance'],
-                "lieu_naissance" => $data['lieu_naissance'],
-                "nationnalite" => $data['nationnalite'],
-                "statut" => $data['statut'],
-
-                "email" => $data['email'] ?? null,
-                "contacts" => $data['contacts'] ?? null,
-                "pays_residence" => $data['pays_residence'] ?? null,
-                "etablissement_origine" => $data['etablissement_origine'] ?? null,
-                "annee_obtention_bac" => $data['annee_obtention_bac'] ?? null,
-                "serie_bac" => $data['serie_bac'] ?? null,
-                "numero_table_bac" => $data['numero_table_bac'] ?? null,
-                "nature_piece" => $data['nature_piece'] ?? null,
-                "numero_piece" => $data['numero_piece'] ?? null,
-                "adresse_geographique" => $data['adresse_geographique'] ?? null,
-                "matricule_secondaire" => $data['matricule_secondaire'] ?? null,
-                "type_responsable" => $data['type_responsable'] ?? null,
-                "nom_responsable" => $data['nom_responsable'] ?? null,
-                "numero_responsable" => $data['numero_responsable'] ?? null,
-                "profession_responsable" => $data['profession_responsable'] ?? null,
-
-
-            ]);
+            $this->etudiantService->create($data);
 
             return response()->json(["success" => "true"]);
         } catch (Exception $e) {
@@ -108,35 +83,11 @@ class EtudiantController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            $etudiant = Etudiant::find($etudiant);
+            // Recuperation de l'etudiant à modifier
+            $etudiant = $this->etudiantService->find($etudiant);
 
-            $etudiantUpdated = $etudiant->update([
-                "ip" => $data['ip'],
-                "civilite" => $data['civilite'],
-                "genre" => $data['genre'],
-                "nom" => $data['nom'],
-                "prenom" => $data['prenom'],
-                "date_naissance" => $data['date_naissance'],
-                "lieu_naissance" => $data['lieu_naissance'],
-                "nationnalite" => $data['nationnalite'],
-                "statut" => $data['statut'],
-
-                "email" => $data['email'] ?? null,
-                "contacts" => $data['contacts'] ?? null,
-                "pays_residence" => $data['pays_residence'] ?? null,
-                "etablissement_origine" => $data['etablissement_origine'] ?? null,
-                "annee_obtention_bac" => $data['annee_obtention_bac'] ?? null,
-                "serie_bac" => $data['serie_bac'] ?? null,
-                "numero_table_bac" => $data['numero_table_bac'] ?? null,
-                "nature_piece" => $data['nature_piece'] ?? null,
-                "numero_piece" => $data['numero_piece'] ?? null,
-                "adresse_geographique" => $data['adresse_geographique'] ?? null,
-                "matricule_secondaire" => $data['matricule_secondaire'] ?? null,
-                "type_responsable" => $data['type_responsable'] ?? null,
-                "nom_responsable" => $data['nom_responsable'] ?? null,
-                "numero_responsable" => $data['numero_responsable'] ?? null,
-                "profession_responsable" => $data['profession_responsable'] ?? null,
-            ]);
+            // Modification de l'etudiant
+            $this->etudiantService->update($etudiant, $data);
 
             return response()->json(["success" => "true"]);
         } catch (Exception $e) {
@@ -148,7 +99,7 @@ class EtudiantController extends Controller
     {
         try {
             //Suppression d'une filiere
-            $etudiant->delete();
+            $this->etudiantService->delete($etudiant);
 
             return response()->json(["success" => "true"]);
         } catch (Exception $e) {
@@ -158,11 +109,6 @@ class EtudiantController extends Controller
 
     public function getFicheIndentification(string $etudiant)
     {
-        $etudiantData = Etudiant::where("ip", $etudiant)->first()->toArray();
-        $pdf = Pdf::loadView("pdf.fiche_etudiant", [
-            "etudiant" => $etudiantData
-        ]);
-
-        return $pdf->stream("fiche_identification.pdf");
+       return $this->etudiantService->ficheIdentification($etudiant);
     }
 }

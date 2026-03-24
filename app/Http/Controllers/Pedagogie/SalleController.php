@@ -17,7 +17,7 @@ class SalleController extends Controller
     {
         try {
             $sites = Site::all();
-            $salles = SalleResource::collection(Salle::latest()->paginate(10));
+            $salles = SalleResource::collection(Salle::with("site")->latest()->paginate(10));
 
             return Inertia::render("salle/Index", [
                 "sites" => $sites,

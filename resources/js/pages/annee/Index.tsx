@@ -228,9 +228,6 @@ const Index = () => {
                                         ))}
                                     </TableBody>
                                 </Table>
-
-                                {/* Systeme de pagination */}
-                                <PaginationLinks links={annees.meta.links} />
                             </CardContent>
                         </Card>
                     </div>
