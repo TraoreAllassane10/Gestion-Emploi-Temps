@@ -39,7 +39,7 @@ class AnneeAcademiqueController extends Controller
             //Creation d'une année scolaire
             $this->anneeAcademiqueService->create($data);
 
-            return response()->json(["success" => "true"]);
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -66,7 +66,7 @@ class AnneeAcademiqueController extends Controller
 
             $this->anneeAcademiqueService->update($annee, $data);
 
-            return response()->json(["success" => "true"]);
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -78,7 +78,7 @@ class AnneeAcademiqueController extends Controller
             //Suppression d'une année scolaire
             $this->anneeAcademiqueService->delete($annee);
 
-            return response()->json(["success" => "true"]);
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }

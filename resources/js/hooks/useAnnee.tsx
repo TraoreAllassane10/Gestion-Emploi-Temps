@@ -64,6 +64,9 @@ export default function useAnnee() {
                 .then((response) => {
                     if (response.data.success) {
                         toast.success('Année scolaire supprimée !');
+
+                          // Redirection sur la page d'affiche
+                        router.visit('/annee');
                     }
                 })
                 .catch((error) => {
