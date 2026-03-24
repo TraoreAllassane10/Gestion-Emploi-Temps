@@ -24,6 +24,11 @@ class EtudiantService
         return $this->etudiantRepository->find($etudiant);
     }
 
+    public function findByIp(string $ip)
+    {
+        return $this->etudiantRepository->findByIp($ip);
+    }
+
     public function create(array $data)
     {
         return $this->etudiantRepository->create($data);
@@ -49,11 +54,13 @@ class EtudiantService
         return $pdf->stream("fiche_identification.pdf");
     }
 
-    public function totalEtudiant() {
+    public function totalEtudiant()
+    {
         return $this->etudiantRepository->totalEtudiant();
     }
 
-    public function totalEtudiantParStatut(string $statut) {
+    public function totalEtudiantParStatut(string $statut)
+    {
         return $this->etudiantRepository->totalEtudiantParStatut($statut);
     }
 }

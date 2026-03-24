@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrateur;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Annee\CreateAnneeScolaireRequest;
 use App\Http\Requests\Annee\UpdateAnneeScolaireRequest;
+use App\Http\Resources\AnneeScolaireResource;
 use App\Models\AnneeUniversitaire;
 use App\Services\AnneeAcademiqueService;
 use Carbon\Carbon;
@@ -19,7 +20,7 @@ class AnneeAcademiqueController extends Controller
     public function index()
     {
         try {
-            $annees = $this->anneeAcademiqueService->all();
+            $annees = AnneeScolaireResource::collection($this->anneeAcademiqueService->all());
 
             return Inertia::render("annee/Index", [
                 "annees" => $annees

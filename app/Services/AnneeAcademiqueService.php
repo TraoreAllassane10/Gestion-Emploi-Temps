@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Resources\AnneeScolaireResource;
 use App\Models\AnneeUniversitaire;
 use App\Repositories\AnneeAcademiqueRepository;
 
@@ -15,8 +14,7 @@ class AnneeAcademiqueService
 
     public function all()
     {
-        $annees = $this->anneeAcademiqueRepository->all();
-        return AnneeScolaireResource::collection($annees);
+        return $this->anneeAcademiqueRepository->all(); 
     }
 
     public function find(string $id)
@@ -38,6 +36,10 @@ class AnneeAcademiqueService
     public function delete(AnneeUniversitaire $annee)
     {
         return $this->anneeAcademiqueRepository->delete($annee);
+    }
+
+    public function getAnneeActive() {
+        return $this->anneeAcademiqueRepository->anneeActive();
     }
 
     public function editAnneeActive()

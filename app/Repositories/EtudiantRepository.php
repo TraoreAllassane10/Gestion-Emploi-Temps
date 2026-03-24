@@ -16,6 +16,10 @@ class EtudiantRepository
         return Etudiant::find($etudiant);
     }
 
+    public function findByIp(string $ip) {
+        return Etudiant::where("ip", $ip)->first();
+    }
+
     public function create(array $data)
     {
         return Etudiant::create([

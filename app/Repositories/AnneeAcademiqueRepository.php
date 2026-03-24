@@ -34,4 +34,8 @@ class AnneeAcademiqueRepository
     {
         return $annee->delete();
     }
+
+    public function anneeActive() {
+        return AnneeUniversitaire::where("estActive", 1)->first();
+    }
 }
