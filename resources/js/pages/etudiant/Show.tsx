@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { Etudiant } from '@/types';
+import { fmt } from '@/utils/util';
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowLeft,
@@ -24,10 +25,6 @@ import {
     Users,
 } from 'lucide-react';
 import { useState } from 'react';
-import {
-    INSCRIPTIONS,
-} from '../inscription/data/mock';
-import { fmt } from '@/utils/util';
 
 type Tab = 'profil' | 'academique' | 'contact' | 'responsable' | 'inscriptions';
 
@@ -45,7 +42,7 @@ const TABS: {
 
 export default function Show() {
     const { etudiant } = usePage<{ etudiant: Etudiant }>().props;
-    const MOCK_IP = 'ETU-2024-001'
+    const MOCK_IP = 'ETU-2024-001';
 
     const [activeTab, setActiveTab] = useState<Tab>('profil');
 
@@ -76,8 +73,8 @@ export default function Show() {
                             <div
                                 className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full text-xl font-bold ${etudiant.genre === 'Féminin' ? 'bg-pink-100 text-pink-700' : 'bg-blue-100 text-blue-700'} `}
                             >
-                                {etudiant.prenom[0]}
                                 {etudiant.nom[0]}
+                                {etudiant.prenom[0]}
                             </div>
 
                             {/* Infos principales */}
@@ -205,7 +202,7 @@ export default function Show() {
                                 </AlertDescription>
                             </Alert>
                         ) : (
-                            etudiant.inscriptions.map((ins) => {          
+                            etudiant.inscriptions.map((ins) => {
                                 return (
                                     <Card key={ins.id} className="shadow-sm">
                                         <CardContent className="p-4">
@@ -215,18 +212,18 @@ export default function Show() {
                                                         <span className="text-sm font-semibold">
                                                             {ins.annee.libelle}
                                                         </span>
-                                                       {
-                                                         ins.niveaux.map((niveau) => (
-                                                             <Badge
-                                                            variant="secondary"
-                                                            className="font-bold"
-                                                        >
-                                                            {niveau.nom}
-                                                        </Badge>
-                                                         ))
-                                                       }
+                                                        {ins.niveaux.map(
+                                                            (niveau) => (
+                                                                <Badge
+                                                                    variant="secondary"
+                                                                    className="font-bold"
+                                                                >
+                                                                    {niveau.nom}
+                                                                </Badge>
+                                                            ),
+                                                        )}
                                                         <span
-                                                            className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold `}
+                                                            className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold`}
                                                         >
                                                             <span
                                                                 className={`h-1.5 w-1.5 rounded-full`}
