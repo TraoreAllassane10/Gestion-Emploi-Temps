@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\ScolariteType;
 use App\Enums\StatutEtudiant;
+use App\Enums\StatutInscription;
 use App\Models\FraisConfiguration;
 use App\Models\Inscription;
 use App\Models\Niveau;
@@ -89,7 +90,7 @@ class InscriptionService
 
             // Liste des scolarite en foction des niveaux choisit
             $scolarites = Scolarite::whereIn("niveau_id", $data['niveaux'])
-                ->where("type", $typeScolarite)
+                ->whereIn("type", [$typeScolarite, ScolariteType::LICENCE->value])
                 ->get();
 
 
@@ -115,8 +116,17 @@ class InscriptionService
 
             if ($inscription) {
                 $inscription->niveaux()->attach($data['niveaux']);
-                return $inscription;
+
+                return response()->json([
+                    "success" => true,
+                    "message" => "Inscription éffectuée avec succès"
+                ]);
             }
         }
+    }
+
+    public function delete(Inscription $inscription)
+    {
+        return $this->inscriptionRepository->delete($inscription);
     }
 }

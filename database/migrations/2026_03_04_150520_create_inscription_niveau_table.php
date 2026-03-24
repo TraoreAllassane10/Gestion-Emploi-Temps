@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('inscription_niveau', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('inscription_id')->constrained();
-            $table->foreignId('niveau_id')->constrained();
+            $table->foreignId('inscription_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('niveau_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

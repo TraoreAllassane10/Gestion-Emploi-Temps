@@ -40,7 +40,7 @@ class PaiementController extends Controller
         if ($data['montant'] <= $resetPaye) {
 
             // Effectue le paiement
-            $paiement = $inscription->paiements()->create([
+             $inscription->paiements()->create([
                 "reference" => $data['reference'],
                 "date_paiement" => Carbon::parse($data['date_paiement']),
                 "methode_paiement" => Str::upper($data['methode_paiement']),
@@ -48,12 +48,10 @@ class PaiementController extends Controller
                 "receveur_id" => Auth::user()->id
             ]);
 
-            $recu_url = route("paiements.recu", $paiement->id);
-
             return response()->json([
                 "success" => true,
                 "message" => "Paiement effectué avec succés !",
-                "recu_url" => $recu_url
+            
             ]);
         }
     }

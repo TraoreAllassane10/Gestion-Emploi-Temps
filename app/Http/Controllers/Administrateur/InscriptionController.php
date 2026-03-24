@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\inscription\CreateInscriptionRequest;
 use App\Models\AnneeUniversitaire;
 use App\Models\Etudiant;
+use App\Models\Inscription;
 use App\Models\Niveau;
 use App\Services\InscriptionService;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 
@@ -53,16 +56,9 @@ class InscriptionController extends Controller
         $data = $request->validated();
 
         // Creation d'une inscription
-        $inscription = $this->inscriptionService->create($data);
+        return $this->inscriptionService->create($data);
 
-        if ($inscription) {
-            return response()->json([
-                "success" => true,
-                "inscription" => $inscription
-            ]);
-        }
     }
-
 
     public function show(string $inscription)
     {
@@ -71,5 +67,22 @@ class InscriptionController extends Controller
         return Inertia::render('inscription/Show', [
             "inscription" => $inscriptionData
         ]);
+    }
+
+    public function delete(Inscription $inscription)
+    {
+        try {
+            $this->inscriptionService->delete($inscription);
+
+            return response()->json([
+                "success" => true,
+                "message" => "Inscription supprimée avec succès"
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "success" => false,
+                "message" => "Erreur survenue au niveau du serveur"
+            ]);
+        }
     }
 }
