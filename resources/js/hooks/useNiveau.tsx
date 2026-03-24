@@ -66,6 +66,8 @@ export default function useNiveau() {
                 .then((response) => {
                     if (response.data.success) {
                         toast.success('Niveau supprimé !');
+
+                        router.visit('/niveau')
                     }
                 })
                 .catch((error) => {
