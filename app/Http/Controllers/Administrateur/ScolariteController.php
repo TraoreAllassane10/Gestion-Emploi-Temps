@@ -6,7 +6,6 @@ use App\Enums\ScolariteType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\scolarite\CreateScolariteRequest;
 use App\Http\Requests\scolarite\UpdateScolariteRequest;
-use App\Models\Niveau;
 use App\Models\Scolarite;
 use App\Services\AnneeAcademiqueService;
 use App\Services\NiveauService;

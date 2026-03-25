@@ -6,7 +6,6 @@ use App\Enums\ScolariteType;
 use App\Enums\StatutEtudiant;
 use App\Models\FraisConfiguration;
 use App\Models\Inscription;
-use App\Models\Niveau;
 use App\Models\Scolarite;
 use App\Repositories\InscriptionRepository;
 
