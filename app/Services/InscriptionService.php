@@ -15,12 +15,13 @@ class InscriptionService
     public function __construct(
         protected InscriptionRepository $inscriptionRepository,
         protected AnneeAcademiqueService $anneeAcademiqueService,
-        protected EtudiantService $etudiantService
+        protected EtudiantService $etudiantService,
+        protected NiveauService $niveauService
     ) {}
 
     public function all()
     {
-        $niveaux = Niveau::all();
+        $niveaux = $this->niveauService->getAllNiveaux();
         $annees = $this->anneeAcademiqueService->all();
 
         // Annee universitaire active

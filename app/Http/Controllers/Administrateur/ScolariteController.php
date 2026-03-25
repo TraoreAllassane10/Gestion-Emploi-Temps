@@ -9,6 +9,7 @@ use App\Http\Requests\scolarite\UpdateScolariteRequest;
 use App\Models\Niveau;
 use App\Models\Scolarite;
 use App\Services\AnneeAcademiqueService;
+use App\Services\NiveauService;
 use App\Services\ScolariteService;
 use Exception;
 use Inertia\Inertia;
@@ -17,13 +18,14 @@ class ScolariteController extends Controller
 {
     public function __construct(
         protected ScolariteService $scolariteService,
-        protected AnneeAcademiqueService $anneeAcademiqueService
+        protected AnneeAcademiqueService $anneeAcademiqueService,
+         protected NiveauService $niveauService 
     ) {}
 
     public function index()
     {
         try {
-            $niveaux = Niveau::latest()->get();
+            $niveaux = $this->niveauService->getAllNiveaux();
 
             $annee = $this->anneeAcademiqueService->getAnneeActive();
 
@@ -50,7 +52,7 @@ class ScolariteController extends Controller
 
     public function edit(Scolarite $scolarite)
     {
-        $niveaux = Niveau::latest()->get();
+        $niveaux = $this->niveauService->getAllNiveaux();
 
         return Inertia::render("scolarite/Edit", [
             "scolarite" => $scolarite,

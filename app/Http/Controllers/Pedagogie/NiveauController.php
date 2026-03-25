@@ -17,6 +17,7 @@ use App\Models\Niveau;
 use App\Models\Professeur;
 use App\Models\Salle;
 use App\Models\Seance;
+use App\Services\FiliereService;
 use App\Services\NiveauService;
 use Exception;
 use Illuminate\Http\Request;
@@ -26,17 +27,18 @@ class NiveauController extends Controller
 {
     public function __construct(
         protected NiveauService $niveauService,
-     
+        protected FiliereService $filiereService
     ) {}
 
     public function index()
     {
         try {
             $niveaux = NiveauResource::collection($this->niveauService->getAllNiveaux());
+            $filieres = $this->filiereService->getAllFilieres();
 
             return Inertia::render("niveau/Index", [
                 "niveaux" => $niveaux,
-                "filieres" => FiliereResource::collection(Filiere::latest()->get())
+                "filieres" => FiliereResource::collection($filieres)
             ]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);

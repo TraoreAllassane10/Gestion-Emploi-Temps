@@ -7,9 +7,9 @@ use App\Http\Requests\inscription\CreateInscriptionRequest;
 use App\Models\AnneeUniversitaire;
 use App\Models\Etudiant;
 use App\Models\Inscription;
-use App\Models\Niveau;
 use App\Services\AnneeAcademiqueService;
 use App\Services\InscriptionService;
+use App\Services\NiveauService;
 use Exception;
 use Inertia\Inertia;
 
@@ -18,7 +18,8 @@ class InscriptionController extends Controller
 {
     public function __construct(
         protected InscriptionService $inscriptionService,
-        protected AnneeAcademiqueService $anneeAcademiqueService 
+        protected AnneeAcademiqueService $anneeAcademiqueService,
+        protected NiveauService $niveauService 
     ) {}
 
     public function index()
@@ -42,7 +43,7 @@ class InscriptionController extends Controller
             return $query->where("annee_universitaire_id", $anneeActive->id);
         })->get();
 
-        $niveaux = Niveau::all();
+        $niveaux = $this->niveauService->getAllNiveaux();
 
         // La recuperation de l'annee active MAIS en collection
         $annees = AnneeUniversitaire::where("estActive", 1)->get();
