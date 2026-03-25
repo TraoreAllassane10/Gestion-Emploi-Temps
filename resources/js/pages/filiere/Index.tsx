@@ -57,7 +57,6 @@ interface Meta {
 
 interface Filiere {
     data: Filiere[];
-    meta: Meta;
 }
 
 interface FiliereProps {
@@ -193,8 +192,7 @@ const Index = () => {
                                 </Table>
                             </CardContent>
 
-                            {/* Pagination */}
-                            <PaginationLinks links={filieres.meta.links} />
+                        
                         </Card>
                     </div>
                 </ConfigurationLayout>

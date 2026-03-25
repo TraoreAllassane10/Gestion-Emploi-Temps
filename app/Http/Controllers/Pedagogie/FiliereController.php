@@ -7,15 +7,20 @@ use App\Http\Requests\filiere\CreateFiliereRequest;
 use App\Http\Requests\filiere\UpdateFiliereRequest;
 use App\Http\Resources\FiliereResource;
 use App\Models\Filiere;
+use App\Services\FiliereService;
 use Exception;
 use Inertia\Inertia;
 
 class FiliereController extends Controller
 {
+    public function __construct(
+        protected FiliereService $filiereService
+    ) {}
+
     public function index()
     {
         try {
-            $filieres = FiliereResource::collection(Filiere::latest()->paginate(10));
+            $filieres = FiliereResource::collection($this->filiereService->getAllFilieres());
             return Inertia::render("filiere/Index", [
                 "filieres" => $filieres
             ]);
@@ -31,9 +36,11 @@ class FiliereController extends Controller
             $data = $request->validated();
 
             //Creation d'une filiere
-            Filiere::create($data);
+            $filliereCreee = $this->filiereService->createFiliere($data);
 
-            return response()->json(["success" => "true"]);
+            if ($filliereCreee) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -52,9 +59,11 @@ class FiliereController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            $filiere->update($data);
+            $filiereModifiee = $this->filiereService->updateFiliere($filiere, $data);
 
-            return response()->json(["success" => "true"]);
+            if ($filiereModifiee) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -64,7 +73,11 @@ class FiliereController extends Controller
     {
         try {
             //Suppression d'une filiere
-            $filiere->delete();
+            $filiereSupprimee = $this->filiereService->deleteFiliere($filiere);
+
+            if ($filiereSupprimee) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
