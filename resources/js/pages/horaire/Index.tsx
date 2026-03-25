@@ -181,7 +181,7 @@ const Index = () => {
                                                     {horaire.heure_debut}
                                                 </TableCell>
                                                  <TableCell>
-                                                    {horaire.heure_debut}
+                                                    {horaire.heure_fin}
                                                 </TableCell>
                                                  <TableCell>
                                                     {horaire.index_order}

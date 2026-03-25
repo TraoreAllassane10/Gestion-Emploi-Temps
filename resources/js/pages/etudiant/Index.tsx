@@ -224,8 +224,8 @@ export default function Index() {
                                                 />
                                                 <div>
                                                     <p className="text-sm leading-none font-semibold">
-                                                        {e.civilite} {e.prenom}{' '}
-                                                        {e.nom}
+                                                        {e.civilite} {e.nom} {e.prenom}
+                                                        
                                                     </p>
                                                     <p className="mt-0.5 text-xs text-muted-foreground">
                                                         {e.email ?? (

@@ -67,6 +67,9 @@ const Index = () => {
     const [nom, setNom] = useState('');
     const [filiere_id, setFiliereId] = useState('');
 
+    const [openModal, setOpenModal] = useState(false);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
     const { createNiveau, deleteNiveau } = useNiveau();
 
     // Enregistrement d'un niveau
@@ -86,8 +89,12 @@ const Index = () => {
     };
 
     // Suppression d'un niveau
-    const handleDelete = (id: number) => {
-        if (id) deleteNiveau(id);
+    const handleDelete = () => {
+        if (selectedId) {
+            deleteNiveau(selectedId);
+            setOpenModal(false);
+            setSelectedId(null);
+        }
     };
 
     return (
@@ -257,21 +264,22 @@ const Index = () => {
 
                                                         <DropdownMenuSeparator />
 
-                                                        <DropdownMenuItem className="cursor-pointer gap-2 text-destructive focus:text-destructive">
-                                                            <Link
-                                                                onClick={() =>
-                                                                    handleDelete(
-                                                                        niveau.id,
-                                                                    )
-                                                                }
-                                                                className="flex cursor-pointer items-center gap-2"
-                                                            >
-                                                                <Trash2
-                                                                    size={20}
-                                                                    className="cursor-pointer text-red-600 hover:text-red-800"
-                                                                />
-                                                                Supprimer
-                                                            </Link>
+                                                        <DropdownMenuItem
+                                                            onClick={() => {
+                                                                setSelectedId(
+                                                                    niveau.id,
+                                                                );
+                                                                setOpenModal(
+                                                                    true,
+                                                                );
+                                                            }}
+                                                            className="cursor-pointer gap-2 text-destructive focus:text-destructive"
+                                                        >
+                                                            <Trash2
+                                                                size={20}
+                                                                className="cursor-pointer text-red-600 hover:text-red-800"
+                                                            />
+                                                            Supprimer
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -282,6 +290,39 @@ const Index = () => {
                             </TableBody>
                         </Table>
                     </Card>
+
+                    {openModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                            <div className="w-[400px] rounded-lg bg-white p-6 shadow-xl dark:bg-gray-900">
+                                <h2 className="mb-4 text-lg font-bold text-red-500">
+                                    ⚠️ Confirmation de suppression
+                                </h2>
+
+                                <p className="mb-6 text-sm text-gray-600 dark:text-gray-300">
+                                    Cette action est irréversible. La
+                                    suppression de cette classe peut
+                                    entraîner une perte de données liées
+                                    (inscriptions, scolarités, etc).
+                                </p>
+
+                                <div className="flex justify-end gap-3">
+                                    <Button
+                                        variant="ghost"
+                                        onClick={() => setOpenModal(false)}
+                                    >
+                                        Annuler
+                                    </Button>
+
+                                    <Button
+                                        variant="destructive"
+                                        onClick={handleDelete}
+                                    >
+                                        Supprimer quand même
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </AppLayout>
         </div>

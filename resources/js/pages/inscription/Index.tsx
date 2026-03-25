@@ -43,7 +43,8 @@ import {
 import Avatar from '@/components/etudiant/Avatar';
 import ProgressFinanciere from '@/components/inscription/ProgressFinancier';
 import StatCardsInscription from '@/components/inscription/StatCardsInscription';
-import { Annee, Auth, DataNiveau, Inscription, User } from '@/types';
+import useInscription from '@/hooks/useInscription';
+import { Annee, Auth, DataNiveau, Inscription } from '@/types';
 
 interface InscriptionProps {
     annees: Annee[];
@@ -61,7 +62,12 @@ export default function Index() {
     const { annees, niveaux, inscriptions, stats, auth } =
         usePage<InscriptionProps>().props;
 
-    const isAdmin = auth.user?.roles?.some((role) => role.name == 'Administrateur');
+    const [openModal, setOpenModal] = useState(false);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    const isAdmin = auth.user?.roles?.some(
+        (role) => role.name == 'Administrateur',
+    );
 
     const [search, setSearch] = useState('');
     const [filtreAnnee, setFiltreAnnee] = useState('all');
@@ -99,6 +105,16 @@ export default function Index() {
         setFiltreAnnee('all');
         setFiltreNiveau('all');
         setFiltreStatut('all');
+    };
+
+    const { deleteEtudiant } = useInscription();
+
+    const handleDelete = () => {
+        if (selectedId) {
+            deleteEtudiant(selectedId);
+            setOpenModal(false);
+            setSelectedId(null);
+        }
     };
 
     return (
@@ -354,7 +370,15 @@ export default function Index() {
                                                         Générer le bulletin
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
-                                                    <DropdownMenuItem className="cursor-pointer gap-2 text-destructive focus:text-destructive">
+                                                    <DropdownMenuItem
+                                                        onClick={() => {
+                                                            setSelectedId(
+                                                                ins.id,
+                                                            );
+                                                            setOpenModal(true);
+                                                        }}
+                                                        className="cursor-pointer gap-2 text-destructive focus:text-destructive"
+                                                    >
                                                         <Trash2 className="h-4 w-4" />{' '}
                                                         Supprimer
                                                     </DropdownMenuItem>
@@ -367,6 +391,38 @@ export default function Index() {
                         </TableBody>
                     </Table>
                 </Card>
+
+                {openModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                        <div className="w-[400px] rounded-lg bg-white p-6 shadow-xl dark:bg-gray-900">
+                            <h2 className="mb-4 text-lg font-bold text-red-500">
+                                ⚠️ Confirmation de suppression
+                            </h2>
+
+                            <p className="mb-6 text-sm text-gray-600 dark:text-gray-300">
+                                Cette action est irréversible. La suppression de
+                                cette inscription peut entraîner une perte de
+                                données liées (paiements, historique, etc).
+                            </p>
+
+                            <div className="flex justify-end gap-3">
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => setOpenModal(false)}
+                                >
+                                    Annuler
+                                </Button>
+
+                                <Button
+                                    variant="destructive"
+                                    onClick={handleDelete}
+                                >
+                                    Supprimer quand même
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </AppLayout>
     );

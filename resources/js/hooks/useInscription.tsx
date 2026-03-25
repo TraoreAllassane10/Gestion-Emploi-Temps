@@ -1,3 +1,4 @@
+import inscriptions from '@/routes/inscriptions';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
 import { useState } from 'react';
@@ -46,61 +47,37 @@ export default function useInscription() {
         }
     };
 
-    // Modification d'une inscription
-    // const updateEtudiant = async (id: string, data) => {
-    //     try {
-    //         setIsLoading(true);
+    const deleteEtudiant = async (id: number) => {
+        try {
+            setIsLoading(true);
 
-    //         await axios
-    //             .put(`/inscriptions/${id}/update`, data)
-    //             .then((response) => {
-    //                 if (response.data.success) {
-    //                     toast.success('Etudiant modifié avec succès !');
+            await axios
+                .delete(`/inscriptions/${id}/delete`)
+                .then((response) => {
+                    // Sucess
+                    if (response.data.success) {
+                        toast.success('Inscription supprimée !');
 
-    //                     // Redirection sur la page d'affiche
-    //                     router.visit('/etudiants');
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 toast.error(error.response.data.message);
-    //                 console.log(error);
-    //             })
+                        router.visit("/inscriptions");
+                    }
 
-    //     } catch (error) {
-    //         toast.error('Erreur survenue au seance du serveur');
-    //         console.log(error);
-    //     }
-    //     finally{
-    //          setIsLoading(false);
-    //     }
-    // };
+                    // Echec
+                    if (response.data.success === false) {
+                        toast.error(response.data.message);
+                        return;
+                    }
+                })
+                .catch((error) => {
+                    toast.error('Erreur survenue lors de la suppression');
+                    console.log(error);
+                });
+        } catch (error) {
+            toast.error('Erreur survenue au niveau du serveur');
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-    // Suppression d'un etudiant
-    // const deleteEtudiant = async (id: number) => {
-    //     try {
-    //         setIsLoading(true);
-
-    //         await axios
-    //             .delete(`/etudiants/${id}/delete`)
-    //             .then((response) => {
-    //                 if (response.data.success) {
-    //                     toast.success('Etudiant supprimé !');
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 toast.success(
-    //                     'Erreur survenue lors de la suppression du seance',
-    //                 );
-    //                 console.log(error);
-    //             });
-    //     } catch (error) {
-    //         toast.success('Erreur survenue au seance du serveur');
-    //         console.log(error);
-    //     }
-    //     finally {
-    //         setIsLoading(false);
-    //     }
-    // };
-
-    return { createEtudiant, isLoading };
+    return { createEtudiant, deleteEtudiant, isLoading };
 }

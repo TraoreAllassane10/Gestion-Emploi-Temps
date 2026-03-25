@@ -13,6 +13,8 @@ class Salle extends Model
 
     protected $fillable = ["nom", "site_id"];
 
+    protected $with = ["site"];
+
     public function site()
     {
         return $this->belongsTo(Site::class);

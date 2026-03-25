@@ -1,8 +1,9 @@
 import { EVOLUTION_MENSUELLE } from "@/pages/dashboard-mock";
 import { fmtCompact } from "@/utils/util";
 
-export default function BarChart() {
+export default function BarChart() { 
     const max = Math.max(...EVOLUTION_MENSUELLE.map((m) => m.attendu));
+    
     return (
         <div className="flex h-36 items-end gap-2 px-1">
             {EVOLUTION_MENSUELLE.map((m, i) => {

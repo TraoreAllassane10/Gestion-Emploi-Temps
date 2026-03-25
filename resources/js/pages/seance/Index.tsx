@@ -308,14 +308,14 @@ const Index = () => {
                                                 {seance.niveau?.nom}
                                             </TableCell>
                                             <TableCell className="flex gap-2">
-                                                <Link
+                                                {/* <Link
                                                     href={`/seance/${seance.id}/edit`}
                                                 >
                                                     <Edit
                                                         size={20}
                                                         className="cursor-pointer text-blue-600 hover:text-blue-800"
                                                     />
-                                                </Link>
+                                                </Link> */}
 
                                                 <Link
                                                     onClick={() =>

@@ -15,11 +15,12 @@ export default function usePaiement() {
         try {
             await axios
                 .post(`/inscriptions/${inscriptionId}/paiement`, data)
-                .then((response) => {
-                    // Lance l'onglet d'affichage du reçu
-                    window.open(response.data.recu_url);
+                .then(() => {
+            
+                    toast.success("Paiement effectué avec succès")
 
-                    router.reload();
+                    router.visit(`/inscriptions/${inscriptionId}`);
+
                 })
                 .catch((error) => {
                     toast.error(

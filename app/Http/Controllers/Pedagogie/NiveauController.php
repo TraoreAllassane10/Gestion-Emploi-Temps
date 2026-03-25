@@ -49,7 +49,7 @@ class NiveauController extends Controller
             //Creation d'un niveau
             Niveau::create($data);
 
-            return response()->json(["success" => "true"]);
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -71,7 +71,7 @@ class NiveauController extends Controller
 
             $niveau->update($data);
 
-            return response()->json(["success" => "true"]);
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -80,8 +80,13 @@ class NiveauController extends Controller
     public function delete(Niveau $niveau)
     {
         try {
-            //Suppression d'une filiere
+            //Suppression d'un niveau
             $niveau->delete();
+
+            return response()->json([
+                "success" => true,
+                "message" => "Niveau supprimé avec succès"
+            ]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -94,19 +99,9 @@ class NiveauController extends Controller
             $professeur = $request->query("professeur");
             $date = $request->query("date");
 
-            // Filtrage dynamique des séances
             $seances = Seance::where("niveau_id", $niveauId)
-                ->when($salle, function ($query) use ($salle) {
-                    $query->where("salle_id", $salle);
-                })
-                ->when($professeur, function ($query) use ($professeur) {
-                    $query->where("professeur_id", $professeur);
-                })
-                ->when($date, function ($query) use ($date) {
-                    $query->where("date", $date);
-                })
-                ->orderByDesc('date')
-                ->paginate(10);
+                ->where("semaine_id", 3)
+                ->get();
 
             return Inertia::render("niveau/EmploiDuTemps", [
                 "seances" => SeanceResource::collection($seances),

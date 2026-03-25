@@ -154,6 +154,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post("/inscriptions", "store")->name("inscriptions.store");
 
         Route::get("/inscriptions/{inscription}", "show")->name("inscriptions.show");
+        Route::delete("/inscriptions/{inscription}/delete", "delete")->name("inscriptions.delete");
     });
 
     // Routes Paiement
