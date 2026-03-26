@@ -5,6 +5,7 @@ use App\Http\Controllers\Administrateur\AnneeAcademiqueController;
 use App\Http\Controllers\Administrateur\InscriptionController;
 use App\Http\Controllers\Administrateur\PaiementController;
 use App\Http\Controllers\Administrateur\ScolariteController;
+use App\Http\Controllers\Administrateur\UserController;
 use App\Http\Controllers\CoursController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EtudiantController;
@@ -31,6 +32,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Configurations
     Route::get('/configurations', [AnneeAcademiqueController::class, "editAnneeActive"])->name('edit.anneeActive');
+
+    // Utilisateur
+    Route::middleware("administrateur")->controller(UserController::class)->group(function () {
+        Route::get("utilisateurs", "index")->name("utilisateur");
+        Route::post("utilisateurs", "store")->name("utilisateurs.store");
+        Route::delete("utilisateurs/{utilisateur}/delete", "delete")->name("utilisateurs.delete");
+    });
 
     // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -173,7 +181,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Routes Historiques des actions
-    Route::controller(ActivityLogController::class)->group(function () {
+    Route::middleware("administrateur")->controller(ActivityLogController::class)->group(function () {
         Route::get("historiques", "index")->name("historique");
         Route::get("historiques/{activite}", "show")->name("historique.show");
     });
