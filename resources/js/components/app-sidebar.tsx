@@ -10,13 +10,14 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, niveau, professeur, seance } from '@/routes';
+import { dashboard, historique, niveau, professeur, seance } from '@/routes';
 import { Auth, User, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
     CalendarDays,
     ClipboardList,
     GraduationCap,
+    History,
     LayoutDashboard,
     Settings2,
     UserCog,
@@ -55,6 +56,11 @@ const mainNavItems: NavItem[] = [
         title: 'Programmes',
         href: seance(),
         icon: CalendarDays,
+    },
+     {
+        title: 'Historiques des actions',
+        href: historique(),
+        icon: History,
     },
 ];
 const footerNavItems: NavItem[] = [

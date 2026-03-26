@@ -11,29 +11,34 @@ use App\Http\Resources\NiveauResource;
 use App\Http\Resources\ProfesseurResource;
 use App\Http\Resources\SalleResource;
 use App\Http\Resources\SeanceResource;
-use App\Models\AnneeUniversitaire;
 use App\Models\Cours;
-use App\Models\Etudiant;
 use App\Models\Filiere;
 use App\Models\Niveau;
 use App\Models\Professeur;
 use App\Models\Salle;
 use App\Models\Seance;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\FiliereService;
+use App\Services\NiveauService;
 use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NiveauController extends Controller
 {
+    public function __construct(
+        protected NiveauService $niveauService,
+        protected FiliereService $filiereService
+    ) {}
+
     public function index()
     {
         try {
-            $niveaux = NiveauResource::collection(Niveau::latest()->paginate(10));
+            $niveaux = NiveauResource::collection($this->niveauService->getAllNiveaux());
+            $filieres = $this->filiereService->getAllFilieres();
 
             return Inertia::render("niveau/Index", [
                 "niveaux" => $niveaux,
-                "filieres" => FiliereResource::collection(Filiere::latest()->get())
+                "filieres" => FiliereResource::collection($filieres)
             ]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
@@ -47,9 +52,11 @@ class NiveauController extends Controller
             $data = $request->validated();
 
             //Creation d'un niveau
-            Niveau::create($data);
+            $niveauCree = $this->niveauService->createNiveau($data);
 
-            return response()->json(["success" => true]);
+            if ($niveauCree) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -69,9 +76,11 @@ class NiveauController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            $niveau->update($data);
+            $niveauModifie = $this->niveauService->updateNiveau($niveau, $data);
 
-            return response()->json(["success" => true]);
+            if ($niveauModifie) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -115,29 +124,12 @@ class NiveauController extends Controller
         }
     }
 
-    // Fonction recuperant la liste d'une classe selon l'annee academique
-    public function getListeEtudiant($anneeId, $niveauId)
-    {
-        $listeDesEtudiants = Etudiant::whereHas("inscriptions", function ($query) use ($niveauId, $anneeId) {
-            return $query->where("annee_universitaire_id", $anneeId)->whereHas("niveaux", function ($query) use ($niveauId) {
-                return $query->whereIn("niveau_id", [$niveauId]);
-            });
-        })
-            ->orderBy("nom")
-            ->orderBy("prenom")
-            ->get();
-
-        return $listeDesEtudiants;
-    }
-
     public function listeDeClasse(string $niveauId)
     {
-        // Annee universitaire active
-        $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
 
-        $niveau = Niveau::find($niveauId);
+        $niveau = $this->niveauService->getNiveau($niveauId);
 
-        $listeDesEtudiants = $this->getListeEtudiant($anneeActive->id, $niveauId);
+        $listeDesEtudiants = $this->niveauService->getListeDeClasse($niveauId);
 
         return Inertia::render('niveau/ListeDeClasse', [
             "liste" => $listeDesEtudiants,
@@ -146,20 +138,7 @@ class NiveauController extends Controller
     }
 
     public function downloadListeDeClase(string $niveauId)
-    {
-        // Annee universitaire active
-        $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
-
-        $niveau = Niveau::find($niveauId);
-
-        $listeDesEtudiants = $this->getListeEtudiant($anneeActive->id, $niveauId);
-
-        $pdf = Pdf::loadView('pdf.liste_classe', [
-            "liste" => $listeDesEtudiants,
-            "annee_academique" => $anneeActive->libelle,
-            "filiere" => $niveau->nom
-        ]);
-
-        return $pdf->stream("liste_de_classe_{$niveau->nom}.pdf");
+    { 
+        return $this->niveauService->getListeDeClasseEnPdf($niveauId);
     }
 }

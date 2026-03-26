@@ -38,6 +38,7 @@ class AnneeAcademiqueService
         return $this->anneeAcademiqueRepository->delete($annee);
     }
 
+    // Recupere l'annee active
     public function getAnneeActive() {
         return $this->anneeAcademiqueRepository->anneeActive();
     }
@@ -50,6 +51,7 @@ class AnneeAcademiqueService
         return [$anneeActive, $touteLesAnnees];
     }
 
+    // Change d'année
     public function changeAnneeActive(string $id)
     {
 

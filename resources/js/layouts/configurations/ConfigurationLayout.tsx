@@ -66,7 +66,7 @@ const ConfigurationLayout = ({ children }: PropsWithChildren) => {
         <div className="px-4 py-6">
             <Heading
                 title="Configurations"
-                description="COnfigurer l'application"
+                description="Configurer l'application"
             />
 
             <div className="flex flex-col lg:flex-row lg:space-x-12">

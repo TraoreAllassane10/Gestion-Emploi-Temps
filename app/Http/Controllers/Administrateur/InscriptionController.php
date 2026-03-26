@@ -7,17 +7,19 @@ use App\Http\Requests\inscription\CreateInscriptionRequest;
 use App\Models\AnneeUniversitaire;
 use App\Models\Etudiant;
 use App\Models\Inscription;
-use App\Models\Niveau;
+use App\Services\AnneeAcademiqueService;
 use App\Services\InscriptionService;
+use App\Services\NiveauService;
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 
 class InscriptionController extends Controller
 {
     public function __construct(
-        protected InscriptionService $inscriptionService
+        protected InscriptionService $inscriptionService,
+        protected AnneeAcademiqueService $anneeAcademiqueService,
+        protected NiveauService $niveauService 
     ) {}
 
     public function index()
@@ -34,15 +36,17 @@ class InscriptionController extends Controller
 
     public function create()
     {
-        $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
+        $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
 
         // Recupere les etudiants qui ne sont pas incrire durant l'annee universitaire active
         $etudiants = Etudiant::whereDoesntHave("inscriptions", function ($query) use ($anneeActive) {
             return $query->where("annee_universitaire_id", $anneeActive->id);
         })->get();
 
-        $niveaux = Niveau::all();
-        $annees = $anneeActive = AnneeUniversitaire::where("estActive", 1)->get();
+        $niveaux = $this->niveauService->getAllNiveaux();
+
+        // La recuperation de l'annee active MAIS en collection
+        $annees = AnneeUniversitaire::where("estActive", 1)->get();
 
         return Inertia::render('inscription/Create', [
             "etudiants" => $etudiants,

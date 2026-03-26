@@ -7,17 +7,23 @@ use App\Http\Requests\salle\CreateSalleRequest;
 use App\Http\Requests\salle\UpdateSalleRequest;
 use App\Http\Resources\SalleResource;
 use App\Models\Salle;
-use App\Models\Site;
+use App\Services\SalleService;
+use App\Services\SiteService;
 use Exception;
 use Inertia\Inertia;
 
 class SalleController extends Controller
 {
+    public function __construct(
+        protected SalleService $salleService,
+        protected SiteService $siteService
+    ) {}
+
     public function index()
     {
         try {
-            $sites = Site::all();
-            $salles = SalleResource::collection(Salle::with("site")->latest()->paginate(10));
+            $sites = $this->siteService->getAllSites();
+            $salles = SalleResource::collection($this->salleService->getAllSalles());
 
             return Inertia::render("salle/Index", [
                 "sites" => $sites,
@@ -35,9 +41,11 @@ class SalleController extends Controller
             $data = $request->validated();
 
             //Creation d'une salle
-            Salle::create($data);
+            $salleCreee = $this->salleService->createSalle($data);
 
-            return response()->json(["success" => "true"]);
+            if ($salleCreee) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -45,8 +53,8 @@ class SalleController extends Controller
 
     public function edit(Salle $salle)
     {
-        $sites = Site::all();
-        
+        $sites = $this->siteService->getAllSites();
+
         return Inertia::render("salle/Edit", [
             "sites" => $sites,
             "salle" => $salle
@@ -59,9 +67,11 @@ class SalleController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            $salle->update($data);
+            $salleModifiee = $this->salleService->updateSalle($salle, $data);
 
-            return response()->json(["success" => "true"]);
+            if ($salleModifiee) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -71,7 +81,11 @@ class SalleController extends Controller
     {
         try {
             //Suppression d'une salle
-            $salle->delete();
+            $salleSupprimee = $this->salleService->deleteSalle($salle);
+
+            if ($salleSupprimee) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }

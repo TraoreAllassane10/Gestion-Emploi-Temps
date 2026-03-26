@@ -178,7 +178,7 @@ const Index = () => {
                                 </Table>
                             </CardContent>
 
-                            <PaginationLinks links={sites.meta.links} />
+                           
                         </Card>
                     </div>
                 </ConfigurationLayout>

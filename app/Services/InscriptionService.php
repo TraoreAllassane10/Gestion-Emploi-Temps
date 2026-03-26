@@ -4,10 +4,8 @@ namespace App\Services;
 
 use App\Enums\ScolariteType;
 use App\Enums\StatutEtudiant;
-use App\Enums\StatutInscription;
 use App\Models\FraisConfiguration;
 use App\Models\Inscription;
-use App\Models\Niveau;
 use App\Models\Scolarite;
 use App\Repositories\InscriptionRepository;
 
@@ -16,12 +14,13 @@ class InscriptionService
     public function __construct(
         protected InscriptionRepository $inscriptionRepository,
         protected AnneeAcademiqueService $anneeAcademiqueService,
-        protected EtudiantService $etudiantService
+        protected EtudiantService $etudiantService,
+        protected NiveauService $niveauService
     ) {}
 
     public function all()
     {
-        $niveaux = Niveau::all();
+        $niveaux = $this->niveauService->getAllNiveaux();
         $annees = $this->anneeAcademiqueService->all();
 
         // Annee universitaire active
@@ -65,8 +64,7 @@ class InscriptionService
         if ($etudiant && $anneeUniversitaire) {
 
             // Verifie si l'etudiant est déjè inscrit durant l'annee choisie
-            $estInscrit = Inscription::where("etudiant_ip", $etudiant->ip)
-                ->where("annee_universitaire_id", $anneeUniversitaire->id)->first();
+            $estInscrit = $this->etudiantDejaInscriptionDurantAnneeSelectionnee($etudiant->ip, $anneeUniversitaire->id);
 
             if (!empty($estInscrit)) {
                 return response()->json([
@@ -128,5 +126,11 @@ class InscriptionService
     public function delete(Inscription $inscription)
     {
         return $this->inscriptionRepository->delete($inscription);
+    }
+
+    public function etudiantDejaInscriptionDurantAnneeSelectionnee($etudiantId, $anneeId)
+    {
+        return Inscription::where("etudiant_ip", $etudiantId)
+            ->where("annee_universitaire_id", $anneeId)->first();
     }
 }

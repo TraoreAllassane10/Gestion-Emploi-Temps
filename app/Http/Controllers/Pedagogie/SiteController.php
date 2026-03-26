@@ -7,16 +7,22 @@ use App\Http\Requests\site\CreateSiteRequest;
 use App\Http\Requests\site\UpdateSiteRequest;
 use App\Http\Resources\SiteResource;
 use App\Models\Site;
+use App\Services\SiteService;
 use Exception;
 use Inertia\Inertia;
 
 class SiteController extends Controller
 {
+
+    public function __construct(
+        protected SiteService $siteService
+    ) {}
+
     public function index()
     {
         try {
-            $sites = SiteResource::collection(Site::latest()->paginate(10));
-            
+            $sites = SiteResource::collection($this->siteService->getAllSites());
+
             return Inertia::render("site/Index", [
                 "sites" => $sites
             ]);
@@ -31,10 +37,12 @@ class SiteController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            //Creation d'une salle
-            Site::create($data);
+            //Creation d'un site
+            $siteCree = $this->siteService->createSite($data);
 
-            return response()->json(["success" => "true"]);
+            if ($siteCree) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -53,9 +61,11 @@ class SiteController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            $site->update($data);
+            $siteModifie = $this->siteService->updateSite($site, $data);
 
-            return response()->json(["success" => "true"]);
+            if ($siteModifie) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -64,8 +74,12 @@ class SiteController extends Controller
     public function delete(Site $site)
     {
         try {
-            //Suppression d'une salle
-            $site->delete();
+            //Suppression d'un site
+            $siteSupprime = $this->siteService->deleteSite($site);
+
+            if ($siteSupprime) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }

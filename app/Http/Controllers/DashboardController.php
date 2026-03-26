@@ -2,25 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AnneeUniversitaire;
 use App\Models\Etudiant;
 use App\Models\Filiere;
 use App\Models\Inscription;
+use App\Models\Niveau;
 use App\Models\Paiement;
 use App\Models\Professeur;
+use App\Services\AnneeAcademiqueService;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
+    public function __construct(
+        protected AnneeAcademiqueService $anneeAcademiqueService
+    ) {}
     public function index()
     {
-        $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
+        $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
 
         // Statitstiques globals
         $totalEtudiants = Etudiant::count();
         $totalInscriptions = Inscription::count();
         $totalEnseignants = Professeur::count();
         $totalFilieres = Filiere::count();
+
 
         // Statistiques financiers
         $totalAttendu = Inscription::where("annee_universitaire_id", $anneeActive->id)->sum("montant_total");
@@ -29,6 +34,7 @@ class DashboardController extends Controller
         })->sum("montant");
         $resteAPayer = $totalAttendu - $totalPaye;
         $tauxRecouvrement = $totalAttendu > 0 ? ceil(($totalPaye / $totalAttendu) * 100) : 0;
+
 
         // derniers paiements et inscriptions
         $derniers_paiements = Paiement::with([
@@ -41,6 +47,32 @@ class DashboardController extends Controller
             "etudiant",
             "niveaux"
         ])->latest()->limit(5)->get();
+
+
+        // Repartition des niveaux
+        $couleurs = [
+            '#3b82f6',
+            '#8b5cf6',
+            '#06b6d4',
+            '#10b981',
+            '#f59e0b',
+            '#ef4444',
+            '#6366f1',
+        ];
+
+        $niveaux = Niveau::withCount([
+            'inscriptions as inscriptions_count' => function ($query) use ($anneeActive) {
+                $query->where('annee_universitaire_id', $anneeActive->id);
+            }
+        ])->get();
+
+        $repartitionNiveaux = $niveaux->map(function ($niveau, $index) use ($couleurs) {
+            return [
+                "niveau" => $niveau->nom,
+                "inscrits" => $niveau->inscriptions_count,
+                "couleur" => $couleurs[$index % count($couleurs)]
+            ];
+        });
 
         return Inertia::render(
             "dashboard",
@@ -57,6 +89,7 @@ class DashboardController extends Controller
                     "resteAPayer" => $resteAPayer,
                     "tauxRecouvrement" => $tauxRecouvrement
                 ],
+                "repartitionNiveaux" => $repartitionNiveaux,
                 "derniers_paiements" => $derniers_paiements,
                 "dernieres_inscriptions" => $dernieres_inscriptions,
             ]

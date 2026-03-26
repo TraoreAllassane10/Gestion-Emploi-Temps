@@ -6,23 +6,30 @@ use App\Enums\ScolariteType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\scolarite\CreateScolariteRequest;
 use App\Http\Requests\scolarite\UpdateScolariteRequest;
-use App\Models\AnneeUniversitaire;
-use App\Models\Niveau;
 use App\Models\Scolarite;
+use App\Services\AnneeAcademiqueService;
+use App\Services\NiveauService;
+use App\Services\ScolariteService;
 use Exception;
 use Inertia\Inertia;
 
 class ScolariteController extends Controller
 {
+    public function __construct(
+        protected ScolariteService $scolariteService,
+        protected AnneeAcademiqueService $anneeAcademiqueService,
+         protected NiveauService $niveauService 
+    ) {}
+
     public function index()
     {
         try {
-            $niveaux = Niveau::latest()->get();
-            $annee = AnneeUniversitaire::where("estActive", 1)->first();
+            $niveaux = $this->niveauService->getAllNiveaux();
 
-            $scolarites = Scolarite::where("annee_universitaire_id", $annee->id)
-                ->latest()
-                ->get();
+            $annee = $this->anneeAcademiqueService->getAnneeActive();
+
+            // Recupere les scolarite de l'annee active (Voir repository)
+            $scolarites = $this->scolariteService->getAllScolarites();
 
             return Inertia::render("scolarite/Index", [
                 "scolarites" => $scolarites,
@@ -37,38 +44,14 @@ class ScolariteController extends Controller
 
     public function store(CreateScolariteRequest $request)
     {
-        try {
-            // Validation des entrées
-            $data = $request->validated();
+        $data = $request->validated();
 
-            $scolariteExiste = Scolarite::where("niveau_id", $data['niveau_id'])
-                ->where("type", $data['type'])
-                ->exists();
-
-            if ($scolariteExiste) {
-                return response()->json([
-                    "success" => false,
-                    "message" => "Le niveau selectionné à déjà une scolarité pour ce type"
-                ]);
-            }
-
-            //Creation d'une scolarite
-            Scolarite::create([
-                "annee_universitaire_id" => $data['annee_id'],
-                "niveau_id" => $data['niveau_id'],
-                "type" => $data['type'],
-                "montant" => $data['montant'],
-            ]);
-
-            return response()->json(["success" => "true"]);
-        } catch (Exception $e) {
-            return response()->json(["message" => $e->getMessage()]);
-        }
+        return $this->scolariteService->createScolarite($data);
     }
 
     public function edit(Scolarite $scolarite)
     {
-        $niveaux = Niveau::latest()->get();
+        $niveaux = $this->niveauService->getAllNiveaux();
 
         return Inertia::render("scolarite/Edit", [
             "scolarite" => $scolarite,
@@ -83,14 +66,11 @@ class ScolariteController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            $scolarite->update([
-                "annee_universitaire_id" => $data['annee_id'],
-                "niveau_id" => $data['niveau_id'],
-                "type" => $data['type'],
-                "montant" => $data['montant'],
-            ]);
+            $scolariteModifiee = $this->scolariteService->updateScolarite($scolarite, $data);
 
-            return response()->json(["success" => "true"]);
+            if ($scolariteModifiee) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -100,9 +80,11 @@ class ScolariteController extends Controller
     {
         try {
             //Suppression d'une scolarite
-            $scolarite->delete();
+            $scolariteSupprimee = $this->scolariteService->deleteScolarite($scolarite);
 
-            return response()->json(["success" => "true"]);
+            if ($scolariteSupprimee) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }

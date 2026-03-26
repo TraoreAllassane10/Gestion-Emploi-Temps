@@ -182,7 +182,7 @@ const Index = () => {
                                                     {salle.nom}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {/* {salle.site.nom} */}
+                                                    {salle.site.nom}
                                                 </TableCell>
                                                 <TableCell className="flex gap-2">
                                                     <Link
@@ -212,8 +212,6 @@ const Index = () => {
                                     </TableBody>
                                 </Table>
                             </CardContent>
-
-                            <PaginationLinks links={salles.meta.links} />
                         </Card>
                     </div>
                 </ConfigurationLayout>

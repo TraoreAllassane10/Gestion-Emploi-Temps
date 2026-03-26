@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Administrateur\ActivityLogController;
 use App\Http\Controllers\Administrateur\AnneeAcademiqueController;
 use App\Http\Controllers\Administrateur\InscriptionController;
 use App\Http\Controllers\Administrateur\PaiementController;
@@ -170,6 +170,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("scolarite/{scolarite}/edit", "edit")->name("scolarite.edit");
         Route::put("scolarite/{scolarite}/update", "update")->name("scolarite.update");
         Route::delete("scolarite/{scolarite}/delete", "delete")->name("scolarite.delete");
+    });
+
+    // Routes Historiques des actions
+    Route::controller(ActivityLogController::class)->group(function () {
+        Route::get("historiques", "index")->name("historique");
+        Route::get("historiques/{activite}", "show")->name("historique.show");
     });
 });
 

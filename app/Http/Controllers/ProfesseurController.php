@@ -8,13 +8,19 @@ use Exception;
 use Inertia\Inertia;
 use App\Models\Professeur;
 use App\Http\Resources\ProfesseurResource;
+use App\Services\ProfesseurService;
 
 class ProfesseurController extends Controller
 {
+    public function __construct(
+        protected ProfesseurService $professeurService
+    ) {}
+
     public function index()
     {
         try {
-            $professeurs = ProfesseurResource::collection(Professeur::latest()->paginate(10));
+            $professeurs = ProfesseurResource::collection($this->professeurService->getAllProfesseurs());
+
             return Inertia::render("professeur/Index", [
                 "professeurs" => $professeurs,
             ]);
@@ -30,9 +36,11 @@ class ProfesseurController extends Controller
             $data = $request->validated();
 
             //Creation d'un professeur
-            Professeur::create($data);
+            $professeurCree = $this->professeurService->createProfesseur($data);
 
-            return response()->json(["success" => "true"]);
+            if ($professeurCree) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -51,9 +59,11 @@ class ProfesseurController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            $professeur->update($data);
+            $professeurModifie = $this->professeurService->updateProfesseur($professeur, $data);
 
-            return response()->json(["success" => "true"]);
+            if ($professeurModifie) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -63,9 +73,13 @@ class ProfesseurController extends Controller
     {
         try {
             //Suppression d'un professeur
-            $professeur->delete();
+            $professeurSupprime = $this->professeurService->deleteProfesseur($professeur);
+
+            if ($professeurSupprime) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
-    } 
+    }
 }

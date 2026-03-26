@@ -10,13 +10,18 @@ use App\Models\Cours;
 use App\Models\Professeur;
 use App\Http\Resources\CoursResource;
 use App\Http\Resources\ProfesseurResource;
+use App\Services\CoursService;
 
 class CoursController extends Controller
 {
+    public function __construct(
+        protected CoursService $coursService
+    ) {}
     public function index()
     {
         try {
-            $cours = CoursResource::collection(Cours::latest()->paginate(10));
+            $cours = CoursResource::collection($this->coursService->getAllCours());
+
             return Inertia::render("cours/Index", [
                 "cours" => $cours,
                 "professeurs" => ProfesseurResource::collection(Professeur::latest()->get())
@@ -33,9 +38,11 @@ class CoursController extends Controller
             $data = $request->validated();
 
             //Creation d'un cours
-            Cours::create($data);
+            $coursCree = $this->coursService->createCours($data);
 
-            return response()->json(["success" => "true"]);
+            if ($coursCree) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -55,9 +62,11 @@ class CoursController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            $cours->update($data);
+            $coursModifie = $this->coursService->updateCours($cours, $data);
 
-            return response()->json(["success" => "true"]);
+            if ($coursModifie) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -67,9 +76,13 @@ class CoursController extends Controller
     {
         try {
             //Suppression d'un cours
-            $cours->delete();
+            $coursSupprime = $this->coursService->deleteCours($cours);
+
+            if ($coursSupprime) {
+                return response()->json(["success" => true]);
+            }
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
-    } 
+    }
 }
