@@ -296,8 +296,8 @@ export default function Index() {
                                                 />
                                                 <div>
                                                     <p className="text-sm leading-none font-medium">
-                                                        {ins.etudiant.prenom}{' '}
                                                         {ins.etudiant.nom}
+                                                        {ins.etudiant.prenom}
                                                     </p>
                                                     <p className="mt-0.5 text-xs text-muted-foreground">
                                                         {ins.etudiant.ip} ·{' '}
