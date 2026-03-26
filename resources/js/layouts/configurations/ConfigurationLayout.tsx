@@ -2,7 +2,7 @@ import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
-import { annee, cours, filiere, horaire, salle, semaine, site } from '@/routes';
+import { annee, filiere } from '@/routes';
 import { NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';
@@ -24,40 +24,46 @@ const sidebarNavItems: NavItem[] = [
         icon: null,
     },
     {
-        title: 'Scolarites',
-        href: '/scolarite',
-        icon: null,
-    },
-    {
-        title: 'Sites',
-        href: site(),
-        icon: null,
-    },
-    {
-        title: 'Salles',
-        href: salle(),
-        icon: null,
-    },
-    {
-        title: 'Matières',
-        href: cours(),
-        icon: null,
-    },
-    {
         title: 'Filières',
         href: filiere(),
         icon: null,
     },
     {
-        title: 'Semaines',
-        href: semaine(),
+        title: 'Scolarités',
+        href: '/scolarite',
         icon: null,
     },
     {
-        title: 'Horaires',
-        href: horaire(),
+        title: 'Utilisateurs',
+        href: '/utilisateurs',
         icon: null,
     },
+    // {
+    //     title: 'Sites',
+    //     href: site(),
+    //     icon: null,
+    // },
+    // {
+    //     title: 'Salles',
+    //     href: salle(),
+    //     icon: null,
+    // },
+    // {
+    //     title: 'Matières',
+    //     href: cours(),
+    //     icon: null,
+    // },
+
+    // {
+    //     title: 'Semaines',
+    //     href: semaine(),
+    //     icon: null,
+    // },
+    // {
+    //     title: 'Horaires',
+    //     href: horaire(),
+    //     icon: null,
+    // },
 ];
 
 const ConfigurationLayout = ({ children }: PropsWithChildren) => {

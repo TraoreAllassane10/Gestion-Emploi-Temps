@@ -10,11 +10,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, historique, niveau, professeur, seance } from '@/routes';
-import { Auth, User, type NavItem } from '@/types';
+import { dashboard, historique, niveau, professeur } from '@/routes';
+import { Auth, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
-    CalendarDays,
     ClipboardList,
     GraduationCap,
     History,
@@ -25,58 +24,62 @@ import {
 } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutDashboard,
-    },
-    {
-        title: 'Etudiant',
-        href: '/etudiants',
-        icon: Users,
-    },
-    {
-        title: 'Inscriptions',
-        href: '/inscriptions',
-        icon: ClipboardList,
-    },
-
-    {
-        title: 'Classes',
-        href: niveau(),
-        icon: GraduationCap,
-    },
-    {
-        title: 'Professeurs',
-        href: professeur(),
-        icon: UserCog,
-    },
-    {
-        title: 'Programmes',
-        href: seance(),
-        icon: CalendarDays,
-    },
-     {
-        title: 'Historiques des actions',
-        href: historique(),
-        icon: History,
-    },
-];
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Configurations',
-        href: '/configurations',
-        icon: Settings2,
-    },
-];
-
 export function AppSidebar() {
     const { auth } = usePage<{ auth: Auth }>().props;
 
     const isAuthorize = auth.user?.roles?.some(
         (role) => role.name == 'Administrateur',
     );
+
+    const mainNavItems: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: dashboard(),
+            icon: LayoutDashboard,
+        },
+        {
+            title: 'Etudiant',
+            href: '/etudiants',
+            icon: Users,
+        },
+        {
+            title: 'Inscriptions',
+            href: '/inscriptions',
+            icon: ClipboardList,
+        },
+
+        {
+            title: 'Classes',
+            href: niveau(),
+            icon: GraduationCap,
+        },
+        {
+            title: 'Professeurs',
+            href: professeur(),
+            icon: UserCog,
+        },
+        // {
+        //     title: 'Programmes',
+        //     href: seance(),
+        //     icon: CalendarDays,
+        // },
+        ...(isAuthorize
+            ? [
+                  {
+                      title: 'Historiques des actions',
+                      href: historique(),
+                      icon: History,
+                  },
+              ]
+            : []),
+    ];
+    const footerNavItems: NavItem[] = [
+        {
+            title: 'Configurations',
+            href: '/configurations',
+            icon: Settings2,
+        },
+    ];
 
     return (
         <Sidebar collapsible="icon" variant="inset">
