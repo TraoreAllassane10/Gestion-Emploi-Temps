@@ -22,7 +22,7 @@ class DashboardController extends Controller
 
         // Statitstiques globals
         $totalEtudiants = Etudiant::count();
-        $totalInscriptions = Inscription::count();
+        $totalInscriptions = Inscription::where("annee_universitaire_id", $anneeActive->id)->count();
         $totalEnseignants = Professeur::count();
         $totalFilieres = Filiere::count();
 
