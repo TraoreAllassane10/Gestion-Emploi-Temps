@@ -43,6 +43,16 @@ import {
 import Avatar from '@/components/etudiant/Avatar';
 import ProgressFinanciere from '@/components/inscription/ProgressFinancier';
 import StatCardsInscription from '@/components/inscription/StatCardsInscription';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import useInscription from '@/hooks/useInscription';
 import { Annee, Auth, DataNiveau, Inscription } from '@/types';
 
@@ -62,7 +72,6 @@ export default function Index() {
     const { annees, niveaux, inscriptions, stats, auth } =
         usePage<InscriptionProps>().props;
 
-    const [openModal, setOpenModal] = useState(false);
     const [selectedId, setSelectedId] = useState<number | null>(null);
 
     const isAdmin = auth.user?.roles?.some(
@@ -112,7 +121,6 @@ export default function Index() {
     const handleDelete = () => {
         if (selectedId) {
             deleteEtudiant(selectedId);
-            setOpenModal(false);
             setSelectedId(null);
         }
     };
@@ -242,7 +250,12 @@ export default function Index() {
                                 <TableHead>Type</TableHead>
                                 <TableHead>Statut</TableHead>
                                 {isAdmin && (
-                                    <TableHead>Situation financière</TableHead>
+                                    <>
+                                        <TableHead>Réduction</TableHead>
+                                        <TableHead>
+                                            Situation financière
+                                        </TableHead>
+                                    </>
                                 )}
                                 <TableHead className="w-[100px]" />
                             </TableRow>
@@ -330,14 +343,21 @@ export default function Index() {
                                         </TableCell>
 
                                         {isAdmin && (
-                                            <TableCell>
-                                                <ProgressFinanciere
-                                                    paye={Number(
-                                                        ins.total_paiements,
-                                                    )}
-                                                    total={ins.montant_total}
-                                                />
-                                            </TableCell>
+                                            <>
+                                                <TableCell className="text-sm font-medium tabular-nums">
+                                                    {ins.taux_reduction} %
+                                                </TableCell>
+                                                <TableCell>
+                                                    <ProgressFinanciere
+                                                        paye={Number(
+                                                            ins.total_paiements,
+                                                        )}
+                                                        total={
+                                                            ins.montant_total
+                                                        }
+                                                    />
+                                                </TableCell>
+                                            </>
                                         )}
 
                                         <TableCell>
@@ -375,7 +395,6 @@ export default function Index() {
                                                             setSelectedId(
                                                                 ins.id,
                                                             );
-                                                            setOpenModal(true);
                                                         }}
                                                         className="cursor-pointer gap-2 text-destructive focus:text-destructive"
                                                     >
@@ -392,37 +411,35 @@ export default function Index() {
                     </Table>
                 </Card>
 
-                {openModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                        <div className="w-[400px] rounded-lg bg-white p-6 shadow-xl dark:bg-gray-900">
-                            <h2 className="mb-4 text-lg font-bold text-red-500">
-                                ⚠️ Confirmation de suppression
-                            </h2>
-
-                            <p className="mb-6 text-sm text-gray-600 dark:text-gray-300">
+                {/* Dialog confirmation suppression */}
+                <AlertDialog
+                    open={!!selectedId}
+                    onOpenChange={(open) => {
+                        if (!open) setSelectedId(null);
+                    }}
+                >
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>
+                                Supprimer cette année academique ?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
                                 Cette action est irréversible. La suppression de
                                 cette inscription peut entraîner une perte de
                                 données liées (paiements, historique, etc).
-                            </p>
-
-                            <div className="flex justify-end gap-3">
-                                <Button
-                                    variant="ghost"
-                                    onClick={() => setOpenModal(false)}
-                                >
-                                    Annuler
-                                </Button>
-
-                                <Button
-                                    variant="destructive"
-                                    onClick={handleDelete}
-                                >
-                                    Supprimer quand même
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <AlertDialogAction
+                                onClick={handleDelete}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            >
+                                Supprimer
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </AppLayout>
     );
