@@ -34,10 +34,10 @@ import {
     Auth,
     Inscription,
     Paiement,
+    RepartitionNiveau,
     StatFinanciere,
     StatGlobales,
 } from '@/types';
-import { REPARTITION_NIVEAUX } from './dashboard-mock';
 
 interface DashboardProps {
     anneeActive: Annee;
@@ -45,6 +45,7 @@ interface DashboardProps {
     stats_financiere: StatFinanciere;
     derniers_paiements: Paiement[];
     dernieres_inscriptions: Inscription[];
+    repartitionNiveaux: RepartitionNiveau[];
     auth: Auth;
     [key: string]: unknown;
 }
@@ -57,6 +58,7 @@ export default function Dashboard() {
         derniers_paiements,
         dernieres_inscriptions,
         auth,
+        repartitionNiveaux,
     } = usePage<DashboardProps>().props;
 
     const taux = stats_financiere.tauxRecouvrement;
@@ -125,7 +127,7 @@ export default function Dashboard() {
                 </div>
 
                 {isAdmin ? (
-                    <div className='space-y-6'>
+                    <div className="space-y-6">
                         {/* ── Situation financière et niveaux ─────────────────────────────────────── */}
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                             {/* Recouvrement */}
@@ -238,11 +240,11 @@ export default function Dashboard() {
                                 <CardContent className="space-y-3">
                                     {(() => {
                                         const max = Math.max(
-                                            ...REPARTITION_NIVEAUX.map(
+                                            ...repartitionNiveaux.map(
                                                 (r) => r.inscrits,
                                             ),
                                         );
-                                        return REPARTITION_NIVEAUX.map(
+                                        return repartitionNiveaux.map(
                                             ({ niveau, inscrits, couleur }) => (
                                                 <div
                                                     key={niveau}
@@ -457,11 +459,11 @@ export default function Dashboard() {
                             <CardContent className="space-y-3">
                                 {(() => {
                                     const max = Math.max(
-                                        ...REPARTITION_NIVEAUX.map(
+                                        ...repartitionNiveaux.map(
                                             (r) => r.inscrits,
                                         ),
                                     );
-                                    return REPARTITION_NIVEAUX.map(
+                                    return repartitionNiveaux.map(
                                         ({ niveau, inscrits, couleur }) => (
                                             <div
                                                 key={niveau}

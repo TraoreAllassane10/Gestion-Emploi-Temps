@@ -240,6 +240,12 @@ export interface StatGlobales {
     anneeEnCours: '2024-2025';
 }
 
+export interface RepartitionNiveau {
+  niveau: string
+  inscrits: number
+  couleur: string
+}
+
 // Historique des actions
 export interface Activite {
     id: string;
