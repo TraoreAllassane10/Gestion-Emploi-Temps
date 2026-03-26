@@ -23,4 +23,11 @@ class ActivityLog extends Model
         "ancienne_valeur" => "array",
         "nouvelle_valeur" => "array"
     ];
+
+    protected $with = ["user"];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

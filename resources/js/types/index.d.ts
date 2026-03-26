@@ -239,3 +239,15 @@ export interface StatGlobales {
     totalFilieres: 8;
     anneeEnCours: '2024-2025';
 }
+
+// Historique des actions
+export interface Activite {
+    id: string;
+    user: User;
+    action: string;
+    entite_type: string;
+    entite_id: string | null;
+    ancienne_valeur: any | null;
+    nouvelle_valeur: any | null;
+    created_at: string;
+}
