@@ -19,6 +19,10 @@ class Niveau extends Model
         return $this->belongsTo(Filiere::class);
     }
 
+    public function scolarites() {
+        return $this->hasMany(Scolarite::class);
+    }
+
     public function inscriptions()
     {
         return $this->belongsToMany(Inscription::class, "inscription_niveau");

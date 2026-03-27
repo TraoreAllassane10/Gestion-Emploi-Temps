@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\ScolariteType;
+use App\Models\AnneeUniversitaire;
+use App\Models\Niveau;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +20,10 @@ class ScolariteFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "type" => ScolariteType::AFFECTE,
+            "montant" => 145000,
+            "niveau_id" => Niveau::factory(),
+            "annee_universitaire_id" => AnneeUniversitaire::factory()
         ];
     }
 }
