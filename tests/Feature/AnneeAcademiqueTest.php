@@ -72,8 +72,9 @@ test("Un utlisateur peut modifier une année", function () {
 
     $annee = AnneeUniversitaire::factory()->create();
 
-    $response = $this->put("annee/{$annee->id}/update", [
-        "libelle" => "2025-2026 ",
+    $response = $this->put("/annee/{$annee->id}/update", [
+        "id" => $annee->id,
+        "libelle" => "2025-2026",
         "date_debut" => "01-01-2025",
         "date_fin" => "01-09-2025",
         "estActive" => 0
@@ -81,35 +82,6 @@ test("Un utlisateur peut modifier une année", function () {
 
     $this->assertDatabaseHas("annee_universitaires", [
         "id" => $annee->id,
-        "libelle" => "2025-2026 ",
+        "libelle" => "2025-2026",
     ]);
 });
-
-// test("Une seule année peut etre active", function () {
-//     $user = User::factory()->create();
-
-//     $this->actingAs($user);
-
-//     // Annee 1 active
-//     AnneeUniversitaire::factory()->active()->create();
-
-//     // Annee 2 active
-//     AnneeUniversitaire::factory()->active()->create();
-
-//     $this->assertEquals(1, AnneeUniversitaire::where("estActve", 1)->count());
-// });
-
-
-// test("Activer une année desactive les autres", function () {
-//     $user = User::factory()->create();
-//     $this->actingAs($user);
-
-//     $annee1 = AnneeUniversitaire::factory()->active()->create();
-
-//     $annee2 = AnneeUniversitaire::factory()->inactive()->create();
-
-//     $this->get("annee/{$annee2->id}/change-annee");
-
-//     expect($annee1->estActive)->toBeFalse();
-//     expect($annee2->estActive)->toBeTrue();
-// });
