@@ -361,10 +361,10 @@ const Index = () => {
                                             <TableCell>
                                                 <div className="flex items-center gap-2.5">
                                                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                                                        {activite.user.name[0].toUpperCase()}
+                                                        {activite.user ? activite.user?.name[0].toUpperCase() : (<span>US</span>)}
                                                     </div>
                                                     <span className="text-sm font-medium">
-                                                        {activite.user.name}
+                                                        {activite.user ? activite.user?.name : "Utilisateur supprimé"}
                                                     </span>
                                                 </div>
                                             </TableCell>

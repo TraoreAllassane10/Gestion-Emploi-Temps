@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\AnneeUniversitaire;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,9 @@ class FraisConfigurationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "type" => "frais_annexe",
+            "montant" => 20000,
+            "annee_universitaire_id" => AnneeUniversitaire::factory()
         ];
     }
 }

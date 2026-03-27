@@ -10,6 +10,7 @@ use App\Models\AnneeUniversitaire;
 use App\Services\AnneeAcademiqueService;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class AnneeAcademiqueController extends Controller
@@ -36,8 +37,21 @@ class AnneeAcademiqueController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            //Creation d'une année scolaire
-            $this->anneeAcademiqueService->create($data);
+            if (isset($data['estActive'])) {
+                // Raison pour laquelle je n'ai pas utilisé le service ici, c'est que je veux cette annee en collection
+                $anneeActive = AnneeUniversitaire::where("estActive", 1);
+
+                DB::transaction(function () use ($anneeActive, $data) {
+                    $anneeActive->update([[
+                        "estActive" => false
+                    ]]);
+
+                    $this->anneeAcademiqueService->create($data);
+                });
+            } else {
+                //Creation d'une année scolaire
+                $this->anneeAcademiqueService->create($data);
+            }
 
             return response()->json(["success" => true]);
         } catch (Exception $e) {
