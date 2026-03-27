@@ -17,7 +17,18 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "name" => fake()->name,
+            "email" => fake()->unique()->safeEmail(),
+            "password" => bcrypt("password"),
+            'email_verified_at' => now(),
         ];
+    }
+
+    public function withoutTwoFactor(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+        ]);
     }
 }

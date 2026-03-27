@@ -20,6 +20,10 @@ class DashboardController extends Controller
     {
         $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
 
+        if (!$anneeActive) {
+            abort(404, "Aucune année academique active");
+        }
+
         // Statitstiques globals
         $totalEtudiants = Etudiant::count();
         $totalInscriptions = Inscription::where("annee_universitaire_id", $anneeActive->id)->count();
