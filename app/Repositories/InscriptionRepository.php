@@ -8,10 +8,17 @@ use App\Models\Paiement;
 
 class InscriptionRepository
 {
+    public function __construct(
+        protected AnneeAcademiqueRepository $anneeAcademiqueRepository
+    )
+    {}
     public function all()
     {
+        $anneeActive = $this->anneeAcademiqueRepository->anneeActive();
+
         return Inscription::with("paiements")
             ->withSum("paiements as total_paiements", "montant")
+            ->where('annee_universitaire_id', $anneeActive->id)
             ->latest()
             ->get();
     }
