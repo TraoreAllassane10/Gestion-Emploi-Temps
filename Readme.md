@@ -34,6 +34,12 @@ Ce projet vise à digitaliser la gestion académique en offrant une plateforme c
 - Gestion multi-inscriptions
 - Statistiques (Somme total des inscriptions, Somme total payées, somme restante)
 
+### Gestion des paiements de scolarités
+
+- Enregistrement d'un paiement
+- Impression du reçu d'un paiements à tout moment (PDF)
+- Visualisation de la progession des paiements d'une inscription
+
 ### Gestion des enseignants
 
 - CRUD complet des enseignants
@@ -77,9 +83,10 @@ Ce projet vise à digitaliser la gestion académique en offrant une plateforme c
 
 ## Structure du projet
 
+```text
 app/
-|**Enums/
-|**Observers/
+├── Enums/
+├── Observers/
 ├── Models/
 ├── Http/
 │ ├── Controllers/
@@ -100,6 +107,7 @@ resources/
 routes/
 ├── web.php
 ├── api.php
+```
 
 ## Installation
 
@@ -150,7 +158,7 @@ Gestion des rôles avec Spatie :
 - Secretaire de scolarité
 
 ## Architecture (évolution)
+
 - Controllers → très légers
 - Services → logique métier
 - Repositories → accès aux données
-
