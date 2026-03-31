@@ -144,7 +144,7 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                                         +{fmt(p.montant)}
                                     </TableCell>
                                     <TableCell className="text-md text-right">
-                                        {p.receveur?.name}
+                                        {p.nom_receveur}
                                     </TableCell>
 
                                     <TableCell>

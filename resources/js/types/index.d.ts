@@ -222,6 +222,7 @@ export interface Paiement {
     montant: number;
     receveur?: User;
     inscription?: Inscription;
+    nom_receveur: string;
 }
 
 // Types Dashboard

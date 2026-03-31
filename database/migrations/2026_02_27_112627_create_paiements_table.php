@@ -19,9 +19,10 @@ return new class extends Migration
             $table->string('methode_paiement');
             $table->integer("montant");
 
+            $table->string('nom_receveur');
             $table->foreignId("receveur_id");
             $table->foreignId("inscription_id")->constrained()->onDelete("cascade");
-
+            
             $table->index(['receveur_id', 'inscription_id']);
             $table->timestamps();
         });

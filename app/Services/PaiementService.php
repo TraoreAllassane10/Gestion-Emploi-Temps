@@ -43,7 +43,8 @@ class PaiementService
                 "date_paiement" => Carbon::parse($data['date_paiement']),
                 "methode_paiement" => Str::upper($data['methode_paiement']),
                 "montant" => $data['montant'],
-                "receveur_id" => Auth::user()->id
+                "receveur_id" => Auth::user()->id,
+                "nom_receveur" => Auth::user()->name
             ]);
 
             return response()->json([
