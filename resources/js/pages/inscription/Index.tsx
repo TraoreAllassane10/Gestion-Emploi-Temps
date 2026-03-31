@@ -79,7 +79,6 @@ export default function Index() {
     );
 
     const [search, setSearch] = useState('');
-    const [filtreAnnee, setFiltreAnnee] = useState('all');
     const [filtreNiveau, setFiltreNiveau] = useState('all');
     const [filtreStatut, setFiltreStatut] = useState('all');
 
@@ -93,8 +92,6 @@ export default function Index() {
             inscription.etudiant.ip.toLowerCase().includes(q);
         return (
             match &&
-            (filtreAnnee === 'all' ||
-                inscription.annee.libelle == filtreAnnee) &&
             (filtreNiveau === 'all' ||
                 inscription.niveaux.some((n) =>
                     n.nom.includes(filtreNiveau),
@@ -105,13 +102,11 @@ export default function Index() {
 
     const hasFilters =
         search ||
-        filtreAnnee !== 'all' ||
         filtreNiveau !== 'all' ||
         filtreStatut !== 'all';
 
     const reset = () => {
         setSearch('');
-        setFiltreAnnee('all');
         setFiltreNiveau('all');
         setFiltreStatut('all');
     };
@@ -163,24 +158,6 @@ export default function Index() {
                             />
                         </div>
 
-                        <Select
-                            value={filtreAnnee}
-                            onValueChange={setFiltreAnnee}
-                        >
-                            <SelectTrigger className="w-[160px]">
-                                <SelectValue placeholder="Année" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">
-                                    Toutes les années
-                                </SelectItem>
-                                {annees.map((a) => (
-                                    <SelectItem key={a.id} value={a.libelle}>
-                                        {a.libelle}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
 
                         <Select
                             value={filtreNiveau}

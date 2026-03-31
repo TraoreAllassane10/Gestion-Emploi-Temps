@@ -16,6 +16,7 @@ class InscriptionObserver
     {
         ActivityLog::create([
             "user_id" => Auth::user()->id,
+               "user_name" => Auth::user()->name,
             "action" => TypeAction::CREATION->value,
             "entite_type" => "Inscription",
             "entite_id" => (string) $inscription->id,
@@ -30,6 +31,7 @@ class InscriptionObserver
     {
         ActivityLog::create([
             "user_id" => Auth::user()->id,
+               "user_name" => Auth::user()->name,
             "action" => TypeAction::MODIFICATION->value,
             "entite_type" => "Inscription",
             "entite_id" => (string) $inscription->id,
@@ -45,6 +47,7 @@ class InscriptionObserver
     {
          ActivityLog::create([
             "user_id" => Auth::user()->id,
+               "user_name" => Auth::user()->name,
             "action" => TypeAction::SUPPRESSION->value,
             "entite_type" => "Inscription",
             "entite_id" => (string) $inscription->id,

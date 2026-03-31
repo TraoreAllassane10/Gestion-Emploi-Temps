@@ -28,7 +28,6 @@ class InscriptionController extends Controller
 
         return Inertia::render('inscription/Index', [
             "niveaux" => $response['niveaux'],
-            "annees" => $response['annees'],
             "inscriptions" => $response['inscriptions'],
             "stats" => $response['stats']
         ]);

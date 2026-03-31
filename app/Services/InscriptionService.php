@@ -21,7 +21,6 @@ class InscriptionService
     public function all()
     {
         $niveaux = $this->niveauService->getAllNiveaux();
-        $annees = $this->anneeAcademiqueService->all();
 
         // Annee universitaire active
         $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
@@ -39,7 +38,6 @@ class InscriptionService
 
         return [
             "niveaux" => $niveaux,
-            "annees" => $annees,
             "inscriptions" => $inscriptions,
             "stats" => [
                 "total_inscription" => $nombreTotalInscription,

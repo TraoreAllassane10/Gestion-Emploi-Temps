@@ -222,6 +222,7 @@ export interface Paiement {
     montant: number;
     receveur?: User;
     inscription?: Inscription;
+    nom_receveur: string;
 }
 
 // Types Dashboard
@@ -250,6 +251,7 @@ export interface RepartitionNiveau {
 export interface Activite {
     id: string;
     user: User;
+    user_name: string;
     action: string;
     entite_type: string;
     entite_id: string | null;

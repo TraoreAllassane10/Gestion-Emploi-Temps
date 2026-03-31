@@ -16,6 +16,7 @@ class ScolariteObserver
     {
         ActivityLog::create([
             "user_id" => Auth::user()->id,
+               "user_name" => Auth::user()->name,
             "action" => TypeAction::CREATION->value,
             "entite_type" => "Scolarité",
             "entite_id" => (string) $scolarite->id,
@@ -30,6 +31,7 @@ class ScolariteObserver
     {
         ActivityLog::create([
             "user_id" => Auth::user()->id,
+               "user_name" => Auth::user()->name,
             "action" => TypeAction::MODIFICATION->value,
             "entite_type" => "Scolarité",
             "entite_id" => (string) $scolarite->id,
@@ -45,6 +47,7 @@ class ScolariteObserver
     {
         ActivityLog::create([
             "user_id" => Auth::user()->id,
+               "user_name" => Auth::user()->name,
             "action" => TypeAction::SUPPRESSION->value,
             "entite_type" => "Scolarité",
             "entite_id" => (string) $scolarite->id,
