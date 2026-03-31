@@ -83,10 +83,10 @@ Ce projet vise à digitaliser la gestion académique en offrant une plateforme c
 
 ## Structure du projet
 
-```bash
+```text
 app/
-|**Enums/
-|**Observers/
+├── Enums/
+├── Observers/
 ├── Models/
 ├── Http/
 │ ├── Controllers/
