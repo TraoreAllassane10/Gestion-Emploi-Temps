@@ -157,7 +157,7 @@ Gestion des rôles avec Spatie :
 - Admin
 - Secretaire de scolarité
 
-## Architecture (évolution)
+## Architecture
 
 - Controllers → très légers
 - Services → logique métier
