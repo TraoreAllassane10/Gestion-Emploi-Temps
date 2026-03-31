@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('user_name');
             $table->string('action');
             $table->string('entite_type');
             $table->string('entite_id')->nullable();

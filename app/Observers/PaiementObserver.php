@@ -16,6 +16,7 @@ class PaiementObserver
     {
         ActivityLog::create([
             "user_id" => Auth::user()->id,
+            "user_name" => Auth::user()->name,
             "action" => TypeAction::CREATION->value,
             "entite_type" => "Paiement",
             "entite_id" => (string) $paiement->id,
@@ -30,6 +31,7 @@ class PaiementObserver
     {
         ActivityLog::create([
             "user_id" => Auth::user()->id,
+            "user_name" => Auth::user()->name,
             "action" => TypeAction::MODIFICATION->value,
             "entite_type" => "Paiement",
             "entite_id" => (string) $paiement->id,
@@ -43,8 +45,9 @@ class PaiementObserver
      */
     public function deleted(Paiement $paiement): void
     {
-         ActivityLog::create([
+        ActivityLog::create([
             "user_id" => Auth::user()->id,
+            "user_name" => Auth::user()->name,
             "action" => TypeAction::SUPPRESSION->value,
             "entite_type" => "Paiement",
             "entite_id" => (string) $paiement->id,

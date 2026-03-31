@@ -364,7 +364,7 @@ const Index = () => {
                                                         {activite.user ? activite.user?.name[0].toUpperCase() : (<span>US</span>)}
                                                     </div>
                                                     <span className="text-sm font-medium">
-                                                        {activite.user ? activite.user?.name : "Utilisateur supprimé"}
+                                                        {activite.user_name}
                                                     </span>
                                                 </div>
                                             </TableCell>

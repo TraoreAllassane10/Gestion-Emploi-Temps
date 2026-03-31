@@ -16,6 +16,7 @@ class AnneeUniversitaireObserver
     {
         ActivityLog::create([
             "user_id" => Auth::user()->id,
+            "user_name" => Auth::user()->name,
             "action" => TypeAction::CREATION->value,
             "entite_type" => "Année Academique",
             "entite_id" => (string) $anneeUniversitaire->id,
@@ -30,6 +31,7 @@ class AnneeUniversitaireObserver
     {
         ActivityLog::create([
             "user_id" => Auth::user()->id,
+            "user_name" => Auth::user()->name,
             "action" => TypeAction::MODIFICATION->value,
             "entite_type" => "Année Academique",
             "entite_id" => (string) $anneeUniversitaire->id,
@@ -43,8 +45,9 @@ class AnneeUniversitaireObserver
      */
     public function deleted(AnneeUniversitaire $anneeUniversitaire): void
     {
-         ActivityLog::create([
+        ActivityLog::create([
             "user_id" => Auth::user()->id,
+            "user_name" => Auth::user()->name,
             "action" => TypeAction::SUPPRESSION->value,
             "entite_type" => "Année Academique",
             "entite_id" => (string) $anneeUniversitaire->id,

@@ -232,7 +232,7 @@ const Show = () => {
                                 {activite.user?.name?.[0]?.toUpperCase() ?? 'U'}
                             </div>
                             <div>
-                                <p className="text-sm font-semibold">{activite.user?.name ?? '—'}</p>
+                                <p className="text-sm font-semibold">{activite.user_name ?? '—'}</p>
                                 <p className="text-xs text-muted-foreground">{activite.user?.email ?? '—'}</p>
                             </div>
                         </div>
