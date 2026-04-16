@@ -42,6 +42,7 @@ import {
 import Avatar from '@/components/etudiant/Avatar';
 import EtudiantStats from '@/components/etudiant/EtudiantStats';
 import StatutBadge from '@/components/etudiant/StatutBadge';
+import useEtudiant from '@/hooks/useEtudiant';
 import { Etudiant, Meta, StatsEtudiant } from '@/types';
 
 interface EtudiantData {
@@ -83,6 +84,14 @@ export default function Index() {
         setSearch('');
         setFiltreStatut('all');
         setFiltreGenre('all');
+    };
+
+    const { deleteEtudiant } = useEtudiant();
+
+    const handleDelete = (ip: string) => {
+        if (ip) {
+            deleteEtudiant(ip);
+        }
     };
 
     return (
@@ -224,8 +233,8 @@ export default function Index() {
                                                 />
                                                 <div>
                                                     <p className="text-sm leading-none font-semibold">
-                                                        {e.civilite} {e.nom} {e.prenom}
-                                                        
+                                                        {e.civilite} {e.nom}{' '}
+                                                        {e.prenom}
                                                     </p>
                                                     <p className="mt-0.5 text-xs text-muted-foreground">
                                                         {e.email ?? (
@@ -298,8 +307,13 @@ export default function Index() {
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem className="cursor-pointer gap-2 text-destructive focus:text-destructive">
-                                                        <Trash2 className="h-4 w-4" />{' '}
-                                                        Supprimer
+                                                        <Link
+                                                            onClick={() => handleDelete(e.ip)}
+                                                            className="flex cursor-pointer items-center gap-2"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />{' '}
+                                                            Supprimer
+                                                        </Link>
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
