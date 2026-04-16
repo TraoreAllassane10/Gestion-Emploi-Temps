@@ -169,6 +169,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware("administrateur")->controller(PaiementController::class)->group(function () {
         Route::post("/inscriptions/{inscription}/paiement", "store")->name("paiements.store");
         Route::get('/paiements/{paiement}/recu', "recu")->name('paiements.recu');
+        Route::get('/inscriptions/{inscription}/recap-paiements', "recapitulatifPaiement")->name('paiements.recap');
     });
 
     // Routes Scolarite

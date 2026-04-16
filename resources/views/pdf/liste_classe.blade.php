@@ -31,10 +31,11 @@
             border: none;
         }
 
-        .header-left {
-            /* width: 55%; */
-            margin-right: 20px;
+        .header-left p {
+            font-size: 10px;
+            line-height: 1.6;
         }
+
 
         .header-left p {
             font-size: 10px;
@@ -173,15 +174,23 @@
 <body>
     <table class="header-table">
         <tr>
-            <td style="width: 70%;">
-                <p style="margin-bottom: 10px">
-                    Ministère de l'Enseignement Supérieur et de<br>
+            <td class="header-left" style="width:65%;">
+                <p>
+                    Ministère de l'Enseignement Supérieur et de<br />
                     la Recherche Scientifique - MESRS
                 </p>
-                <p style="padding-left:8px; font-size:10px; line-height:1.5;">
-                    Institut National d'Intelligence Numérique<br>
-                    Économique et Commerciale - INEC Daloa
-                </p>
+                <table class="logo-zone-table">
+                    <tr>
+                        <td style="width:65px;">
+                            <img src="{{ public_path('./images/logo_inec.jpg') }}" alt="INEC SA" width="55"
+                                height="55" onerror="this.style.display='none'">
+                        </td>
+                        <td style="padding-left:8px; font-size:10px; line-height:1.6;">
+                            Institut National d'Intelligence Numérique<br>
+                            Économique et Commerciale - INEC Daloa
+                        </td>
+                    </tr>
+                </table>
             </td>
 
             <td style="width: 30%">

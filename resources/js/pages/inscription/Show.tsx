@@ -1,19 +1,10 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, usePage } from '@inertiajs/react';
-import {
-    ArrowLeft,
-    BarChart2,
-    Download,
-    Lock,
-    User,
-    Wallet,
-} from 'lucide-react';
+import { ArrowLeft, BarChart2, Lock, User, Wallet } from 'lucide-react';
 import { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 
 import Avatar from '@/components/etudiant/Avatar';
 import StatutInscriptionBadge from '@/components/inscription/StatutInscriptionBadge';
@@ -43,17 +34,10 @@ export default function Show() {
 
     const [activeTab, setActiveTab] = useState<Tab>('general');
 
-    const isAdmin = auth.user?.roles?.some((role) => role.name == 'Administrateur');
+    const isAdmin = auth.user?.roles?.some(
+        (role) => role.name == 'Administrateur',
+    );
 
-    // Calcule Progression
-    const progression =
-        inscription.montant_total > 0
-            ? Math.round(
-                  (Number(inscription.total_paiements) /
-                      inscription.montant_total) *
-                      100,
-              )
-            : 0;
 
     return (
         <AppLayout>
@@ -105,36 +89,6 @@ export default function Show() {
                                         inscription.niveaux[0].filiere.nom}{' '}
                                     · {inscription.annee?.libelle}
                                 </p>
-                            </div>
-
-                            {/* Mini progression */}
-                            {isAdmin && (
-                                <div className="shrink-0 sm:text-right">
-                                    <p className="mb-1 text-xs text-muted-foreground">
-                                        Recouvrement
-                                    </p>
-                                    <p
-                                        className={`text-lg font-bold tabular-nums ${progression >= 100 ? 'text-emerald-600' : 'text-primary'}`}
-                                    >
-                                        {progression}%
-                                    </p>
-                                    <Progress
-                                        value={progression}
-                                        className="mt-1 h-1.5 w-24"
-                                    />
-                                </div>
-                            )}
-
-                            {/* Actions */}
-                            <div className="flex shrink-0 gap-2">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="gap-1.5"
-                                >
-                                    <Download className="h-3.5 w-3.5" />{' '}
-                                    Bulletin
-                                </Button>
                             </div>
                         </div>
                     </CardContent>
