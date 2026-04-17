@@ -222,10 +222,10 @@ export default function Index() {
                         <TableHeader>
                             <TableRow className="bg-muted/40 hover:bg-muted/40">
                                 <TableHead>Étudiant</TableHead>
-                                <TableHead>Année</TableHead>
+                         
                                 <TableHead>Niveau</TableHead>
                                 <TableHead>Type</TableHead>
-                                <TableHead>Statut</TableHead>
+                                {/* <TableHead>Statut</TableHead> */}
                                 {isAdmin && (
                                     <>
                                         <TableHead>Réduction</TableHead>
@@ -273,7 +273,7 @@ export default function Index() {
                                                 />
                                                 <div>
                                                     <p className="text-sm leading-none font-medium">
-                                                        {ins.etudiant.nom}
+                                                        {ins.etudiant.nom} {" "}
                                                         {ins.etudiant.prenom}
                                                     </p>
                                                     <p className="mt-0.5 text-xs text-muted-foreground">
@@ -285,10 +285,6 @@ export default function Index() {
                                                     </p>
                                                 </div>
                                             </div>
-                                        </TableCell>
-
-                                        <TableCell className="text-sm font-medium tabular-nums">
-                                            {ins.annee.libelle}
                                         </TableCell>
 
                                         <TableCell className="space-x-1">
@@ -307,7 +303,7 @@ export default function Index() {
                                                 {ins.type_inscription}
                                             </span>
                                         </TableCell>
-
+{/* 
                                         <TableCell>
                                             <span
                                                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold`}
@@ -317,7 +313,7 @@ export default function Index() {
                                                 />
                                                 {ins.status ?? 'Aucun'}
                                             </span>
-                                        </TableCell>
+                                        </TableCell> */}
 
                                         {isAdmin && (
                                             <>

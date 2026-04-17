@@ -228,7 +228,7 @@ const Index = () => {
                                                             <Users2Icon className="h-4 w-4" /> Liste de classe
                                                         </Link>
                                                     </DropdownMenuItem>
-
+{/* 
                                                     <DropdownMenuItem asChild>
                                                         <Link
                                                             href={`/niveau/${niveau.id}/emploi-du-temps`}
@@ -236,7 +236,7 @@ const Index = () => {
                                                         >
                                                             <CalendarDaysIcon className="h-4 w-4" /> Emploi du temps
                                                         </Link>
-                                                    </DropdownMenuItem>
+                                                    </DropdownMenuItem> */}
 
                                                     <DropdownMenuSeparator />
 

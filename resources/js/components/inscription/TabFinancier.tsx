@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { Inscription } from '@/types';
 import { fmt } from '@/utils/util';
-import { Link } from '@inertiajs/react';
 import { ChevronDown, Download, PlusCircle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
@@ -95,17 +94,35 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                     <CardTitle className="text-sm font-semibold">
                         Historique des paiements
                     </CardTitle>
-                    {reste === 0 ? (
-                        <span className="font-bold text-red-500">Solde</span>
-                    ) : (
-                        <Button
-                            size="sm"
-                            className="h-8 gap-1.5"
-                            onClick={() => setModalOpen(true)}
+
+                    <div className="flex shrink-0 gap-2 place-items-center">
+                        {reste === 0 ? (
+                            <span className="font-bold text-red-500">
+                                Solde
+                            </span>
+                        ) : (
+                            <Button
+                                size="sm"
+                                className="h-8 gap-1.5"
+                                onClick={() => setModalOpen(true)}
+                            >
+                                <PlusCircle className="h-3.5 w-3.5" /> Ajouter
+                            </Button>
+                        )}
+                        <a
+                            href={`/inscriptions/${ins.id}/recap-paiements`}
+                            target="_blank"
                         >
-                            <PlusCircle className="h-3.5 w-3.5" /> Ajouter
-                        </Button>
-                    )}
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1.5"
+                            >
+                                <Download className="h-3.5 w-3.5" /> Imprimer le
+                                recap
+                            </Button>
+                        </a>
+                    </div>
                 </CardHeader>
                 <Separator />
                 {ins.paiements.length === 0 ? (
@@ -130,7 +147,7 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                         </TableHeader>
                         <TableBody>
                             {ins.paiements.map((p) => (
-                                <TableRow key={p.id} className='group'>
+                                <TableRow key={p.id} className="group">
                                     <TableCell className="font-mono text-xs text-muted-foreground">
                                         {p.reference}
                                     </TableCell>
@@ -153,7 +170,7 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                   className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
+                                                    className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
                                                 >
                                                     Reçu{' '}
                                                     <ChevronDown className="h-3 w-3" />
@@ -167,7 +184,7 @@ export default function TabFinancier({ ins }: { ins: Inscription }) {
                                                     <a
                                                         href={`/paiements/${p.id}/recu`}
                                                         className="flex cursor-pointer items-center gap-2"
-                                                        target='_blank'
+                                                        target="_blank"
                                                     >
                                                         <Download className="h-4 w-4" />{' '}
                                                         Télécharger le reçu

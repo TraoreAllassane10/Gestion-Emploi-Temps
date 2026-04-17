@@ -12,14 +12,15 @@ use Illuminate\Support\Str;
 class PaiementService
 {
     public function __construct(
-        protected InscriptionService $inscriptionService
+        protected InscriptionService $inscriptionService,
+
     ) {}
 
     public function createPaiement(string $inscriptionId, array $data)
     {
         // Verifie si l'inscription existe
         $inscriptionExist = Inscription::where("id", $inscriptionId)->exists();
-        
+
         if (!$inscriptionExist) {
             return response()->json(["success" => false, "message" => "Inscription introuvable"]);
         }
@@ -75,6 +76,17 @@ class PaiementService
         return Pdf::loadView("pdf.recu_paiement", [
             "paiement" => $paiement,
             "reste" => $restePaye
+        ]);
+    }
+
+    public function getRecapPaiements(Inscription $inscription)
+    {
+        $inscription->load('paiements');
+
+        return Pdf::loadView('pdf.recap_paiements', [
+            "etudiant" => $inscription->etudiant,
+            "niveaux" => $inscription->niveaux,
+            "paiements" => $inscription->paiements
         ]);
     }
 }

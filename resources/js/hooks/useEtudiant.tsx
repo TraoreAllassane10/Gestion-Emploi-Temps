@@ -70,7 +70,7 @@ export default function useEtudiant() {
     };
 
     // Suppression d'un etudiant
-    const deleteEtudiant = async (id: number) => {
+    const deleteEtudiant = async (id: string) => {
         try {
             setIsLoading(true);
 

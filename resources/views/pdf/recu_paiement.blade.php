@@ -69,9 +69,18 @@
 
         <div class="header">
 
-            <h3>INSTITUT NATIONAL D’INTELLIGENCE NUMERIQUE, ECONOMIQUE ET COMMERCIALE</h3>
-
-            <h4>INEC - DALOA</h4>
+            <table class="logo-zone-table">
+                <tr>
+                    <td>
+                        <img src="{{ public_path('./images/logo_inec.jpg') }}" alt="INEC SA" width="55" height="55"
+                            onerror="this.style.display='none'">
+                    </td>
+                    <td>
+                        <h3>INSTITUT NATIONAL D’INTELLIGENCE NUMERIQUE, ECONOMIQUE ET COMMERCIALE</h3>
+                        <h4>INEC SA</h4>
+                    </td>
+                </tr>
+            </table>
 
             <h4>REÇU DE RÈGLEMENT DES FRAIS D’ECOLE</h4>
 
