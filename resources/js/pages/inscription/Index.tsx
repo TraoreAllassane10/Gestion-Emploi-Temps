@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     ChevronDown,
     Eye,
@@ -43,6 +43,7 @@ import {
 import Avatar from '@/components/etudiant/Avatar';
 import ProgressFinanciere from '@/components/inscription/ProgressFinancier';
 import StatCardsInscription from '@/components/inscription/StatCardsInscription';
+import PaginationLinks from '@/components/Pagination';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -59,17 +60,30 @@ import { Annee, Auth, DataNiveau, Inscription } from '@/types';
 interface InscriptionProps {
     annees: Annee[];
     niveaux: DataNiveau[];
-    inscriptions: Inscription[];
+    inscriptions: {
+        data: Inscription[];
+        links: {
+            active: boolean;
+            label: string;
+            page: number;
+            url: string;
+        }[];
+    };
     stats: {
         total_inscription: number;
         total_inscription_annee: number;
+    };
+      filters: {
+        search: string;
+        statut: string;
+        niveau: string;
     };
     auth: Auth;
     [key: string]: unknown;
 }
 
 export default function Index() {
-    const { annees, niveaux, inscriptions, stats, auth } =
+    const { niveaux, inscriptions, stats, filters, auth } =
         usePage<InscriptionProps>().props;
 
     const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -78,46 +92,34 @@ export default function Index() {
         (role) => role.name == 'Administrateur',
     );
 
-    const [search, setSearch] = useState('');
-    const [filtreNiveau, setFiltreNiveau] = useState('all');
-    const [filtreStatut, setFiltreStatut] = useState('all');
-
-    const filtered = inscriptions.filter((inscription) => {
-        const q = search.toLowerCase();
-        const match =
-            !q ||
-            `${inscription.etudiant.prenom} ${inscription.etudiant.nom}`
-                .toLowerCase()
-                .includes(q) ||
-            inscription.etudiant.ip.toLowerCase().includes(q);
-        return (
-            match &&
-            (filtreNiveau === 'all' ||
-                inscription.niveaux.some((n) =>
-                    n.nom.includes(filtreNiveau),
-                )) &&
-            (filtreStatut === 'all' || inscription.status === filtreStatut)
-        );
-    });
+    const [search, setSearch] = useState(filters.search ?? '');
+    const [filtreNiveau, setFiltreNiveau] = useState(filters.niveau ?? 'all');
+    const [filtreStatut, setFiltreStatut] = useState(filters.statut ?? 'all');
 
     const hasFilters =
-        search ||
-        filtreNiveau !== 'all' ||
-        filtreStatut !== 'all';
+        search || filtreNiveau !== 'all' || filtreStatut !== 'all';
 
+    // Réinitialisation des states de filtrage et recherche
     const reset = () => {
         setSearch('');
         setFiltreNiveau('all');
         setFiltreStatut('all');
+
+        router.visit('/inscriptions');
     };
 
-    const { deleteEtudiant } = useInscription();
+    const { deleteEtudiant, rechercheEtFiltrage } = useInscription();
 
     const handleDelete = () => {
         if (selectedId) {
             deleteEtudiant(selectedId);
             setSelectedId(null);
         }
+    };
+
+    // Recherche
+    const handleSearch = () => {
+        rechercheEtFiltrage(search, filtreStatut, filtreNiveau);
     };
 
     return (
@@ -158,7 +160,6 @@ export default function Index() {
                             />
                         </div>
 
-
                         <Select
                             value={filtreNiveau}
                             onValueChange={setFiltreNiveau}
@@ -171,7 +172,7 @@ export default function Index() {
                                     Tous niveaux
                                 </SelectItem>
                                 {niveaux.map((n) => (
-                                    <SelectItem key={n.id} value={n.nom}>
+                                    <SelectItem key={n.id} value={n.id.toString()}>
                                         {n.nom}
                                     </SelectItem>
                                 ))}
@@ -189,7 +190,7 @@ export default function Index() {
                                 <SelectItem value="all">
                                     Tous statuts
                                 </SelectItem>
-                                {['Solde', 'Bon'].map((s) => (
+                                {['Solde', 'En cours'].map((s) => (
                                     <SelectItem key={s} value={s}>
                                         {s}
                                     </SelectItem>
@@ -198,20 +199,32 @@ export default function Index() {
                         </Select>
 
                         {hasFilters && (
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={reset}
-                                className="gap-1.5 text-muted-foreground"
-                            >
-                                <X className="h-3.5 w-3.5" /> Réinitialiser
-                            </Button>
+                            <>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={handleSearch}
+                                    className="gap-1.5 text-muted-foreground"
+                                >
+                                    <Search className="h-3.5 w-3.5" />{' '}
+                                    Rechercher
+                                </Button>
+
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={reset}
+                                    className="gap-1.5 text-muted-foreground"
+                                >
+                                    <X className="h-3.5 w-3.5" /> Réinitialiser
+                                </Button>
+                            </>
                         )}
 
                         <span className="ml-auto flex items-center gap-1 text-xs text-muted-foreground">
                             <SlidersHorizontal className="h-3.5 w-3.5" />
-                            {filtered.length} résultat
-                            {filtered.length !== 1 ? 's' : ''}
+                            {inscriptions.data.length} résultat
+                            {inscriptions.data.length !== 1 ? 's' : ''}
                         </span>
                     </CardContent>
                 </Card>
@@ -222,10 +235,10 @@ export default function Index() {
                         <TableHeader>
                             <TableRow className="bg-muted/40 hover:bg-muted/40">
                                 <TableHead>Étudiant</TableHead>
-                         
+
                                 <TableHead>Niveau</TableHead>
                                 <TableHead>Type</TableHead>
-                                {/* <TableHead>Statut</TableHead> */}
+
                                 {isAdmin && (
                                     <>
                                         <TableHead>Réduction</TableHead>
@@ -238,7 +251,7 @@ export default function Index() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filtered.length === 0 ? (
+                            {inscriptions.data.length === 0 ? (
                                 <TableRow>
                                     <TableCell
                                         colSpan={7}
@@ -262,7 +275,7 @@ export default function Index() {
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                filtered.map((ins) => (
+                                inscriptions.data.map((ins) => (
                                     <TableRow key={ins.id} className="group">
                                         <TableCell>
                                             <div className="flex items-center gap-2.5">
@@ -273,7 +286,7 @@ export default function Index() {
                                                 />
                                                 <div>
                                                     <p className="text-sm leading-none font-medium">
-                                                        {ins.etudiant.nom} {" "}
+                                                        {ins.etudiant.nom}{' '}
                                                         {ins.etudiant.prenom}
                                                     </p>
                                                     <p className="mt-0.5 text-xs text-muted-foreground">
@@ -303,17 +316,6 @@ export default function Index() {
                                                 {ins.type_inscription}
                                             </span>
                                         </TableCell>
-{/* 
-                                        <TableCell>
-                                            <span
-                                                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold`}
-                                            >
-                                                <span
-                                                    className={`h-1.5 w-1.5 rounded-full`}
-                                                />
-                                                {ins.status ?? 'Aucun'}
-                                            </span>
-                                        </TableCell> */}
 
                                         {isAdmin && (
                                             <>
@@ -381,6 +383,8 @@ export default function Index() {
                                 ))
                             )}
                         </TableBody>
+
+                        <PaginationLinks links={inscriptions.links} />
                     </Table>
                 </Card>
 

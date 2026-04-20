@@ -3,12 +3,35 @@
 namespace App\Repositories;
 
 use App\Models\Etudiant;
+use Illuminate\Http\Request;
 
 class EtudiantRepository
 {
-    public function all()
+    public function all(Request $request)
     {
-        return Etudiant::latest()->get();
+        $query = Etudiant::query();
+
+        $query->when($request->search, function ($q) use ($request) {
+            $q->where(function ($q) use ($request) {
+                $q->where('nom', 'like', '%' . $request->search . '%')
+                    ->orWhere('prenom', 'like', '%' . $request->search . '%')
+                    ->orWhere('ip', 'like', '%' . $request->search . '%');
+            });
+        });
+
+        $query->when($request->genre, function ($q) use ($request) {
+            if ($request->genre !== "all") {
+                $q->where("genre", $request->genre);
+            }
+        });
+
+        $query->when($request->statut, function ($q) use ($request) {
+            if ($request->statut !== "all") {
+                $q->where("statut", $request->statut);
+            }
+        });
+
+        return $query->latest()->paginate(20)->withQueryString();
     }
 
     public function find(string $etudiant)
@@ -16,7 +39,8 @@ class EtudiantRepository
         return Etudiant::find($etudiant);
     }
 
-    public function findByIp(string $ip) {
+    public function findByIp(string $ip)
+    {
         return Etudiant::where("ip", $ip)->first();
     }
 

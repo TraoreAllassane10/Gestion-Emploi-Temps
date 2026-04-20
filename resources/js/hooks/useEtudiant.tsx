@@ -8,6 +8,26 @@ import toast from 'react-hot-toast';
 export default function useEtudiant() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const rechercheEtFiltrage = (search: string, filtreStatut: string, filtreGenre: string) => {
+        try {
+            return router.get(
+                `/etudiants`,
+                {
+                    search: search,
+                    statut: filtreStatut,
+                    genre: filtreGenre,
+                    page: 1
+                },
+                {
+                    preserveState: true,
+                    replace: true,
+                },
+            );
+        } catch (error) {
+            console.log('Erreur lors de la recherche ou du filtarge : ', error);
+        }
+    };
+
     // Création d'un etudiant
     const createEtudiant = async (data: EtudiantFormData) => {
         try {
@@ -58,14 +78,12 @@ export default function useEtudiant() {
                 .catch((error) => {
                     toast.error(error.response.data.message);
                     console.log(error);
-                })
-           
+                });
         } catch (error) {
             toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
-        }
-        finally{
-             setIsLoading(false);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -90,11 +108,16 @@ export default function useEtudiant() {
         } catch (error) {
             toast.success('Erreur survenue au niveau du serveur');
             console.log(error);
-        }
-        finally {
+        } finally {
             setIsLoading(false);
         }
     };
 
-    return { createEtudiant, updateEtudiant, deleteEtudiant, isLoading };
+    return {
+        createEtudiant,
+        updateEtudiant,
+        deleteEtudiant,
+        rechercheEtFiltrage,
+        isLoading,
+    };
 }

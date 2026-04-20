@@ -6,6 +6,7 @@ use App\Http\Resources\EtudiantRessource;
 use App\Models\Etudiant;
 use App\Repositories\EtudiantRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class EtudiantService
 {
@@ -14,9 +15,9 @@ class EtudiantService
         protected EtudiantRepository $etudiantRepository
     ) {}
 
-    public function all()
+    public function all(Request $request)
     {
-        return EtudiantRessource::collection($this->etudiantRepository->all());
+        return EtudiantRessource::collection($this->etudiantRepository->all($request));
     }
 
     public function find(string $etudiant)

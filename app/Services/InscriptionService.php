@@ -8,6 +8,7 @@ use App\Models\FraisConfiguration;
 use App\Models\Inscription;
 use App\Models\Scolarite;
 use App\Repositories\InscriptionRepository;
+use Illuminate\Http\Request;
 
 class InscriptionService
 {
@@ -18,14 +19,14 @@ class InscriptionService
         protected NiveauService $niveauService
     ) {}
 
-    public function all()
+    public function all(Request $request)
     {
         $niveaux = $this->niveauService->getAllNiveaux();
 
         // Annee universitaire active
         $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
 
-        $inscriptions = $this->inscriptionRepository->all();
+        $inscriptions = $this->inscriptionRepository->all($request);
 
         // Statistiques
         $nombreTotalInscription = $this->inscriptionRepository->totalInscription();
