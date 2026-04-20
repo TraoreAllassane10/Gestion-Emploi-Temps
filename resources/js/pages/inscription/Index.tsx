@@ -55,6 +55,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import useInscription from '@/hooks/useInscription';
 import { Annee, Auth, DataNiveau, Inscription } from '@/types';
+import PaginationLinks from '@/components/Pagination';
 
 interface InscriptionProps {
     annees: Annee[];
@@ -225,7 +226,7 @@ export default function Index() {
                          
                                 <TableHead>Niveau</TableHead>
                                 <TableHead>Type</TableHead>
-                                {/* <TableHead>Statut</TableHead> */}
+                  
                                 {isAdmin && (
                                     <>
                                         <TableHead>Réduction</TableHead>
@@ -303,17 +304,6 @@ export default function Index() {
                                                 {ins.type_inscription}
                                             </span>
                                         </TableCell>
-{/* 
-                                        <TableCell>
-                                            <span
-                                                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold`}
-                                            >
-                                                <span
-                                                    className={`h-1.5 w-1.5 rounded-full`}
-                                                />
-                                                {ins.status ?? 'Aucun'}
-                                            </span>
-                                        </TableCell> */}
 
                                         {isAdmin && (
                                             <>
@@ -381,6 +371,8 @@ export default function Index() {
                                 ))
                             )}
                         </TableBody>
+
+                        {/* <PaginationLinks links={inscriptions.meta.links} /> */}
                     </Table>
                 </Card>
 

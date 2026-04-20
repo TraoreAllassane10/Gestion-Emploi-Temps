@@ -9,6 +9,7 @@ use Exception;
 use Inertia\Inertia;
 use App\Models\Etudiant;
 use App\Services\EtudiantService;
+use Illuminate\Http\Request;
 
 class EtudiantController extends Controller
 {
@@ -16,10 +17,10 @@ class EtudiantController extends Controller
         protected EtudiantService $etudiantService
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $etudiants = $this->etudiantService->all();
+            $etudiants = $this->etudiantService->all($request);
 
             $total = Etudiant::count();
             $affecte = $this->etudiantService->totalEtudiantParStatut(StatutEtudiant::AFFECTE->value);
@@ -35,7 +36,8 @@ class EtudiantController extends Controller
                     "naff" => $naff,
                     "reaffecte" => $reaffecte,
                     "transfert" => $transfert
-                ]
+                ],
+                'filters' => $request->only(['search', 'genre', 'statut'])
             ]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);

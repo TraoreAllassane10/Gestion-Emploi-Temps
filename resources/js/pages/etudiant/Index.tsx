@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     ChevronDown,
     Eye,
@@ -11,7 +11,7 @@ import {
     Users,
     X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -42,6 +42,7 @@ import {
 import Avatar from '@/components/etudiant/Avatar';
 import EtudiantStats from '@/components/etudiant/EtudiantStats';
 import StatutBadge from '@/components/etudiant/StatutBadge';
+import PaginationLinks from '@/components/Pagination';
 import useEtudiant from '@/hooks/useEtudiant';
 import { Etudiant, Meta, StatsEtudiant } from '@/types';
 
@@ -53,46 +54,52 @@ interface EtudiantData {
 interface EtudiantProps {
     stats: StatsEtudiant;
     etudiants: EtudiantData;
+    filters: {
+        search: string;
+        statut: string;
+        genre: string;
+    };
     [key: string]: unknown;
 }
 
 export default function Index() {
-    const { etudiants, stats } = usePage<EtudiantProps>().props;
+    const { etudiants, stats, filters } = usePage<EtudiantProps>().props;
 
-    const [search, setSearch] = useState('');
-    const [filtreStatut, setFiltreStatut] = useState('all');
-    const [filtreGenre, setFiltreGenre] = useState('all');
+    const [search, setSearch] = useState(filters.search ?? '');
+    const [filtreStatut, setFiltreStatut] = useState(filters.statut ?? 'all');
+    const [filtreGenre, setFiltreGenre] = useState(filters.genre ?? 'all');
 
-    const filtered = etudiants.data.filter((e) => {
-        const q = search.toLowerCase();
-        const matchSearch =
-            !q ||
-            `${e.prenom} ${e.nom}`.toLowerCase().includes(q) ||
-            e.ip.toLowerCase().includes(q) ||
-            (e.email ?? '').toLowerCase().includes(q) ||
-            e.lieu_naissance.toLowerCase().includes(q);
-        return (
-            matchSearch &&
-            (filtreStatut === 'all' || e.statut === filtreStatut) &&
-            (filtreGenre === 'all' || e.genre === filtreGenre)
-        );
-    });
+    console.log(filters);
 
     const hasFilters =
         search || filtreStatut !== 'all' || filtreGenre !== 'all';
+
     const reset = () => {
         setSearch('');
         setFiltreStatut('all');
         setFiltreGenre('all');
+
+        router.visit("/etudiants")
     };
 
-    const { deleteEtudiant } = useEtudiant();
+    const { deleteEtudiant, rechercheEtFiltrage } = useEtudiant();
 
     const handleDelete = (ip: string) => {
         if (ip) {
             deleteEtudiant(ip);
         }
     };
+
+    // Synchronisation des states
+    useEffect(() => {
+        setSearch(filters.search ?? '');
+        setFiltreStatut(filters.statut ?? 'all');
+        setFiltreGenre(filters.genre ?? 'all');
+    }, [filters]);
+
+    const handleSearch = () => {
+        rechercheEtFiltrage(search, filtreStatut, filtreGenre)
+    }
 
     return (
         <AppLayout>
@@ -144,6 +151,14 @@ export default function Index() {
                                 <SelectItem value="all">
                                     Tous statuts
                                 </SelectItem>
+                                <SelectItem value="Affecté">Affecté</SelectItem>
+                                <SelectItem value="Naff">Naff</SelectItem>
+                                <SelectItem value="Réaffecté">
+                                    Réaffecté
+                                </SelectItem>
+                                <SelectItem value="Transfert">
+                                    Transfert
+                                </SelectItem>
                             </SelectContent>
                         </Select>
 
@@ -164,20 +179,31 @@ export default function Index() {
                         </Select>
 
                         {hasFilters && (
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={reset}
-                                className="gap-1.5 text-muted-foreground"
-                            >
-                                <X className="h-3.5 w-3.5" /> Réinitialiser
-                            </Button>
+                            <>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={handleSearch}
+                                    className="gap-1.5 text-muted-foreground"
+                                >
+                                    <Search className="h-3.5 w-3.5" /> Rechercher
+                                </Button>
+
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={reset}
+                                    className="gap-1.5 text-muted-foreground"
+                                >
+                                    <X className="h-3.5 w-3.5" /> Réinitialiser
+                                </Button>
+                            </>
                         )}
 
                         <span className="ml-auto flex items-center gap-1 text-xs text-muted-foreground">
                             <SlidersHorizontal className="h-3.5 w-3.5" />
-                            {filtered.length} résultat
-                            {filtered.length !== 1 ? 's' : ''}
+                            {etudiants.data.length} résultat
+                            {etudiants.data.length !== 1 ? 's' : ''}
                         </span>
                     </CardContent>
                 </Card>
@@ -197,7 +223,7 @@ export default function Index() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filtered.length === 0 ? (
+                            {etudiants.data.length === 0 ? (
                                 <TableRow>
                                     <TableCell
                                         colSpan={7}
@@ -222,7 +248,7 @@ export default function Index() {
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                filtered.map((e) => (
+                                etudiants.data.map((e) => (
                                     <TableRow key={e.ip} className="group">
                                         <TableCell>
                                             <div className="flex items-center gap-2.5">
@@ -308,7 +334,11 @@ export default function Index() {
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem className="cursor-pointer gap-2 text-destructive focus:text-destructive">
                                                         <Link
-                                                            onClick={() => handleDelete(e.ip)}
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    e.ip,
+                                                                )
+                                                            }
                                                             className="flex cursor-pointer items-center gap-2"
                                                         >
                                                             <Trash2 className="h-4 w-4" />{' '}
@@ -322,6 +352,8 @@ export default function Index() {
                                 ))
                             )}
                         </TableBody>
+
+                        <PaginationLinks links={etudiants.meta.links} />
                     </Table>
                 </Card>
             </div>
