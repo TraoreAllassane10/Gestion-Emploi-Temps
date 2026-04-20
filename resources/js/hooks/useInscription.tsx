@@ -15,6 +15,27 @@ interface CreateInscriptionData {
 export default function useInscription() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    // Recherche et filtrage des données
+    const rechercheEtFiltrage = (search: string, filtreStatut: string, filtreNiveau: string) => {
+        try {
+            return router.get(
+                `/inscriptions`,
+                {
+                    search: search,
+                    statut: filtreStatut,
+                    niveau: filtreNiveau,
+                    page: 1
+                },
+                {
+                    preserveState: true,
+                    replace: true,
+                },
+            );
+        } catch (error) {
+            console.log('Erreur lors de la recherche ou du filtarge : ', error);
+        }
+    };
+
     // Création d'une inscription
     const createEtudiant = async (data: CreateInscriptionData) => {
         try {
@@ -79,5 +100,5 @@ export default function useInscription() {
         }
     };
 
-    return { createEtudiant, deleteEtudiant, isLoading };
+    return { createEtudiant, deleteEtudiant, rechercheEtFiltrage, isLoading };
 }

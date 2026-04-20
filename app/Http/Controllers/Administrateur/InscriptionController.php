@@ -11,6 +11,7 @@ use App\Services\AnneeAcademiqueService;
 use App\Services\InscriptionService;
 use App\Services\NiveauService;
 use Exception;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 
@@ -22,14 +23,15 @@ class InscriptionController extends Controller
         protected NiveauService $niveauService 
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $response = $this->inscriptionService->all();
+        $response = $this->inscriptionService->all($request);
 
         return Inertia::render('inscription/Index', [
             "niveaux" => $response['niveaux'],
             "inscriptions" => $response['inscriptions'],
-            "stats" => $response['stats']
+            "stats" => $response['stats'],
+            'filters' => $request->only(['search', 'genre', 'statut'])
         ]);
     }
 
