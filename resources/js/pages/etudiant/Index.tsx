@@ -69,8 +69,6 @@ export default function Index() {
     const [filtreStatut, setFiltreStatut] = useState(filters.statut ?? 'all');
     const [filtreGenre, setFiltreGenre] = useState(filters.genre ?? 'all');
 
-    console.log(filters);
-
     const hasFilters =
         search || filtreStatut !== 'all' || filtreGenre !== 'all';
 
