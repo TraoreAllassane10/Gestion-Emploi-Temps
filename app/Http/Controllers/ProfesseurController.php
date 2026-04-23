@@ -13,7 +13,7 @@ use App\Services\ProfesseurService;
 class ProfesseurController extends Controller
 {
     public function __construct(
-        protected ProfesseurService $professeurService
+        protected ProfesseurService $professeurService,
     ) {}
 
     public function index()

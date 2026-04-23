@@ -27,21 +27,18 @@ import {
 } from '@/components/ui/table';
 import useProfesseur from '@/hooks/useProfesseur';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, Professeur } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
     ChevronDown,
     ChevronLeft,
     ChevronRight,
     Edit,
-    Mail,
-    Phone,
     PlusCircle,
     Trash2,
     UserRound,
 } from 'lucide-react';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Professeurs', href: '/professeur' },
@@ -62,13 +59,11 @@ interface Meta {
     links: { active: boolean; label: string; page: number; url: string }[];
 }
 
-interface Professeur {
-    data: Data[];
-    meta: Meta;
-}
-
 interface ProfesseurProps {
-    professeurs: Professeur;
+    professeurs: {
+        data: Professeur[];
+        meta: Meta;
+    };
     [key: string]: unknown;
 }
 
@@ -77,8 +72,9 @@ interface ProfesseurProps {
 function Avatar({ nom, prenom }: { nom: string; prenom: string }) {
     return (
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+             {nom[0]?.toUpperCase()}
             {prenom[0]?.toUpperCase()}
-            {nom[0]?.toUpperCase()}
+           
         </div>
     );
 }
@@ -87,26 +83,9 @@ function Avatar({ nom, prenom }: { nom: string; prenom: string }) {
 
 const Index = () => {
     const { professeurs } = usePage<ProfesseurProps>().props;
-
-    const [nom, setNom] = useState('');
-    const [prenom, setPrenom] = useState('');
-    const [email, setEmail] = useState('');
-    const [telephone, setTelephone] = useState('');
     const [selectedId, setSelectedId] = useState<number | null>(null);
 
-    const { createProfesseur, deleteProfesseur } = useProfesseur();
-
-    const handleSubmit = () => {
-        if (!nom || !prenom || !email || !telephone) {
-            toast.error('Veuillez remplir tous les champs !');
-            return;
-        }
-        createProfesseur({ nom, prenom, email, telephone });
-        setNom('');
-        setPrenom('');
-        setEmail('');
-        setTelephone('');
-    };
+    const { deleteProfesseur } = useProfesseur();
 
     const handleDelete = () => {
         if (selectedId) {
@@ -124,7 +103,7 @@ const Index = () => {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight">
-                            Professeurs
+                            Enseignants
                         </h1>
                         <p className="mt-0.5 text-sm text-muted-foreground">
                             {professeurs.data.length} professeur
@@ -149,9 +128,12 @@ const Index = () => {
                     <Table>
                         <TableHeader>
                             <TableRow className="bg-muted/40 hover:bg-muted/40">
-                                <TableHead>Professeur</TableHead>
-                                <TableHead>Email</TableHead>
-                                <TableHead>Téléphone</TableHead>
+                                <TableHead>Nom et prenom</TableHead>
+                                <TableHead>Matricule</TableHead>
+
+                                <TableHead>Sexe</TableHead>
+                                <TableHead>Date de naissance</TableHead>
+                                <TableHead>Spécialité</TableHead>
                                 <TableHead className="w-[80px]" />
                             </TableRow>
                         </TableHeader>
@@ -171,82 +153,88 @@ const Index = () => {
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                professeurs.data.map((prof) => (
-                                    <TableRow key={prof.id} className="group">
-                                        {/* Professeur */}
-                                        <TableCell>
-                                            <div className="flex items-center gap-2.5">
-                                                <Avatar
-                                                    nom={prof.nom}
-                                                    prenom={prof.prenom}
-                                                />
-                                                <div>
-                                                    <p className="text-sm leading-none font-medium">
-                                                        {prof.prenom} {prof.nom}
-                                                    </p>
+                                professeurs.data.map((prof) => {
+                                    const nom = prof.nom_prenom.split(' ');
+                                
+                                    return (
+                                        <TableRow
+                                            key={prof.id}
+                                            className="group"
+                                        >
+                                            <TableCell>
+                                                <div className='flex flex-row place-items-center gap-2'>
+                                                    <Avatar
+                                                        nom={nom[0]}
+                                                        prenom={nom[1]}
+                                                    />
+                                                    {prof.nom_prenom}
                                                 </div>
-                                            </div>
-                                        </TableCell>
+                                            </TableCell>
 
-                                        {/* Email */}
-                                        <TableCell>
-                                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                                                <Mail className="h-3.5 w-3.5 shrink-0" />
-                                                {prof.email}
-                                            </div>
-                                        </TableCell>
+                                            <TableCell>
+                                                <span className="rounded-sm bg-accent p-1">
+                                                    {prof.matricule}
+                                                </span>
+                                            </TableCell>
 
-                                        {/* Téléphone */}
-                                        <TableCell>
-                                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                                                <Phone className="h-3.5 w-3.5 shrink-0" />
-                                                {prof.telephone}
-                                            </div>
-                                        </TableCell>
+                                            <TableCell>{prof.sexe}</TableCell>
 
-                                        {/* Actions */}
-                                        <TableCell>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
+                                            <TableCell>
+                                                {prof.date_naissance}
+                                            </TableCell>
+
+                                            <TableCell>
+                                                {prof.specialite}
+                                            </TableCell>
+
+                                            {/* Actions */}
+                                            <TableCell>
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger
+                                                        asChild
                                                     >
-                                                        Actions{' '}
-                                                        <ChevronDown className="h-3 w-3" />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent
-                                                    align="end"
-                                                    className="w-44"
-                                                >
-                                                    <DropdownMenuItem asChild>
-                                                        <Link
-                                                            href={`/professeur/${prof.id}/edit`}
-                                                            className="flex cursor-pointer items-center gap-2"
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
                                                         >
-                                                            <Edit className="h-4 w-4" />
-                                                            Modifier
-                                                        </Link>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    <DropdownMenuItem
-                                                        onClick={() =>
-                                                            setSelectedId(
-                                                                prof.id,
-                                                            )
-                                                        }
-                                                        className="cursor-pointer gap-2 text-destructive focus:text-destructive"
+                                                            Actions{' '}
+                                                            <ChevronDown className="h-3 w-3" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent
+                                                        align="end"
+                                                        className="w-44"
                                                     >
-                                                        <Trash2 className="h-4 w-4" />
-                                                        Supprimer
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
+                                                        <DropdownMenuItem
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={`/professeur/${prof.id}/edit`}
+                                                                className="flex cursor-pointer items-center gap-2"
+                                                            >
+                                                                <Edit className="h-4 w-4" />
+                                                                Modifier
+                                                            </Link>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                            onClick={() =>
+                                                                setSelectedId(
+                                                                    prof.id,
+                                                                )
+                                                            }
+                                                            className="cursor-pointer gap-2 text-destructive focus:text-destructive"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                            Supprimer
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })
                             )}
                         </TableBody>
                     </Table>

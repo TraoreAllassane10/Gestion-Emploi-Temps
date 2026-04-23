@@ -18,11 +18,19 @@ class AnneeUniversitaire extends Model
         "date_fin" => "date:d-m-Y",
     ];
 
-    public function inscriptions() {
+    public function inscriptions()
+    {
         return $this->hasMany(Inscription::class);
     }
 
-    public function scolarites() {
+    public function scolarites()
+    {
         return $this->hasMany(Scolarite::class);
+    }
+
+    public function professeurs()
+    {
+        return $this->belongsToMany(Professeur::class, "annee_professeurs")
+            ->withPivot("diplome", "grade", "statut", "annee_prise_fonction", "formation_continue", "nombre_heure_cours_prevue", "nombre_heure_cours_realise");
     }
 }
