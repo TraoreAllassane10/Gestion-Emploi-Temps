@@ -17,18 +17,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetDescription,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from '@/components/ui/sheet';
 import {
     Table,
     TableBody,
@@ -132,7 +120,6 @@ const Index = () => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="space-y-5 p-6">
-
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
@@ -147,75 +134,14 @@ const Index = () => {
                         </p>
                     </div>
 
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <Button className="gap-2">
+                    <div>
+                        <Link href="professeur/create">
+                            <Button className="gap-2 transition duration-300 hover:bg-red-700">
                                 <PlusCircle className="h-4 w-4" />
-                                Ajouter un professeur
+                                Ajouter un enseignant
                             </Button>
-                        </SheetTrigger>
-                        <SheetContent>
-                            <SheetHeader>
-                                <SheetTitle>Nouveau professeur</SheetTitle>
-                                <SheetDescription>
-                                    Renseignez les informations du professeur.
-                                </SheetDescription>
-                            </SheetHeader>
-                            <div className="grid flex-1 auto-rows-min gap-5 px-4">
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="grid gap-2">
-                                        <Label>Nom</Label>
-                                        <Input
-                                            placeholder="Nom"
-                                            value={nom}
-                                            onChange={(e) =>
-                                                setNom(e.target.value)
-                                            }
-                                        />
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <Label>Prénom</Label>
-                                        <Input
-                                            placeholder="Prénom"
-                                            value={prenom}
-                                            onChange={(e) =>
-                                                setPrenom(e.target.value)
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label>Email</Label>
-                                    <Input
-                                        type="email"
-                                        placeholder="exemple@email.com"
-                                        value={email}
-                                        onChange={(e) =>
-                                            setEmail(e.target.value)
-                                        }
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label>Téléphone</Label>
-                                    <Input
-                                        placeholder="+225 07 XX XX XX"
-                                        value={telephone}
-                                        onChange={(e) =>
-                                            setTelephone(e.target.value)
-                                        }
-                                    />
-                                </div>
-                            </div>
-                            <SheetFooter>
-                                <Button onClick={handleSubmit}>
-                                    Enregistrer
-                                </Button>
-                                <SheetClose asChild>
-                                    <Button variant="outline">Fermer</Button>
-                                </SheetClose>
-                            </SheetFooter>
-                        </SheetContent>
-                    </Sheet>
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Tableau */}
@@ -247,7 +173,6 @@ const Index = () => {
                             ) : (
                                 professeurs.data.map((prof) => (
                                     <TableRow key={prof.id} className="group">
-
                                         {/* Professeur */}
                                         <TableCell>
                                             <div className="flex items-center gap-2.5">
@@ -256,7 +181,7 @@ const Index = () => {
                                                     prenom={prof.prenom}
                                                 />
                                                 <div>
-                                                    <p className="text-sm font-medium leading-none">
+                                                    <p className="text-sm leading-none font-medium">
                                                         {prof.prenom} {prof.nom}
                                                     </p>
                                                 </div>
@@ -308,7 +233,9 @@ const Index = () => {
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem
                                                         onClick={() =>
-                                                            setSelectedId(prof.id)
+                                                            setSelectedId(
+                                                                prof.id,
+                                                            )
                                                         }
                                                         className="cursor-pointer gap-2 text-destructive focus:text-destructive"
                                                     >
@@ -318,7 +245,6 @@ const Index = () => {
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
-
                                     </TableRow>
                                 ))
                             )}
@@ -371,7 +297,9 @@ const Index = () => {
                                 return (
                                     <Button
                                         key={i}
-                                        variant={link.active ? 'default' : 'outline'}
+                                        variant={
+                                            link.active ? 'default' : 'outline'
+                                        }
                                         size="sm"
                                         disabled={!link.url || link.active}
                                         asChild={!!link.url && !link.active}
@@ -390,13 +318,14 @@ const Index = () => {
                         </div>
                     </div>
                 )}
-
             </div>
 
             {/* Dialog confirmation suppression */}
             <AlertDialog
                 open={!!selectedId}
-                onOpenChange={(open) => { if (!open) setSelectedId(null); }}
+                onOpenChange={(open) => {
+                    if (!open) setSelectedId(null);
+                }}
             >
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -420,7 +349,6 @@ const Index = () => {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-
         </AppLayout>
     );
 };

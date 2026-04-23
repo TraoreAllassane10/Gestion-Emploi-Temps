@@ -29,6 +29,11 @@ class ProfesseurController extends Controller
         }
     }
 
+    public function create() {
+        $professeurs = $this->professeurService->getAllProfesseurs();
+        return Inertia::render('professeur/Create', ["professeurs" => $professeurs]);
+    }
+
     public function store(CreateProfesseurRequest $request)
     {
         try {

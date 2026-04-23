@@ -79,6 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Routes Professeur
     Route::controller(ProfesseurController::class)->group(function () {
         Route::get("professeur", "index")->name("professeur");
+        Route::get("professeur/create", "create")->name("professeur.create");
         Route::post("professeur", "store")->name("professeur.store");
         Route::get("professeur/{professeur}/edit", "edit")->name("professeur.edit");
         Route::put("professeur/{professeur}/update", "update")->name("professeur.update");

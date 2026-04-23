@@ -138,7 +138,7 @@ export default function Index() {
                         </p>
                     </div>
                     <Link href="/inscriptions/create">
-                        <Button className="gap-2">
+                        <Button className="gap-2 hover:bg-red-700 transition duration-300">
                             <PlusCircle className="h-4 w-4" />
                             Nouvelle inscription
                         </Button>
