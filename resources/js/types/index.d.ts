@@ -155,6 +155,7 @@ export interface Professeur {
     formation_continue: number;
     nombre_heure_cours_prevue: number;
     nombre_heure_cours_realise: number;
+    annee_academiques: any
 }
 
 export interface Cours {

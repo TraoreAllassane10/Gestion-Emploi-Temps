@@ -11,7 +11,20 @@ class ProfesseurRepository
     ) {}
     public function all()
     {
-        return Professeur::latest()->get();
+        $anneeActive = $this->anneeAcademiqueRepository->anneeActive();
+
+        $professeurs = Professeur::whereHas("anneeAcademiques", function ($query) use ($anneeActive) {
+            $query->where("annee_universitaire_id", $anneeActive->id);
+        })->with(["anneeAcademiques" => function ($query) use ($anneeActive) {
+            $query->where("annee_universitaire_id", $anneeActive->id);
+        }])->latest()->paginate(10);
+
+        return $professeurs;
+    }
+
+    public function find(Professeur $professeur)
+    {
+        return $professeur->anneeAcademiques()->first();
     }
 
     public function create(array $data)
@@ -46,7 +59,26 @@ class ProfesseurRepository
     {
         $anneeActive = $this->anneeAcademiqueRepository->anneeActive();
 
-        return $professeur->anneeAcademiques()->detach($anneeActive->id);
+        // Supprimer les données de l'enseignant durant l'année active
+        $professeur->anneeAcademiques()->detach($anneeActive->id);
+
+        // Supprimmer l'enseignant s'il existe plus dans aucune des années
+        if ($professeur->anneeAcademiques()->count() == 0) {
+            $professeur->delete();
+        }
+
+        return $professeur;
+    }
+
+    public function professeurNonEnregistreDabord()
+    {
+        $anneeActive = $this->anneeAcademiqueRepository->anneeActive();
+
+        $professeurs = Professeur::whereDoesntHave("anneeAcademiques", function ($query) use ($anneeActive) {
+            $query->where("annee_universitaire_id", $anneeActive->id);
+        })->latest()->get();
+
+        return $professeurs;
     }
 
     public function informationDeLaFonction($professeur, array $data)

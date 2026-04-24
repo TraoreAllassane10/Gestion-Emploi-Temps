@@ -1,3 +1,5 @@
+import Avatar from '@/components/etudiant/Avatar';
+import PaginationLinks from '@/components/Pagination';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -34,6 +36,8 @@ import {
     ChevronLeft,
     ChevronRight,
     Edit,
+    Eye,
+    Pencil,
     PlusCircle,
     Trash2,
     UserRound,
@@ -43,14 +47,6 @@ import { useState } from 'react';
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Professeurs', href: '/professeur' },
 ];
-
-interface Data {
-    id: number;
-    nom: string;
-    prenom: string;
-    email: string;
-    telephone: string;
-}
 
 interface Meta {
     current_page: number;
@@ -67,20 +63,6 @@ interface ProfesseurProps {
     [key: string]: unknown;
 }
 
-// ── Avatar initiales ──────────────────────────────────────────────────────────
-
-function Avatar({ nom, prenom }: { nom: string; prenom: string }) {
-    return (
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-             {nom[0]?.toUpperCase()}
-            {prenom[0]?.toUpperCase()}
-           
-        </div>
-    );
-}
-
-// ── Page ──────────────────────────────────────────────────────────────────────
-
 const Index = () => {
     const { professeurs } = usePage<ProfesseurProps>().props;
     const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -93,8 +75,6 @@ const Index = () => {
             setSelectedId(null);
         }
     };
-
-    const { meta } = professeurs;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -130,10 +110,9 @@ const Index = () => {
                             <TableRow className="bg-muted/40 hover:bg-muted/40">
                                 <TableHead>Nom et prenom</TableHead>
                                 <TableHead>Matricule</TableHead>
-
-                                <TableHead>Sexe</TableHead>
                                 <TableHead>Date de naissance</TableHead>
                                 <TableHead>Spécialité</TableHead>
+                                <TableHead>Grade</TableHead>
                                 <TableHead className="w-[80px]" />
                             </TableRow>
                         </TableHeader>
@@ -155,17 +134,22 @@ const Index = () => {
                             ) : (
                                 professeurs.data.map((prof) => {
                                     const nom = prof.nom_prenom.split(' ');
-                                
+
                                     return (
                                         <TableRow
                                             key={prof.id}
                                             className="group"
                                         >
                                             <TableCell>
-                                                <div className='flex flex-row place-items-center gap-2'>
+                                                <div className="flex flex-row place-items-center gap-2">
                                                     <Avatar
                                                         nom={nom[0]}
                                                         prenom={nom[1]}
+                                                        genre={
+                                                            prof.sexe == 'M'
+                                                                ? 'Masculin'
+                                                                : 'Féminin'
+                                                        }
                                                     />
                                                     {prof.nom_prenom}
                                                 </div>
@@ -177,14 +161,19 @@ const Index = () => {
                                                 </span>
                                             </TableCell>
 
-                                            <TableCell>{prof.sexe}</TableCell>
-
                                             <TableCell>
                                                 {prof.date_naissance}
                                             </TableCell>
 
                                             <TableCell>
                                                 {prof.specialite}
+                                            </TableCell>
+
+                                            <TableCell>
+                                                {
+                                                    prof.annee_academiques[0]
+                                                        .pivot.grade
+                                                }
                                             </TableCell>
 
                                             {/* Actions */}
@@ -206,6 +195,18 @@ const Index = () => {
                                                         align="end"
                                                         className="w-44"
                                                     >
+                                                        <DropdownMenuItem
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={`/professeur/${prof.id}/show`}
+                                                                className="flex cursor-pointer items-center gap-2"
+                                                            >
+                                                                <Eye className="h-4 w-4" />
+                                                                Voir profil
+                                                            </Link>
+                                                        </DropdownMenuItem>
+
                                                         <DropdownMenuItem
                                                             asChild
                                                         >
@@ -241,71 +242,7 @@ const Index = () => {
                 </Card>
 
                 {/* Pagination */}
-                {meta && meta.last_page > 1 && (
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span>
-                            Page {meta.current_page} sur {meta.last_page}
-                        </span>
-                        <div className="flex items-center gap-1">
-                            {meta.links.map((link, i) => {
-                                const isFirst = i === 0;
-                                const isLast = i === meta.links.length - 1;
-
-                                if (isFirst || isLast) {
-                                    return (
-                                        <Button
-                                            key={i}
-                                            variant="outline"
-                                            size="sm"
-                                            disabled={!link.url}
-                                            asChild={!!link.url}
-                                            className="h-8 w-8 p-0"
-                                        >
-                                            {link.url ? (
-                                                <Link href={link.url}>
-                                                    {isFirst ? (
-                                                        <ChevronLeft className="h-4 w-4" />
-                                                    ) : (
-                                                        <ChevronRight className="h-4 w-4" />
-                                                    )}
-                                                </Link>
-                                            ) : (
-                                                <span>
-                                                    {isFirst ? (
-                                                        <ChevronLeft className="h-4 w-4" />
-                                                    ) : (
-                                                        <ChevronRight className="h-4 w-4" />
-                                                    )}
-                                                </span>
-                                            )}
-                                        </Button>
-                                    );
-                                }
-
-                                return (
-                                    <Button
-                                        key={i}
-                                        variant={
-                                            link.active ? 'default' : 'outline'
-                                        }
-                                        size="sm"
-                                        disabled={!link.url || link.active}
-                                        asChild={!!link.url && !link.active}
-                                        className="h-8 w-8 p-0"
-                                    >
-                                        {link.url && !link.active ? (
-                                            <Link href={link.url}>
-                                                {link.label}
-                                            </Link>
-                                        ) : (
-                                            <span>{link.label}</span>
-                                        )}
-                                    </Button>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
+               <PaginationLinks links={professeurs.meta.links} />
             </div>
 
             {/* Dialog confirmation suppression */}

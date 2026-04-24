@@ -8,12 +8,14 @@ use Exception;
 use Inertia\Inertia;
 use App\Models\Professeur;
 use App\Http\Resources\ProfesseurResource;
+use App\Services\AnneeAcademiqueService;
 use App\Services\ProfesseurService;
 
 class ProfesseurController extends Controller
 {
     public function __construct(
         protected ProfesseurService $professeurService,
+        protected AnneeAcademiqueService $anneeAcademiqueService
     ) {}
 
     public function index()
@@ -29,8 +31,20 @@ class ProfesseurController extends Controller
         }
     }
 
-    public function create() {
-        $professeurs = $this->professeurService->getAllProfesseurs();
+    public function show(Professeur $professeur)
+    {
+        $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
+
+        $professeur->load(['anneeAcademiques' => function ($query) use ($anneeActive) {
+            $query->where('annee_universitaire_id', $anneeActive->id);
+        }]);
+
+        return Inertia::render("professeur/Show", ["professeur" => $professeur]);
+    }
+
+    public function create()
+    {
+        $professeurs = $this->professeurService->getProfesseurNonEnregistreDabord();
         return Inertia::render('professeur/Create', ["professeurs" => $professeurs]);
     }
 

@@ -79,6 +79,7 @@ export default function useProfesseur() {
                 .then((response) => {
                     if (response.data.success) {
                         toast.success('Professeur supprimé !');
+                        router.visit(professeur());
                     }
                 })
                 .catch((error) => {

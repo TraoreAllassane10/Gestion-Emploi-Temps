@@ -81,6 +81,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("professeur", "index")->name("professeur");
         Route::get("professeur/create", "create")->name("professeur.create");
         Route::post("professeur", "store")->name("professeur.store");
+        Route::get("professeur/{professeur}/show", "show")->name("professeur.show");
         Route::get("professeur/{professeur}/edit", "edit")->name("professeur.edit");
         Route::put("professeur/{professeur}/update", "update")->name("professeur.update");
         Route::delete("professeur/{professeur}/delete", "delete")->name("professeur.delete");
