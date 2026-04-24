@@ -4,10 +4,21 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 interface Data {
-    nom: string;
-    prenom: string;
-    email: string;
+    option: number;
+    matricule: string;
+    nom_prenom: string;
+    sexe: string;
+    date_naissance: string;
+    pays: string;
+    specialite: string;
     telephone: string;
+    diplome: string;
+    grade: number;
+    statut: number;
+    annee_prise_fonction: number;
+    formation_continue: number;
+    nombre_heure_cours_prevue: number;
+    nombre_heure_cours_realise: number;
 }
 
 export default function useProfesseur() {
@@ -68,6 +79,7 @@ export default function useProfesseur() {
                 .then((response) => {
                     if (response.data.success) {
                         toast.success('Professeur supprimé !');
+                        router.visit(professeur());
                     }
                 })
                 .catch((error) => {

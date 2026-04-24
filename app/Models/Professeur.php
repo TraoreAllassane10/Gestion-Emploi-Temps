@@ -10,9 +10,16 @@ class Professeur extends Model
     /** @use HasFactory<\Database\Factories\ProfesseurFactory> */
     use HasFactory;
 
-    protected $fillable = ["nom", "prenom", "email", "telephone"];
+    protected $fillable = ["matricule", "nom_prenom", "sexe", "date_naissance", "pays", "specialite", "telephone"];
 
-    public function cours () {
+    public function cours()
+    {
         return $this->hasMany(Cours::class);
+    }
+
+    public function anneeAcademiques()
+    {
+        return $this->belongsToMany(AnneeUniversitaire::class, "annee_professeurs")
+            ->withPivot("diplome", "grade", "statut", "annee_prise_fonction", "formation_continue", "nombre_heure_cours_prevue", "nombre_heure_cours_realise");
     }
 }

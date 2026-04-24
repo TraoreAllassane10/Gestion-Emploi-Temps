@@ -1,3 +1,5 @@
+import Avatar from '@/components/etudiant/Avatar';
+import PaginationLinks from '@/components/Pagination';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -17,18 +19,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetDescription,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from '@/components/ui/sheet';
 import {
     Table,
     TableBody,
@@ -39,33 +29,24 @@ import {
 } from '@/components/ui/table';
 import useProfesseur from '@/hooks/useProfesseur';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, Professeur } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
     ChevronDown,
     ChevronLeft,
     ChevronRight,
     Edit,
-    Mail,
-    Phone,
+    Eye,
+    Pencil,
     PlusCircle,
     Trash2,
     UserRound,
 } from 'lucide-react';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Professeurs', href: '/professeur' },
 ];
-
-interface Data {
-    id: number;
-    nom: string;
-    prenom: string;
-    email: string;
-    telephone: string;
-}
 
 interface Meta {
     current_page: number;
@@ -74,51 +55,19 @@ interface Meta {
     links: { active: boolean; label: string; page: number; url: string }[];
 }
 
-interface Professeur {
-    data: Data[];
-    meta: Meta;
-}
-
 interface ProfesseurProps {
-    professeurs: Professeur;
+    professeurs: {
+        data: Professeur[];
+        meta: Meta;
+    };
     [key: string]: unknown;
 }
 
-// ── Avatar initiales ──────────────────────────────────────────────────────────
-
-function Avatar({ nom, prenom }: { nom: string; prenom: string }) {
-    return (
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-            {prenom[0]?.toUpperCase()}
-            {nom[0]?.toUpperCase()}
-        </div>
-    );
-}
-
-// ── Page ──────────────────────────────────────────────────────────────────────
-
 const Index = () => {
     const { professeurs } = usePage<ProfesseurProps>().props;
-
-    const [nom, setNom] = useState('');
-    const [prenom, setPrenom] = useState('');
-    const [email, setEmail] = useState('');
-    const [telephone, setTelephone] = useState('');
     const [selectedId, setSelectedId] = useState<number | null>(null);
 
-    const { createProfesseur, deleteProfesseur } = useProfesseur();
-
-    const handleSubmit = () => {
-        if (!nom || !prenom || !email || !telephone) {
-            toast.error('Veuillez remplir tous les champs !');
-            return;
-        }
-        createProfesseur({ nom, prenom, email, telephone });
-        setNom('');
-        setPrenom('');
-        setEmail('');
-        setTelephone('');
-    };
+    const { deleteProfesseur } = useProfesseur();
 
     const handleDelete = () => {
         if (selectedId) {
@@ -127,17 +76,14 @@ const Index = () => {
         }
     };
 
-    const { meta } = professeurs;
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="space-y-5 p-6">
-
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight">
-                            Professeurs
+                            Enseignants
                         </h1>
                         <p className="mt-0.5 text-sm text-muted-foreground">
                             {professeurs.data.length} professeur
@@ -147,75 +93,14 @@ const Index = () => {
                         </p>
                     </div>
 
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <Button className="gap-2">
+                    <div>
+                        <Link href="professeur/create">
+                            <Button className="gap-2 transition duration-300 hover:bg-red-700">
                                 <PlusCircle className="h-4 w-4" />
-                                Ajouter un professeur
+                                Ajouter un enseignant
                             </Button>
-                        </SheetTrigger>
-                        <SheetContent>
-                            <SheetHeader>
-                                <SheetTitle>Nouveau professeur</SheetTitle>
-                                <SheetDescription>
-                                    Renseignez les informations du professeur.
-                                </SheetDescription>
-                            </SheetHeader>
-                            <div className="grid flex-1 auto-rows-min gap-5 px-4">
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="grid gap-2">
-                                        <Label>Nom</Label>
-                                        <Input
-                                            placeholder="Nom"
-                                            value={nom}
-                                            onChange={(e) =>
-                                                setNom(e.target.value)
-                                            }
-                                        />
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <Label>Prénom</Label>
-                                        <Input
-                                            placeholder="Prénom"
-                                            value={prenom}
-                                            onChange={(e) =>
-                                                setPrenom(e.target.value)
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label>Email</Label>
-                                    <Input
-                                        type="email"
-                                        placeholder="exemple@email.com"
-                                        value={email}
-                                        onChange={(e) =>
-                                            setEmail(e.target.value)
-                                        }
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label>Téléphone</Label>
-                                    <Input
-                                        placeholder="+225 07 XX XX XX"
-                                        value={telephone}
-                                        onChange={(e) =>
-                                            setTelephone(e.target.value)
-                                        }
-                                    />
-                                </div>
-                            </div>
-                            <SheetFooter>
-                                <Button onClick={handleSubmit}>
-                                    Enregistrer
-                                </Button>
-                                <SheetClose asChild>
-                                    <Button variant="outline">Fermer</Button>
-                                </SheetClose>
-                            </SheetFooter>
-                        </SheetContent>
-                    </Sheet>
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Tableau */}
@@ -223,9 +108,11 @@ const Index = () => {
                     <Table>
                         <TableHeader>
                             <TableRow className="bg-muted/40 hover:bg-muted/40">
-                                <TableHead>Professeur</TableHead>
-                                <TableHead>Email</TableHead>
-                                <TableHead>Téléphone</TableHead>
+                                <TableHead>Nom et prenom</TableHead>
+                                <TableHead>Matricule</TableHead>
+                                <TableHead>Date de naissance</TableHead>
+                                <TableHead>Spécialité</TableHead>
+                                <TableHead>Grade</TableHead>
                                 <TableHead className="w-[80px]" />
                             </TableRow>
                         </TableHeader>
@@ -245,158 +132,125 @@ const Index = () => {
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                professeurs.data.map((prof) => (
-                                    <TableRow key={prof.id} className="group">
+                                professeurs.data.map((prof) => {
+                                    const nom = prof.nom_prenom.split(' ');
 
-                                        {/* Professeur */}
-                                        <TableCell>
-                                            <div className="flex items-center gap-2.5">
-                                                <Avatar
-                                                    nom={prof.nom}
-                                                    prenom={prof.prenom}
-                                                />
-                                                <div>
-                                                    <p className="text-sm font-medium leading-none">
-                                                        {prof.prenom} {prof.nom}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </TableCell>
-
-                                        {/* Email */}
-                                        <TableCell>
-                                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                                                <Mail className="h-3.5 w-3.5 shrink-0" />
-                                                {prof.email}
-                                            </div>
-                                        </TableCell>
-
-                                        {/* Téléphone */}
-                                        <TableCell>
-                                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                                                <Phone className="h-3.5 w-3.5 shrink-0" />
-                                                {prof.telephone}
-                                            </div>
-                                        </TableCell>
-
-                                        {/* Actions */}
-                                        <TableCell>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
-                                                    >
-                                                        Actions{' '}
-                                                        <ChevronDown className="h-3 w-3" />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent
-                                                    align="end"
-                                                    className="w-44"
-                                                >
-                                                    <DropdownMenuItem asChild>
-                                                        <Link
-                                                            href={`/professeur/${prof.id}/edit`}
-                                                            className="flex cursor-pointer items-center gap-2"
-                                                        >
-                                                            <Edit className="h-4 w-4" />
-                                                            Modifier
-                                                        </Link>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    <DropdownMenuItem
-                                                        onClick={() =>
-                                                            setSelectedId(prof.id)
+                                    return (
+                                        <TableRow
+                                            key={prof.id}
+                                            className="group"
+                                        >
+                                            <TableCell>
+                                                <div className="flex flex-row place-items-center gap-2">
+                                                    <Avatar
+                                                        nom={nom[0]}
+                                                        prenom={nom[1]}
+                                                        genre={
+                                                            prof.sexe == 'M'
+                                                                ? 'Masculin'
+                                                                : 'Féminin'
                                                         }
-                                                        className="cursor-pointer gap-2 text-destructive focus:text-destructive"
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                        Supprimer
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </TableCell>
+                                                    />
+                                                    {prof.nom_prenom}
+                                                </div>
+                                            </TableCell>
 
-                                    </TableRow>
-                                ))
+                                            <TableCell>
+                                                <span className="rounded-sm bg-accent p-1">
+                                                    {prof.matricule}
+                                                </span>
+                                            </TableCell>
+
+                                            <TableCell>
+                                                {prof.date_naissance}
+                                            </TableCell>
+
+                                            <TableCell>
+                                                {prof.specialite}
+                                            </TableCell>
+
+                                            <TableCell>
+                                                {
+                                                    prof.annee_academiques[0]
+                                                        .pivot.grade
+                                                }
+                                            </TableCell>
+
+                                            {/* Actions */}
+                                            <TableCell>
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger
+                                                        asChild
+                                                    >
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
+                                                        >
+                                                            Actions{' '}
+                                                            <ChevronDown className="h-3 w-3" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent
+                                                        align="end"
+                                                        className="w-44"
+                                                    >
+                                                        <DropdownMenuItem
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={`/professeur/${prof.id}/show`}
+                                                                className="flex cursor-pointer items-center gap-2"
+                                                            >
+                                                                <Eye className="h-4 w-4" />
+                                                                Voir profil
+                                                            </Link>
+                                                        </DropdownMenuItem>
+
+                                                        <DropdownMenuItem
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={`/professeur/${prof.id}/edit`}
+                                                                className="flex cursor-pointer items-center gap-2"
+                                                            >
+                                                                <Edit className="h-4 w-4" />
+                                                                Modifier
+                                                            </Link>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                            onClick={() =>
+                                                                setSelectedId(
+                                                                    prof.id,
+                                                                )
+                                                            }
+                                                            className="cursor-pointer gap-2 text-destructive focus:text-destructive"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                            Supprimer
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })
                             )}
                         </TableBody>
                     </Table>
                 </Card>
 
                 {/* Pagination */}
-                {meta && meta.last_page > 1 && (
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span>
-                            Page {meta.current_page} sur {meta.last_page}
-                        </span>
-                        <div className="flex items-center gap-1">
-                            {meta.links.map((link, i) => {
-                                const isFirst = i === 0;
-                                const isLast = i === meta.links.length - 1;
-
-                                if (isFirst || isLast) {
-                                    return (
-                                        <Button
-                                            key={i}
-                                            variant="outline"
-                                            size="sm"
-                                            disabled={!link.url}
-                                            asChild={!!link.url}
-                                            className="h-8 w-8 p-0"
-                                        >
-                                            {link.url ? (
-                                                <Link href={link.url}>
-                                                    {isFirst ? (
-                                                        <ChevronLeft className="h-4 w-4" />
-                                                    ) : (
-                                                        <ChevronRight className="h-4 w-4" />
-                                                    )}
-                                                </Link>
-                                            ) : (
-                                                <span>
-                                                    {isFirst ? (
-                                                        <ChevronLeft className="h-4 w-4" />
-                                                    ) : (
-                                                        <ChevronRight className="h-4 w-4" />
-                                                    )}
-                                                </span>
-                                            )}
-                                        </Button>
-                                    );
-                                }
-
-                                return (
-                                    <Button
-                                        key={i}
-                                        variant={link.active ? 'default' : 'outline'}
-                                        size="sm"
-                                        disabled={!link.url || link.active}
-                                        asChild={!!link.url && !link.active}
-                                        className="h-8 w-8 p-0"
-                                    >
-                                        {link.url && !link.active ? (
-                                            <Link href={link.url}>
-                                                {link.label}
-                                            </Link>
-                                        ) : (
-                                            <span>{link.label}</span>
-                                        )}
-                                    </Button>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
-
+               <PaginationLinks links={professeurs.meta.links} />
             </div>
 
             {/* Dialog confirmation suppression */}
             <AlertDialog
                 open={!!selectedId}
-                onOpenChange={(open) => { if (!open) setSelectedId(null); }}
+                onOpenChange={(open) => {
+                    if (!open) setSelectedId(null);
+                }}
             >
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -420,7 +274,6 @@ const Index = () => {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-
         </AppLayout>
     );
 };

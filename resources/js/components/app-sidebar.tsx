@@ -54,7 +54,7 @@ export function AppSidebar() {
             icon: GraduationCap,
         },
         {
-            title: 'Professeurs',
+            title: 'Enseignant',
             href: professeur(),
             icon: UserCog,
         },
