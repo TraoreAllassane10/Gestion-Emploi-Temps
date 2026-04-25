@@ -1,6 +1,6 @@
 # Application de gestion d'un etablissement supérieur
 
-Une application web complète de gestion d’établissement supérieur permettant de gérer efficacement les étudiants, les inscriptions, les scolarites, les paiements de scolarites , les années académiques etc.
+Une application web complète de gestion d’établissement supérieur permettant de gérer efficacement les étudiants, les inscriptions les paiements de scolarites , les années académiques etc.
 
 ## Objectifs du projet
 
@@ -8,6 +8,7 @@ Ce projet vise à digitaliser la gestion académique en offrant une plateforme c
 
 - La gestion des étudiants
 - La gestion et suivi des inscriptions
+- La gestion des paiements de scolairités
 - L’organisation des filières et niveaux
 - La gestion des enseignants
 - L’analyse des données via un dashboard
@@ -39,10 +40,12 @@ Ce projet vise à digitaliser la gestion académique en offrant une plateforme c
 - Enregistrement d'un paiement
 - Impression du reçu d'un paiements à tout moment (PDF)
 - Visualisation de la progession des paiements d'une inscription
+- Impression du recapitulatif des paiemeents d'un etudiants
 
 ### Gestion des enseignants
 
 - CRUD complet des enseignants
+- Export de la liste des enseignants selon l'année
 
 ### Gestions des fillières et niveaux
 
@@ -70,6 +73,7 @@ Ce projet vise à digitaliser la gestion académique en offrant une plateforme c
 - API REST
 - Laravel Eloquent ORM
 - Spatie (gestion des rôles et permissions)
+- Laravel Excel
 
 ### Frontend
 
