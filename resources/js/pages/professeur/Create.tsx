@@ -33,7 +33,7 @@ import { ArrowLeft, CheckCircle } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 
-function champObligatoire() {
+export function champObligatoire() {
     return <span className="ml-1 text-red-500">*</span>;
 }
 

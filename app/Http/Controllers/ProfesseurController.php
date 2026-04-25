@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EnseignantExport;
 use App\Http\Requests\professeur\CreateProfesseurRequest;
 use App\Http\Requests\professeur\UpdateProfesseurRequest;
 use Exception;
@@ -10,6 +11,7 @@ use App\Models\Professeur;
 use App\Http\Resources\ProfesseurResource;
 use App\Services\AnneeAcademiqueService;
 use App\Services\ProfesseurService;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProfesseurController extends Controller
 {
@@ -67,6 +69,12 @@ class ProfesseurController extends Controller
 
     public function edit(Professeur $professeur)
     {
+        $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
+
+        $professeur->load(['anneeAcademiques' => function ($query) use ($anneeActive) {
+            $query->where('annee_universitaire_id', $anneeActive->id);
+        }]);
+
         return Inertia::render("professeur/Edit", [
             "professeur" => $professeur,
         ]);
@@ -100,5 +108,13 @@ class ProfesseurController extends Controller
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
+    }
+
+    public function export()
+    {
+
+        $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
+
+        return Excel::download(new EnseignantExport($anneeActive->id), 'Liste_des_enseignants_' . $anneeActive->libelle . '.xlsx');
     }
 }

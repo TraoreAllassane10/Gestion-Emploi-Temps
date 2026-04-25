@@ -52,7 +52,21 @@ class ProfesseurRepository
 
     public function update(Professeur $professeur, array $data)
     {
-        return $professeur->update($data);
+        $anneeActive = $this->anneeAcademiqueRepository->anneeActive();
+
+        $professeur->update($data);
+
+        $professeur->anneeAcademiques()->updateExistingPivot($anneeActive->id, [
+            "diplome" => $data['diplome'],
+            "grade" => $data['grade'],
+            "statut" => $data['statut'],
+            "annee_prise_fonction" => $data['annee_prise_fonction'],
+            "formation_continue" => $data['formation_continue'],
+            "nombre_heure_cours_prevue" => $data['nombre_heure_cours_prevue'],
+            "nombre_heure_cours_realise" => $data['nombre_heure_cours_realise'],
+        ]);
+
+        return $professeur;
     }
 
     public function delete(Professeur $professeur)
