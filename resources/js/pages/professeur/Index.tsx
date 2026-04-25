@@ -33,12 +33,10 @@ import { BreadcrumbItem, Professeur } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
     ChevronDown,
-    ChevronLeft,
-    ChevronRight,
     Edit,
     Eye,
-    Pencil,
     PlusCircle,
+    Sheet,
     Trash2,
     UserRound,
 } from 'lucide-react';
@@ -93,7 +91,18 @@ const Index = () => {
                         </p>
                     </div>
 
-                    <div>
+                    <div className="flex place-items-center gap-2">
+                        <a href={`professeur/export`}>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1.5"
+                            >
+                                <Sheet className="h-3.5 w-3.5" /> Exporter vers
+                                Excel
+                            </Button>
+                        </a>
+
                         <Link href="professeur/create">
                             <Button className="gap-2 transition duration-300 hover:bg-red-700">
                                 <PlusCircle className="h-4 w-4" />
@@ -242,7 +251,7 @@ const Index = () => {
                 </Card>
 
                 {/* Pagination */}
-               <PaginationLinks links={professeurs.meta.links} />
+                <PaginationLinks links={professeurs.meta.links} />
             </div>
 
             {/* Dialog confirmation suppression */}

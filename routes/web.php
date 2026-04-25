@@ -85,6 +85,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("professeur/{professeur}/edit", "edit")->name("professeur.edit");
         Route::put("professeur/{professeur}/update", "update")->name("professeur.update");
         Route::delete("professeur/{professeur}/delete", "delete")->name("professeur.delete");
+        Route::get("professeur/export", "export")->name("professeur.export");
     });
 
     //Routes Site
