@@ -27,18 +27,18 @@ class AnneeUniversitaireObserver
     /**
      * Handle the AnneeUniversitaire "updated" event.
      */
-    public function updated(AnneeUniversitaire $anneeUniversitaire): void
-    {
-        ActivityLog::create([
-            "user_id" => Auth::user()->id,
-            "user_name" => Auth::user()->name,
-            "action" => TypeAction::MODIFICATION->value,
-            "entite_type" => "Année Academique",
-            "entite_id" => (string) $anneeUniversitaire->id,
-            "ancienne_valeur" => $anneeUniversitaire->getOriginal(),
-            "nouvelle_valeur" => $anneeUniversitaire->getChanges()
-        ]);
-    }
+    // public function updated(AnneeUniversitaire $anneeUniversitaire): void
+    // {
+    //     ActivityLog::create([
+    //         "user_id" => Auth::user()->id,
+    //         "user_name" => Auth::user()->name,
+    //         "action" => TypeAction::MODIFICATION->value,
+    //         "entite_type" => "Année Academique",
+    //         "entite_id" => (string) $anneeUniversitaire->id,
+    //         "ancienne_valeur" => $anneeUniversitaire->getOriginal(),
+    //         "nouvelle_valeur" => $anneeUniversitaire->getChanges()
+    //     ]);
+    // }
 
     /**
      * Handle the AnneeUniversitaire "deleted" event.

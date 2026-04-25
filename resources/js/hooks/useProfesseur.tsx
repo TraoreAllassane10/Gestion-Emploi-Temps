@@ -29,19 +29,19 @@ export default function useProfesseur() {
                 .post('/professeur', data)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.success('Professeur crée avec succès !');
+                        toast.success('Enseignant crée avec succès !');
                         // Redirection vers la page d'affichage des professeur
                         router.visit(professeur());
                     }
                 })
                 .catch((error) => {
                     toast.error(
-                        "Erreur survenue lors de la creation d'un professeur",
+                        "Erreur survenue lors de la creation d'un Enseignant",
                     );
                     console.log(error);
                 });
         } catch (error) {
-            toast.error('Erreur survenue au professeur du serveur');
+            toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
         }
     };
@@ -53,7 +53,7 @@ export default function useProfesseur() {
                 .put(`/professeur/${id}/update`, data)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.success('Niveau modifié avec succès !');
+                        toast.success('Enseignant modifié avec succès !');
 
                         // Redirection sur la page d'affiche
                         router.visit('/professeur');
@@ -61,12 +61,12 @@ export default function useProfesseur() {
                 })
                 .catch((error) => {
                     toast.error(
-                        "Erreur survenue lors de la modification d'un professeur",
+                        "Erreur survenue lors de la modification d'un Enseignant",
                     );
                     console.log(error);
                 });
         } catch (error) {
-            toast.error('Erreur survenue au professeur du serveur');
+            toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
         }
     };
@@ -78,13 +78,13 @@ export default function useProfesseur() {
                 .delete(`/professeur/${id}/delete`)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.success('Professeur supprimé !');
+                        toast.success('Enseignant supprimé !');
                         router.visit(professeur());
                     }
                 })
                 .catch((error) => {
                     toast.success(
-                        'Erreur survenue lors de la suppression du professeur',
+                        'Erreur survenue lors de la suppression du Enseignant',
                     );
                     console.log(error);
                 });
