@@ -26,7 +26,8 @@ Ce projet vise à digitaliser la gestion académique en offrant une plateforme c
 - Recherche et filtrage
 - Visualisation du profil complet d'etudiant
 - Visualisation du parcours d'etudiants (inscriptions passées)
-- Gestion de la fiche d'identification (PDF)
+- Impression de la fiche d'identification (PDF)
+- Impression du certificat de scolarité (PDF)
 
 ### Gestion des inscriptions
 
