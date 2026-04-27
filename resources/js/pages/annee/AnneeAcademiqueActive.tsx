@@ -21,15 +21,15 @@ const AnneeAcademiqueActive = () => {
     const { anneeActive, annees } = usePage<AnneeAcademiqueActiveProps>().props;
     const [annee, setAnnee] = useState('');
 
-    const {changeAnnee} = useAnnee()
+    const { changeAnnee } = useAnnee();
 
     const updateAnneeActive = () => {
-        if (! annee) {
-            return ;
+        if (!annee) {
+            return;
         }
-        
-        changeAnnee(annee)
-    }
+
+        changeAnnee(annee);
+    };
 
     return (
         <AppLayout>
@@ -66,7 +66,12 @@ const AnneeAcademiqueActive = () => {
                         </NativeSelect>
 
                         {annee && (
-                            <Button className="bg-red-500" onClick={updateAnneeActive}>Changer</Button>
+                            <Button
+                                className="bg-red-500"
+                                onClick={updateAnneeActive}
+                            >
+                                Changer
+                            </Button>
                         )}
                     </div>
                 </div>

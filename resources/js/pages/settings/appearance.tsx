@@ -10,7 +10,7 @@ import { edit as editAppearance } from '@/routes/appearance';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Appearance settings',
+        title: 'Paramètres de l\'apparence',
         href: editAppearance().url,
     },
 ];

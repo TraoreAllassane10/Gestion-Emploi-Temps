@@ -57,11 +57,13 @@ export default function TwoFactorRecoveryCodes({
             <CardHeader>
                 <CardTitle className="flex gap-3">
                     <LockKeyhole className="size-4" aria-hidden="true" />
-                    2FA Recovery Codes
+                    Codes de récupération 2FA
                 </CardTitle>
                 <CardDescription>
-                    Recovery codes let you regain access if you lose your 2FA
-                    device. Store them in a secure password manager.
+                    Les codes de récupération vous permettent de retrouver
+                    l'accès à votre compte si vous perdez votre dispositif
+                    d'authentification à deux facteurs (2FA). Stockez-les dans
+                    un gestionnaire de mots de passe sécurisé.
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -76,7 +78,8 @@ export default function TwoFactorRecoveryCodes({
                             className="size-4"
                             aria-hidden="true"
                         />
-                        {codesAreVisible ? 'Hide' : 'View'} Recovery Codes
+                        {codesAreVisible ? 'Cacher' : 'Voir'} les codes de
+                        récupération
                     </Button>
 
                     {canRegenerateCodes && (
@@ -92,7 +95,7 @@ export default function TwoFactorRecoveryCodes({
                                     disabled={processing}
                                     aria-describedby="regenerate-warning"
                                 >
-                                    <RefreshCw /> Regenerate Codes
+                                    <RefreshCw /> Regenerer les Codes
                                 </Button>
                             )}
                         </Form>
@@ -143,15 +146,16 @@ export default function TwoFactorRecoveryCodes({
                                     )}
                                 </div>
 
-                                <div className="text-xs text-muted-foreground select-none">
+                                <div className="text-xs text-muted-foreground">
                                     <p id="regenerate-warning">
-                                        Each recovery code can be used once to
-                                        access your account and will be removed
-                                        after use. If you need more, click{' '}
+                                        Chaque code de récupération est
+                                        utilisable une seule fois pour accéder à
+                                        votre compte et sera supprimé après
+                                        utilisation. Si vous en avez besoin de
+                                        plusieurs, cliquez ici sur {' '}
                                         <span className="font-bold">
-                                            Regenerate Codes
-                                        </span>{' '}
-                                        above.
+                                            Regenerer des codes.
+                                        </span>
                                     </p>
                                 </div>
                             </>

@@ -15,7 +15,7 @@ import { edit } from '@/routes/user-password';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Password settings',
+        title: 'Paramètres de mot de passe',
         href: edit().url,
     },
 ];
@@ -31,8 +31,8 @@ export default function Password() {
             <SettingsLayout>
                 <div className="space-y-6">
                     <HeadingSmall
-                        title="Update password"
-                        description="Ensure your account is using a long, random password to stay secure"
+                        title="Modification du mot de passe"
+                        description="Pour garantir la sécurité de votre compte, assurez-vous d'utiliser un mot de passe long et aléatoire."
                     />
 
                     <Form
@@ -61,7 +61,7 @@ export default function Password() {
                             <>
                                 <div className="grid gap-2">
                                     <Label htmlFor="current_password">
-                                        Current password
+                                        Mot de passe actuel
                                     </Label>
 
                                     <Input
@@ -71,7 +71,7 @@ export default function Password() {
                                         type="password"
                                         className="mt-1 block w-full"
                                         autoComplete="current-password"
-                                        placeholder="Current password"
+                                        placeholder="Mot de passe actuel"
                                     />
 
                                     <InputError
@@ -81,7 +81,7 @@ export default function Password() {
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="password">
-                                        New password
+                                        Nouveau mot de passe
                                     </Label>
 
                                     <Input
@@ -91,7 +91,7 @@ export default function Password() {
                                         type="password"
                                         className="mt-1 block w-full"
                                         autoComplete="new-password"
-                                        placeholder="New password"
+                                        placeholder="Nouveau mot de passe"
                                     />
 
                                     <InputError message={errors.password} />
@@ -99,7 +99,7 @@ export default function Password() {
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="password_confirmation">
-                                        Confirm password
+                                        Confirmer le mot de passe
                                     </Label>
 
                                     <Input
@@ -108,7 +108,7 @@ export default function Password() {
                                         type="password"
                                         className="mt-1 block w-full"
                                         autoComplete="new-password"
-                                        placeholder="Confirm password"
+                                        placeholder="Confirmer le mot de passe"
                                     />
 
                                     <InputError
@@ -121,7 +121,7 @@ export default function Password() {
                                         disabled={processing}
                                         data-test="update-password-button"
                                     >
-                                        Save password
+                                        Sauvegarder
                                     </Button>
 
                                     <Transition
@@ -132,7 +132,7 @@ export default function Password() {
                                         leaveTo="opacity-0"
                                     >
                                         <p className="text-sm text-neutral-600">
-                                            Saved
+                                            Sauvegardé
                                         </p>
                                     </Transition>
                                 </div>
