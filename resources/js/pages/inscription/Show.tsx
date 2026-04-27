@@ -38,7 +38,6 @@ export default function Show() {
         (role) => role.name == 'Administrateur',
     );
 
-
     return (
         <AppLayout>
             <Head
@@ -70,10 +69,19 @@ export default function Show() {
                             <div className="min-w-0 flex-1">
                                 <div className="mb-0.5 flex flex-wrap items-center gap-2">
                                     <h1 className="text-xl font-bold tracking-tight">
-                                        {inscription.etudiant?.prenom}{' '}
-                                        {inscription.etudiant?.nom}
+                                        {inscription.etudiant?.nom}{' '}
+                                        {inscription.etudiant?.prenom}
                                     </h1>
-                                    <StatutInscriptionBadge statut="Actif" />
+                                    {inscription.status && (
+                                        <StatutInscriptionBadge
+                                            statut={
+                                                inscription.status === 'Bon'
+                                                    ? 'En cours'
+                                                    : inscription.status
+                                            }
+                                        />
+                                    )}
+
                                     {inscription.niveaux?.map((niveau) => (
                                         <Badge
                                             variant="secondary"

@@ -86,7 +86,8 @@ class PaiementService
         return Pdf::loadView('pdf.recap_paiements', [
             "etudiant" => $inscription->etudiant,
             "niveaux" => $inscription->niveaux,
-            "paiements" => $inscription->paiements
+            "paiements" => $inscription->paiements,
+            'annee' => $inscription->annee
         ]);
     }
 }

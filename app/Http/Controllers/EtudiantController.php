@@ -111,6 +111,11 @@ class EtudiantController extends Controller
 
     public function getFicheIndentification(string $etudiant)
     {
-       return $this->etudiantService->ficheIdentification($etudiant);
+        return $this->etudiantService->ficheIdentification($etudiant);
+    }
+
+    public function certificatDeScolarite(string $etudiant)
+    {
+        return $this->etudiantService->getCertificatDeScolarite($etudiant);
     }
 }
