@@ -55,6 +55,17 @@ class EtudiantService
         return $pdf->stream("fiche_identification.pdf");
     }
 
+    public function getCertificatDeScolarite(string $etudiant)
+    {
+        $etudiantData = Etudiant::with('inscriptions')->where("ip", $etudiant)->first()->toArray();
+
+        $pdf = Pdf::loadView("pdf.certificat_scolarite", [
+            "etudiant" => $etudiantData
+        ]);
+
+        return $pdf->stream('certificat_scolarite.pdf');
+    }
+
     public function totalEtudiant()
     {
         return $this->etudiantRepository->totalEtudiant();

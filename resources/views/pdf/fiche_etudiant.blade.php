@@ -35,6 +35,7 @@
         td {
             padding: 4px;
             vertical-align: top;
+            font-size: 16px;
         }
 
         .line {
@@ -67,6 +68,8 @@
 
     <div class="header">
 
+         <img src="{{ public_path('./images/logo_inec.jpg') }}" alt="INEC SA" width="55"
+                                height="55" onerror="this.style.display='none'">
         <h2>INSTITUT NATIONAL D'INTELLIGENCE NUMÉRIQUE</h2>
         <h3>FICHE IDENTIFICATION DE L'ÉTUDIANT</h3>
 

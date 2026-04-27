@@ -138,6 +138,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete("etudiants/{etudiant}/delete", "delete")->name("etudiants.delete");
 
         Route::get('/etudiants/{etudiant}/fiche', "getFicheIndentification")->name('etudiants.fiche');
+        Route::get('/etudiants/{etudiant}/certificat-scolarite', "certificatDeScolarite")->name('etudiants.certificatDeScolarite');
     });
 
     //Routes Horaires

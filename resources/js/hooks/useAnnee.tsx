@@ -92,7 +92,7 @@ export default function useAnnee() {
                     if (response.data.success) {
                         toast.success("L'année académique changée !");
                         // Redirection sur la page d'affiche
-                        router.visit('/configurations');
+                        router.visit('/dashboard', {fresh: true});
                     }
                 })
                 .catch((error) => {

@@ -190,14 +190,13 @@
                 </table>
             </td>
             <td class="header-right" style="width:45%;">
-                <p>Année Académique {{ $annee_academique ?? '2025 - 2026' }}</p>
-                <div class="filiere-box">{{ $filiere ?? 'FC 1' }}</div>
+                <p>Année Académique : {{ $annee->libelle ?? '-' }}</p>
+                <div class="filiere-box">{{ $niveaux[0]['nom']?? '-' }}</div>
                 <br><br>
                 <p>Imprimé le : {{ \Carbon\Carbon::now()->format('d/m/Y à H:i') }}</p>
             </td>
         </tr>
     </table>
-
     {{-- ===== TITRE + INFOS ÉTUDIANT ===== --}}
     <div class="titre-section">
         <h3>Récapitulatif des paiements</h3>

@@ -10,7 +10,7 @@ const ProfilSection = ({ etudiant }: { etudiant: Etudiant }) => {
                 <InfoRow
                     icon={User}
                     label="Nom complet"
-                    value={`${etudiant.civilite} ${etudiant.prenom} ${etudiant.nom}`}
+                    value={`${etudiant.civilite} ${etudiant.nom} ${etudiant.prenom} `}
                 />
                 <InfoRow
                     icon={Calendar}

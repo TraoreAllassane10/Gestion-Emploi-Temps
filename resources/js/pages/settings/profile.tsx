@@ -16,7 +16,7 @@ import { edit } from '@/routes/profile';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Profile settings',
+        title: 'Paramètres de profil',
         href: edit().url,
     },
 ];
@@ -32,13 +32,13 @@ export default function Profile({
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Profile settings" />
+            <Head title="Mon profil" />
 
             <SettingsLayout>
                 <div className="space-y-6">
                     <HeadingSmall
-                        title="Profile information"
-                        description="Update your name and email address"
+                        title="Votre profil"
+                        description="Mettre à jour votre nom et email"
                     />
 
                     <Form
@@ -51,7 +51,7 @@ export default function Profile({
                         {({ processing, recentlySuccessful, errors }) => (
                             <>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="name">Name</Label>
+                                    <Label htmlFor="name">Nom Complet</Label>
 
                                     <Input
                                         id="name"
@@ -70,7 +70,7 @@ export default function Profile({
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="email">Email address</Label>
+                                    <Label htmlFor="email">Adresse Email</Label>
 
                                     <Input
                                         id="email"
@@ -100,8 +100,7 @@ export default function Profile({
                                                     as="button"
                                                     className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                                 >
-                                                    Click here to resend the
-                                                    verification email.
+                                                    Cliquez ici pour renvoyer l'email.
                                                 </Link>
                                             </p>
 
@@ -121,7 +120,7 @@ export default function Profile({
                                         disabled={processing}
                                         data-test="update-profile-button"
                                     >
-                                        Save
+                                        Sauvegarder
                                     </Button>
 
                                     <Transition
@@ -132,7 +131,7 @@ export default function Profile({
                                         leaveTo="opacity-0"
                                     >
                                         <p className="text-sm text-neutral-600">
-                                            Saved
+                                            Sauvegardé
                                         </p>
                                     </Transition>
                                 </div>

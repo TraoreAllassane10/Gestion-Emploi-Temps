@@ -81,8 +81,8 @@ export default function Show() {
                             <div className="min-w-0 flex-1">
                                 <div className="mb-1 flex flex-wrap items-center gap-2">
                                     <h1 className="text-xl font-bold tracking-tight">
-                                        {etudiant.civilite} {etudiant.prenom}{' '}
-                                        {etudiant.nom}
+                                        {etudiant.civilite} {etudiant.nom} {' '} {etudiant.prenom}
+                                        
                                     </h1>
                                     <StatutBadge statut={etudiant.statut} />
                                     <Badge
@@ -127,7 +127,21 @@ export default function Show() {
                                         className="gap-1.5"
                                     >
                                         <Printer className="h-3.5 w-3.5" />{' '}
-                                        Imprimer
+                                        Fiche d'identification
+                                    </Button>
+                                </a>
+
+                                 <a
+                                    href={`/etudiants/${etudiant.ip}/certificat-scolarite`}
+                                    target="_blank"
+                                >
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="gap-1.5"
+                                    >
+                                        <Printer className="h-3.5 w-3.5" />{' '}
+                                        Certificat de scolarité
                                     </Button>
                                 </a>
 

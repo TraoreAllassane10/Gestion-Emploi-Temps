@@ -49,7 +49,7 @@ const ListeDeClasse = () => {
                         <a href={`/niveau/${niveau.id}/liste-de-classe/imprimer`} target='_blank'>
                             <Button variant="outline" size="sm">
                                 <Printer />
-                                Telécharger la liste
+                                Telécharger la liste de classe
                             </Button>
                         </a>
                     </div>
