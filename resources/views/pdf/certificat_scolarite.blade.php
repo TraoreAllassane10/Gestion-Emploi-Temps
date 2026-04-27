@@ -11,6 +11,17 @@
             font-size: 11px;
         }
 
+        #arriere {
+            position: fixed;
+
+            top: 20%;
+            left: 5%;
+            /* width: 80%;
+            height: 50%; */
+            opacity: 0.1;
+            z-index: -1000;
+        }
+
         .header {
             text-align: left;
             margin-bottom: 10px;
@@ -56,22 +67,28 @@
 
 <body>
 
+    <div id="arriere">
+        <img src="{{ public_path('./images/logo_inec.jpg') }}" alt="INEC SA" width="600" height="600"
+            onerror="this.style.display='none'">
+    </div>
+
     <div class="header">
 
-      <table>
-         <td style="border: none; text-align: left;">
-             <img src="{{ public_path('./images/logo_inec.jpg') }}" alt="INEC SA" width="100" height="100"
-            onerror="this.style.display='none'">
-         </td>
-      </table>
+        <table>
+            <td style="border: none; text-align: left;">
+                <img src="{{ public_path('./images/logo_inec.jpg') }}" alt="INEC SA" width="100" height="100"
+                    onerror="this.style.display='none'">
+            </td>
+        </table>
         {{-- <h2>INSTITUT NATIONAL D'INTELLIGENCE NUMÉRIQUE</h2> --}}
         <h3>CERTIFICAT DE SCOLARITE</h3>
 
     </div>
-    {{-- @dd($etudiant); --}}
+
     <div>
         <p>Je soussignés, Institut National d'Intelligence Numérique Economique et Commerciale (INEC) certifie que: </p>
-        <p>L'étudiant(e) : <span style="font-weight: bold; text-transform: uppercase;">{{ $etudiant['nom'] }} {{ $etudiant['prenom'] }}</span> née le
+        <p>L'étudiant(e) : <span style="font-weight: bold; text-transform: uppercase;">{{ $etudiant['nom'] }}
+                {{ $etudiant['prenom'] }}</span> née le
             <span
                 style="font-weight: bold">{{ \Carbon\Carbon::parse($etudiant['date_naissance'])->format('d/m/Y') }}</span>
             à <span style="font-weight: bold; text-transform: uppercase;">{{ $etudiant['lieu_naissance'] }}</span>
@@ -97,10 +114,11 @@
 
                     <td>
                         @foreach ($inscription['niveaux'] as $niveau)
-                            {{ $niveau['nom'] }} <br/>
+                            {{ $niveau['nom'] }} <br />
                         @endforeach
                     </td>
-                    <td style="text-transform: uppercase; font-weight: bold;">{{ $inscription['niveaux'][0]['filiere']['nom'] }}</td>
+                    <td style="text-transform: uppercase; font-weight: bold;">
+                        {{ $inscription['niveaux'][0]['filiere']['nom'] }}</td>
                 </tr>
             @endforeach
 
@@ -118,7 +136,11 @@
 
     </div>
 
-
+    <div style="position: absolute; bottom: 0; font-size: 12px; text-align: center; border-top: 1px solid black;">
+        <p>Daloa quartier Evêché à 200 m de la résidence Behy : BP 2455 Daloa / Tél : +225 27 21 29 30 31 Mob. : +225 07
+            89 98 00
+            00 / 01 71 64 67 67 / 05 04 14 14 87 / RCCM : CI-DAL2017-B-6688 / CC : 1749543R</p>
+    </div>
 </body>
 
 </html>
